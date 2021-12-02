@@ -1,17 +1,40 @@
 package day2
 
 import (
-	"fmt"
+	"log"
+	"strconv"
+	"strings"
 
 	"github.com/kamaal111/AdventOfCode/utils"
 )
 
-func Part1() int {
-	lines, _ := utils.GetInputLines("day2/input.txt")
+const inputPath = "day2/input.txt"
 
-	for _, line := range lines {
-		fmt.Println(line)
+func Part1() int {
+	lines, err := utils.GetInputLines(inputPath)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	return 0
+	depth := 0
+	horizontal := 0
+	for _, command := range lines {
+		splittedCommand := strings.Split(command, " ")
+
+		position, err := strconv.Atoi(splittedCommand[1])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		switch splittedCommand[0] {
+		case "forward":
+			horizontal += position
+		case "down":
+			depth += position
+		case "up":
+			depth -= position
+		}
+	}
+
+	return depth * horizontal
 }
