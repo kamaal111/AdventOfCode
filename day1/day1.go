@@ -1,19 +1,16 @@
-package main
+package day1
 
 import (
-	"io/ioutil"
 	"log"
 	"strconv"
-	"strings"
+
+	"github.com/kamaal111/AdventOfCode/utils"
 )
 
-func main() {
-	log.Println("Part 1:", part1())
-	log.Println("Part 2:", part2())
-}
+const inputPath = "day1/input.txt"
 
-func part2() int {
-	lines, err := getInputLines()
+func Part2() int {
+	lines, err := utils.GetInputLines(inputPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,8 +47,8 @@ func part2() int {
 	return increases
 }
 
-func part1() int {
-	lines, err := getInputLines()
+func Part1() int {
+	lines, err := utils.GetInputLines(inputPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,13 +73,4 @@ func part1() int {
 	}
 
 	return increases
-}
-
-func getInputLines() ([]string, error) {
-	inputFileBytes, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		return nil, err
-	}
-	lines := strings.Split(string(inputFileBytes), "\n")
-	return lines, nil
 }
