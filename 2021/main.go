@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/kamaal111/AdventOfCode/day1"
-	"github.com/kamaal111/AdventOfCode/day2"
+	"github.com/kamaal111/AdventOfCode/2021/day1"
+	"github.com/kamaal111/AdventOfCode/2021/day2"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kamaal111/AdventOfCode/utils"
+	"github.com/kamaal111/AdventOfCode/2021/utils"
 )
 
 const inputPath = "day2/input.txt"
