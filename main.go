@@ -12,4 +12,5 @@ func main() {
 	log.Println("Day 1 Part 2:", day1.Part2())
 
 	log.Println("Day 2 Part 1:", day2.Part1())
+	log.Println("Day 2 Part 2:", day2.Part2())
 }
