@@ -1,14 +1,15 @@
 package day1
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
 )
 
 func Run(input string) {
-	log.Println("Day 1 Part 2:", Part1(input))
-	log.Println("Day 1 Part 2:", Part2(input))
+	fmt.Println("Day 1 Part 2:", Part1(input))
+	fmt.Println("Day 1 Part 2:", Part2(input))
 }
 
 func Part2(input string) int {

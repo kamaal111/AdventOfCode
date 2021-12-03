@@ -1,10 +1,10 @@
 package day4
 
-import "log"
+import "fmt"
 
 func Run(input string) {
-	log.Println("Day 4 Part 2:", Part1(input))
-	log.Println("Day 4 Part 2:", Part2(input))
+	fmt.Println("Day 4 Part 2:", Part1(input))
+	fmt.Println("Day 4 Part 2:", Part2(input))
 }
 
 func Part1(input string) int {

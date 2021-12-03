@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -39,5 +40,5 @@ func main() {
 	day4.Run(inputDay4)
 
 	elapsed := time.Since(start)
-	log.Printf("Time: %s", elapsed)
+	fmt.Printf("Time: %s\n", elapsed)
 }
