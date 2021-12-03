@@ -16,43 +16,105 @@ func Part2() int {
 		log.Fatalln(err)
 	}
 
-	var oxygenBitCriteria []string
+	oxygen := getOxygen(lines)
+	scrubber := getScrubber(lines)
 
-	zeros := 0
-	var zerosBitCriteria []string
-	ones := 0
-	var onesBitCriteria []string
+	fmt.Println(oxygen)
+	fmt.Println(scrubber)
 
-	for _, line := range lines {
-		if line[0] == '0' {
-			zeros += 1
-			zerosBitCriteria = append(zerosBitCriteria, line)
-		} else {
-			ones += 1
-			onesBitCriteria = append(onesBitCriteria, line)
+	oxygenInt, err := strconv.ParseInt(oxygen, 2, 64)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(oxygenInt)
+
+	scrubberInt, err := strconv.ParseInt(scrubber, 2, 64)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(scrubberInt)
+
+	return int(oxygenInt * scrubberInt) // 782842, 735164, 50754, 101442, 98848
+}
+
+func getScrubber(lines []string) string {
+	bitCriteria := lines
+
+	scrubber := ""
+
+	lengthOfFirstLine := len(lines[0])
+	for i := 0; i < lengthOfFirstLine; i += 1 {
+		zeros := 0
+		var zerosBitCriteria []string
+		ones := 0
+		var onesBitCriteria []string
+
+		index := 1
+		for _, line := range bitCriteria {
+			if line[i] == '0' {
+				zeros += 1
+				zerosBitCriteria = append(zerosBitCriteria, line)
+			} else {
+				ones += 1
+				onesBitCriteria = append(onesBitCriteria, line)
+			}
+			index += 1
+		}
+
+		if zeros <= ones {
+			scrubber += "0"
+			bitCriteria = zerosBitCriteria
+		} else if ones < zeros {
+			scrubber += "1"
+			bitCriteria = onesBitCriteria
+		}
+
+		if len(bitCriteria) <= 1 {
+			return bitCriteria[0]
 		}
 	}
+
+	return scrubber
+}
+
+func getOxygen(lines []string) string {
+	bitCriteria := lines
 
 	oxygen := ""
 
-	if zeros > ones {
-		oxygen = "0"
-		oxygenBitCriteria = zerosBitCriteria
-	} else if ones > zeros {
-		oxygen = "1"
-		oxygenBitCriteria = onesBitCriteria
-	}
+	lengthOfFirstLine := len(lines[0])
+	for i := 0; i < lengthOfFirstLine; i += 1 {
+		zeros := 0
+		var zerosBitCriteria []string
+		ones := 0
+		var onesBitCriteria []string
 
-	lengthOfFirstCriteria := len(oxygenBitCriteria[0])
-	for i := 1; i < lengthOfFirstCriteria; i += 1 {
-		for _, line := range oxygenBitCriteria {
-			fmt.Println(string(line[i]))
+		index := 1
+		for _, line := range bitCriteria {
+			if line[i] == '0' {
+				zeros += 1
+				zerosBitCriteria = append(zerosBitCriteria, line)
+			} else {
+				ones += 1
+				onesBitCriteria = append(onesBitCriteria, line)
+			}
+			index += 1
+		}
+
+		if zeros > ones {
+			oxygen += "0"
+			bitCriteria = zerosBitCriteria
+		} else if ones >= zeros {
+			oxygen += "1"
+			bitCriteria = onesBitCriteria
+		}
+
+		if len(bitCriteria) <= 1 {
+			return bitCriteria[0]
 		}
 	}
 
-	fmt.Println(oxygen)
-
-	return 0 * 0
+	return oxygen
 }
 
 func Part1() int {
