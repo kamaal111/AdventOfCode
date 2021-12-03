@@ -1,7 +1,6 @@
 package day3
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
@@ -19,20 +18,15 @@ func Part2() int {
 	oxygen := getOxygen(lines)
 	scrubber := getScrubber(lines)
 
-	fmt.Println(oxygen)
-	fmt.Println(scrubber)
-
 	oxygenInt, err := strconv.ParseInt(oxygen, 2, 64)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(oxygenInt)
 
 	scrubberInt, err := strconv.ParseInt(scrubber, 2, 64)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(scrubberInt)
 
 	return int(oxygenInt * scrubberInt)
 }
