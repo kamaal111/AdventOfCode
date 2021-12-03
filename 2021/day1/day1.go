@@ -3,15 +3,16 @@ package day1
 import (
 	"log"
 	"strconv"
-
-	"github.com/kamaal111/AdventOfCode/2021/utils"
+	"strings"
 )
 
-func Part2(inputPath string) int {
-	lines, err := utils.GetInputLines(inputPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+func Run(input string) {
+	log.Println("Day 1 Part 2:", Part1(input))
+	log.Println("Day 1 Part 2:", Part2(input))
+}
+
+func Part2(input string) int {
+	lines := strings.Split(input, "\n")
 
 	increases := 0
 	for lineNumber, line := range lines {
@@ -45,11 +46,8 @@ func Part2(inputPath string) int {
 	return increases
 }
 
-func Part1(inputPath string) int {
-	lines, err := utils.GetInputLines(inputPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+func Part1(input string) int {
+	lines := strings.Split(input, "\n")
 
 	increases := 0
 	for lineNumber, line := range lines {

@@ -4,15 +4,15 @@ import (
 	"log"
 	"strconv"
 	"strings"
-
-	"github.com/kamaal111/AdventOfCode/2021/utils"
 )
 
-func Part2(inputPath string) int {
-	lines, err := utils.GetInputLines(inputPath)
-	if err != nil {
-		log.Fatalln(err)
-	}
+func Run(input string) {
+	log.Println("Day 2 Part 2:", Part1(input))
+	log.Println("Day 2 Part 2:", Part2(input))
+}
+
+func Part2(input string) int {
+	lines := strings.Split(input, "\n")
 
 	depth := 0
 	horizontal := 0
@@ -39,11 +39,8 @@ func Part2(inputPath string) int {
 	return depth * horizontal
 }
 
-func Part1(inputPath string) int {
-	lines, err := utils.GetInputLines(inputPath)
-	if err != nil {
-		log.Fatalln(err)
-	}
+func Part1(input string) int {
+	lines := strings.Split(input, "\n")
 
 	depth := 0
 	horizontal := 0

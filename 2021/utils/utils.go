@@ -2,14 +2,12 @@ package utils
 
 import (
 	"io/ioutil"
-	"strings"
 )
 
-func GetInputLines(filePath string) ([]string, error) {
-	inputFileBytes, err := ioutil.ReadFile(filePath)
+func GetInputString(filePath string) (string, error) {
+	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	lines := strings.Split(string(inputFileBytes), "\n")
-	return lines, nil
+	return string(data), nil
 }

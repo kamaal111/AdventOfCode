@@ -3,15 +3,16 @@ package day3
 import (
 	"log"
 	"strconv"
-
-	"github.com/kamaal111/AdventOfCode/2021/utils"
+	"strings"
 )
 
-func Part2(inputPath string) int {
-	lines, err := utils.GetInputLines(inputPath)
-	if err != nil {
-		log.Fatalln(err)
-	}
+func Run(input string) {
+	log.Println("Day 1 Part 2:", Part1(input))
+	log.Println("Day 1 Part 2:", Part2(input))
+}
+
+func Part2(input string) int {
+	lines := strings.Split(input, "\n")
 
 	oxygen := getOxygen(lines)
 	scrubber := getScrubber(lines)
@@ -109,11 +110,8 @@ func getOxygen(lines []string) string {
 	return oxygen
 }
 
-func Part1(inputPath string) int {
-	lines, err := utils.GetInputLines(inputPath)
-	if err != nil {
-		log.Fatalln(err)
-	}
+func Part1(input string) int {
+	lines := strings.Split(input, "\n")
 
 	gammaRate := ""
 	epsilonRate := ""
