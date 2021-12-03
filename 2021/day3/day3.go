@@ -7,8 +7,8 @@ import (
 )
 
 func Run(input string) {
-	log.Println("Day 1 Part 2:", Part1(input))
-	log.Println("Day 1 Part 2:", Part2(input))
+	log.Println("Day 3 Part 2:", Part1(input))
+	log.Println("Day 3 Part 2:", Part2(input))
 }
 
 func Part2(input string) int {
