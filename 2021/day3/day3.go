@@ -16,46 +16,43 @@ func Part2() int {
 		log.Fatalln(err)
 	}
 
-	gammaRate := ""
-	epsilonRate := ""
+	var oxygenBitCriteria []string
 
-	lengthOfFirstLine := len(lines[0])
-	for i := 0; i < lengthOfFirstLine; i += 1 {
-		zeros := 0
-		ones := 0
+	zeros := 0
+	var zerosBitCriteria []string
+	ones := 0
+	var onesBitCriteria []string
 
-		var zerosBitCriteria []string
-
-		for _, line := range lines {
-			if line[i] == '0' {
-				zeros += 1
-			} else {
-				ones += 1
-			}
-		}
-
-		fmt.Println(zerosBitCriteria)
-
-		if zeros > ones {
-			gammaRate += "0"
-			epsilonRate += "1"
-		} else if ones > zeros {
-			gammaRate += "1"
-			epsilonRate += "0"
+	for _, line := range lines {
+		if line[0] == '0' {
+			zeros += 1
+			zerosBitCriteria = append(zerosBitCriteria, line)
+		} else {
+			ones += 1
+			onesBitCriteria = append(onesBitCriteria, line)
 		}
 	}
 
-	gammaRateInt, err := strconv.ParseInt(gammaRate, 2, 64)
-	if err != nil {
-		log.Fatalln(err)
+	oxygen := ""
+
+	if zeros > ones {
+		oxygen = "0"
+		oxygenBitCriteria = zerosBitCriteria
+	} else if ones > zeros {
+		oxygen = "1"
+		oxygenBitCriteria = onesBitCriteria
 	}
 
-	epsilonRateInt, err := strconv.ParseInt(epsilonRate, 2, 64)
-	if err != nil {
-		log.Fatalln(err)
+	lengthOfFirstCriteria := len(oxygenBitCriteria[0])
+	for i := 1; i < lengthOfFirstCriteria; i += 1 {
+		for _, line := range oxygenBitCriteria {
+			fmt.Println(string(line[i]))
+		}
 	}
 
-	return int(gammaRateInt * epsilonRateInt)
+	fmt.Println(oxygen)
+
+	return 0 * 0
 }
 
 func Part1() int {
