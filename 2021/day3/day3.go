@@ -34,7 +34,7 @@ func Part2() int {
 	}
 	fmt.Println(scrubberInt)
 
-	return int(oxygenInt * scrubberInt) // 782842, 735164, 50754, 101442, 98848
+	return int(oxygenInt * scrubberInt)
 }
 
 func getScrubber(lines []string) string {
