@@ -8,6 +8,19 @@ import (
 
 const inputPath = "input.txt"
 
+const exampleInput = `00100
+11110
+10110
+10111
+10101
+01111
+00111
+11100
+10000
+11001
+00010
+01010`
+
 func TestPart1(t *testing.T) {
 	input, err := utils.GetInputString(inputPath)
 	if err != nil {
@@ -22,6 +35,15 @@ func TestPart1(t *testing.T) {
 	}
 }
 
+func TestPart1Example(t *testing.T) {
+	got := Part1(exampleInput)
+	want := 198
+
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}
+
 func TestPart2(t *testing.T) {
 	input, err := utils.GetInputString(inputPath)
 	if err != nil {
@@ -30,6 +52,15 @@ func TestPart2(t *testing.T) {
 
 	got := Part2(input)
 	want := 793873
+
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}
+
+func TestPart2Example(t *testing.T) {
+	got := Part2(exampleInput)
+	want := 230
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
