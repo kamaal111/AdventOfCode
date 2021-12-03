@@ -8,9 +8,7 @@ import (
 	"github.com/kamaal111/AdventOfCode/2021/utils"
 )
 
-const inputPath = "day2/input.txt"
-
-func Part2() int {
+func Part2(inputPath string) int {
 	lines, err := utils.GetInputLines(inputPath)
 	if err != nil {
 		log.Fatalln(err)
@@ -41,7 +39,7 @@ func Part2() int {
 	return depth * horizontal
 }
 
-func Part1() int {
+func Part1(inputPath string) int {
 	lines, err := utils.GetInputLines(inputPath)
 	if err != nil {
 		log.Fatalln(err)
