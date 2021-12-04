@@ -13,25 +13,39 @@ func Run(input string) {
 func Part1(input string) int {
 	lines := strings.Split(input, "\n")
 
-	var board [][]int
-	board = board[:]
-
-	// plays := lines[0]
-	// for _ = range plays {
-	for i := 2; i < len(lines); i += 1 {
-		if lines[i] == "" {
-			board = append(board, []int{})
-		}
-
-		board[len(board)-1] = append(board[len(board)-1], i)
-	}
-	// }
-
-	fmt.Println(board)
+	makeGame(lines)
 
 	return 0
 }
 
 func Part2(input string) int {
 	return 0
+}
+
+func makeGame(lines []string) {
+	boards := []string{}
+	// unmarkedBoards := []string{}
+
+	for i := 1; i < len(lines); i += 1 {
+		line := string(lines[i])
+		fmt.Println(line)
+		if line == "" {
+			continue
+		}
+
+		boardsLength := len(boards)
+		if boardsLength > 0 && len(boards[boardsLength-1]) < (5*5) {
+			pieces := strings.Split(line, " ")
+			fmt.Println(pieces)
+		}
+		// boards = append(boards, i)
+		// unmarkedBoards = append(unmarkedBoards, i)
+		break
+	}
+}
+
+type Game struct {
+	plays          []string
+	boards         []string
+	unmarkedBoards []string
 }
