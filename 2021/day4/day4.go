@@ -28,7 +28,7 @@ func Part1(input string) int {
 				if err != nil {
 					log.Fatal(err)
 				}
-				return board.UnmarkedCount() * playInt
+				return board.UnmarkedSum() * playInt
 			}
 		}
 	}
@@ -37,12 +37,44 @@ func Part1(input string) int {
 }
 
 func Part2(input string) int {
+	lines := strings.Split(input, "\n")
+
+	game := makeGame(lines)
+
+	winningBoards := []WinningBoard{}
+
+	for _, play := range game.plays {
+		for _, board := range game.boards {
+			board = board.MarkPieces(play)
+		}
+
+		for _, board := range game.boards {
+			if board.Evaluate() {
+				winningBoard := WinningBoard{
+					board: board,
+					play:  play,
+				}
+				winningBoards = append(winningBoards, winningBoard)
+
+				game = game.DiscardBoardWithID(board.id)
+			}
+		}
+	}
+
+	if len(winningBoards) > 0 {
+		winningBoard := winningBoards[len(winningBoards)-1]
+		playInt, err := strconv.Atoi(winningBoard.play)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return winningBoard.board.UnmarkedSum() * playInt
+	}
+
 	return 0
 }
 
 func makeGame(lines []string) Game {
 	boards := []Board{}
-	unmarkedBoards := []Board{}
 
 	for lineNumber := 1; lineNumber < len(lines); lineNumber += 1 {
 		line := string(lines[lineNumber])
@@ -61,27 +93,46 @@ func makeGame(lines []string) Game {
 		if boardsLength > 0 && len(boards[boardsLength-1].pieces) < (5*5) {
 			boardToAppend := append(boards[boardsLength-1].pieces, cleanedSplittedLine...)
 			boards[boardsLength-1].pieces = boardToAppend
-			unmarkedBoards[boardsLength-1].pieces = boardToAppend
 		} else {
-			boardToAppend := append(boards, Board{pieces: cleanedSplittedLine})
+			boardToAppend := append(boards, Board{pieces: cleanedSplittedLine, id: len(boards)})
 			boards = boardToAppend
-			unmarkedBoards = boardToAppend
 		}
 	}
 
 	plays := strings.Split(lines[0], ",")
 
 	game := Game{
-		plays:          plays,
-		boards:         boards,
-		unmarkedBoards: unmarkedBoards,
+		plays:  plays,
+		boards: boards,
 	}
 
 	return game
 }
 
 type Board struct {
+	id     int
 	pieces []string
+}
+
+type WinningBoard struct {
+	board Board
+	play  string
+}
+
+type Game struct {
+	plays  []string
+	boards []Board
+}
+
+func (game Game) DiscardBoardWithID(id int) Game {
+	boards := []Board{}
+	for _, board := range game.boards {
+		if board.id != id {
+			boards = append(boards, board)
+		}
+	}
+	game.boards = boards
+	return game
 }
 
 func (board Board) MarkPieces(play string) Board {
@@ -151,7 +202,7 @@ func (board Board) Evaluate() bool {
 	return false
 }
 
-func (board Board) UnmarkedCount() int {
+func (board Board) UnmarkedSum() int {
 	sumUnmarked := 0
 	for _, piece := range board.pieces {
 		if piece != "X" {
@@ -163,10 +214,4 @@ func (board Board) UnmarkedCount() int {
 		}
 	}
 	return sumUnmarked
-}
-
-type Game struct {
-	plays          []string
-	boards         []Board
-	unmarkedBoards []Board
 }
