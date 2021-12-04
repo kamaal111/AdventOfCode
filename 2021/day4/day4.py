@@ -1,4 +1,5 @@
 from typing import List
+from dataclasses import dataclass
 
 
 example_input = """7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -23,35 +24,53 @@ example_input = """7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,
 
 
 def run(input: str):
-    print(f"Day 4 Part 1: {part1(input)}")
+    print(f"Day 4 Part 1: {part1(input)}")  # 46920
+    print(f"Day 4 Part 2: {part2(input)}")  # 12635
 
 
-def part1(input: str):
+def part2(input: str):
     lines = input.splitlines()
-    plays = lines[0].split(",")
 
-    boards: List[str] = []
-    unmarked_boards: List[str] = []
+    game = Game(lines)
 
-    for line in lines[1:]:
-        if line == "":
-            continue
-
-        if len(boards) > 0 and len(boards[-1]) < (5 * 5):
-            for piece in line.split():
-                boards[-1].append(piece)
-                unmarked_boards[-1].append(piece)
-        else:
-            boards.append(line.split())
-            unmarked_boards.append(line.split())
-
-    for play in plays:
-        for board in boards:
+    winning_boards: List[WinningBoard] = []
+    for play in game.plays:
+        for board in game.boards:
             for i in range(len(board)):
                 if board[i] == play:
                     board[i] = "X"
 
-        for board in boards:
+        for board in game.boards:
+            if evaluate_board(board):
+                winning_board = WinningBoard(board, play)
+                winning_boards.append(winning_board)
+                game.discard_board_at_index(game.boards.index(board))
+
+    if len(winning_boards) > 0:
+        sum_unmarked = 0
+
+        last_winning_board = winning_boards[-1]
+        for piece in last_winning_board.board:
+            if piece != "X":
+                sum_unmarked += int(piece)
+
+        return sum_unmarked * int(last_winning_board.play)
+
+    return 0
+
+
+def part1(input: str):
+    lines = input.splitlines()
+
+    game = Game(lines)
+
+    for play in game.plays:
+        for board in game.boards:
+            for i in range(len(board)):
+                if board[i] == play:
+                    board[i] = "X"
+
+        for board in game.boards:
             if evaluate_board(board):
                 sum_unmarked = 0
                 for piece in board:
@@ -63,13 +82,49 @@ def part1(input: str):
     return 0
 
 
+@dataclass
+class WinningBoard:
+    board: List[str]
+    play: int
+
+
+class Game:
+    plays: List[str] = []
+    boards: List[str] = []
+    unmarked_boards: List[str] = []
+
+    def __init__(self, lines: List[str]):
+        self.plays = lines[0].split(",")
+
+        boards: List[str] = []
+        unmarked_boards: List[str] = []
+
+        for line in lines[1:]:
+            if line == "":
+                continue
+
+            if len(boards) > 0 and len(boards[-1]) < (5 * 5):
+                for piece in line.split():
+                    boards[-1].append(piece)
+                    unmarked_boards[-1].append(piece)
+            else:
+                boards.append(line.split())
+                unmarked_boards.append(line.split())
+
+        self.boards = boards
+        self.unmarked_boards = unmarked_boards
+
+    def discard_board_at_index(self, index: int):
+        self.boards.pop(index)
+        self.unmarked_boards.pop(index)
+
+
 def evaluate_board(board: List[str]) -> bool:
     x_count = board.count("X")
 
     if x_count >= 5:
         rows = []
         columns = []
-        diagonals = []
 
         for i in range(5):
             row = []
@@ -82,20 +137,10 @@ def evaluate_board(board: List[str]) -> bool:
             rows.append(row)
             columns.append(column)
 
-        diagonals.append([board[0], board[6], board[12], board[18], board[24]])
-        diagonals.append([board[4], board[8], board[12], board[16], board[20]])
-
         for row in rows:
             x_count_row = row.count("X")
             if x_count_row == 5:
                 return True
-
-        # print(f"{diagonals=}")
-        # for diagonal in diagonals:
-        #     x_count_diagonal = diagonal.count("X")
-        #     if x_count_diagonal == 5:
-        #         print(f"{diagonal=}")
-        #         return True
 
         for column in columns:
             x_count_column = column.count("X")
