@@ -8,7 +8,7 @@ import (
 )
 
 func Run(input string) {
-	fmt.Println("Day 3 Part 2:", Part1(input))
+	fmt.Println("Day 3 Part 1:", Part1(input))
 	fmt.Println("Day 3 Part 2:", Part2(input))
 }
 

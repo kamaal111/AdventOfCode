@@ -7,11 +7,6 @@ def run(input: str):
 
 
 def part2(input: str):
-    lines = input.splitlines()
-
-    for line in lines:
-        pass
-
     return 0
 
 
@@ -21,7 +16,22 @@ def part1(input: str):
     gamma_rate = ""
     epsilon_rate = ""
 
-    for line in lines:
-        pass
+    length_of_first_line = len(lines[0])
+    for i in range(length_of_first_line):
+        zeros = 0
+        ones = 0
 
-    return 0
+        for line in lines:
+            if line[i] == "0":
+                zeros += 1
+            else:
+                ones += 1
+
+        if zeros > ones:
+            gamma_rate += "0"
+            epsilon_rate += "1"
+        elif ones > zeros:
+            gamma_rate += "1"
+            epsilon_rate += "0"
+
+    return int(gamma_rate, 2) * int(epsilon_rate, 2)

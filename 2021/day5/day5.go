@@ -3,8 +3,8 @@ package day5
 import "fmt"
 
 func Run(input string) {
-	fmt.Println("Day 1 Part 2:", Part1(input))
-	fmt.Println("Day 1 Part 2:", Part2(input))
+	fmt.Println("Day 5 Part 2:", Part1(input))
+	fmt.Println("Day 5 Part 2:", Part2(input))
 }
 
 func Part2(input string) int {
