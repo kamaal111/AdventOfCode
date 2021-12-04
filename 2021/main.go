@@ -9,6 +9,7 @@ import (
 	"github.com/kamaal111/AdventOfCode/2021/day2"
 	"github.com/kamaal111/AdventOfCode/2021/day3"
 	"github.com/kamaal111/AdventOfCode/2021/day4"
+	"github.com/kamaal111/AdventOfCode/2021/day5"
 	"github.com/kamaal111/AdventOfCode/2021/utils"
 )
 
@@ -38,6 +39,12 @@ func main() {
 		log.Fatal(err)
 	}
 	day4.Run(inputDay4)
+
+	inputDay5, err := utils.GetInputString("day5/input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	day5.Run(inputDay5)
 
 	elapsed := time.Since(start)
 	fmt.Printf("Time: %s\n", elapsed)
