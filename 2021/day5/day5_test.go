@@ -17,7 +17,7 @@ func TestPart1(t *testing.T) {
 	}
 
 	got := Part1(input)
-	want := 22
+	want := 0
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
@@ -26,7 +26,7 @@ func TestPart1(t *testing.T) {
 
 func TestPart1Example(t *testing.T) {
 	got := Part1(exampleInput)
-	want := 22
+	want := 0
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
@@ -40,7 +40,7 @@ func TestPart2(t *testing.T) {
 	}
 
 	got := Part2(input)
-	want := 22
+	want := 0
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
@@ -49,7 +49,7 @@ func TestPart2(t *testing.T) {
 
 func TestPart2Example(t *testing.T) {
 	got := Part2(exampleInput)
-	want := 2
+	want := 0
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
