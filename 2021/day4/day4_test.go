@@ -1,6 +1,10 @@
 package day4
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/kamaal111/AdventOfCode/2021/utils"
+)
 
 const exampleInput = `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -22,6 +26,22 @@ const exampleInput = `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20
 22 11 13  6  5
  2  0 12  3  7`
 
+const inputPath = "input.txt"
+
+func TestPart1(t *testing.T) {
+	input, err := utils.GetInputString(inputPath)
+	if err != nil {
+		t.Errorf("could not get input: %v", err)
+	}
+
+	got := Part1(input)
+	want := 46920
+
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}
+
 func TestPart1Example(t *testing.T) {
 	got := Part1(exampleInput)
 	want := 4512
@@ -31,11 +51,25 @@ func TestPart1Example(t *testing.T) {
 	}
 }
 
-// func TestPart2Example(t *testing.T) {
-// 	got := Part2(exampleInput)
-// 	want := 23
+func TestPart2(t *testing.T) {
+	input, err := utils.GetInputString(inputPath)
+	if err != nil {
+		t.Errorf("could not get input: %v", err)
+	}
 
-// 	if got != want {
-// 		t.Errorf("got %d, wanted %d", got, want)
-// 	}
-// }
+	got := Part2(input)
+	want := 12635
+
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}
+
+func TestPart2Example(t *testing.T) {
+	got := Part2(exampleInput)
+	want := 23
+
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}

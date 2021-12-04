@@ -15,7 +15,7 @@ def main():
     input_string = get_input_string("day3/input.txt")
     day3.run(input_string)
     input_string = get_input_string("day4/input.txt")
-    day4.run(input_string) # 46920 and 12635
+    day4.run(input_string)
 
 if __name__ == "__main__":
     start = time.time()

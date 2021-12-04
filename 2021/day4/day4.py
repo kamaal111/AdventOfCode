@@ -90,14 +90,14 @@ class WinningBoard:
 
 class Game:
     plays: List[str] = []
-    boards: List[str] = []
-    unmarked_boards: List[str] = []
+    boards: List[List[str]] = []
+    unmarked_boards: List[List[str]] = []
 
     def __init__(self, lines: List[str]):
         self.plays = lines[0].split(",")
 
-        boards: List[str] = []
-        unmarked_boards: List[str] = []
+        boards: List[List[str]] = []
+        unmarked_boards: List[List[str]] = []
 
         for line in lines[1:]:
             if line == "":
@@ -123,12 +123,12 @@ def evaluate_board(board: List[str]) -> bool:
     x_count = board.count("X")
 
     if x_count >= 5:
-        rows = []
-        columns = []
+        rows: List[List[str]] = []
+        columns: List[List[str]] = []
 
         for i in range(5):
-            row = []
-            column = []
+            row: List[str] = []
+            column: List[str] = []
 
             for j in range(5):
                 row.append(board[i * 5 + j])
