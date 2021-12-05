@@ -23,7 +23,7 @@ public struct AOCDay1 {
 
         public func execute(with input: String) -> Int {
             var increases = 0
-            let lines = input.split(separator: "\n")
+            let lines = input.splitLines
             for (lineNumber, line) in lines.enumerated() {
                 guard let intLine = Int(line) else { return 0 }
 
@@ -45,7 +45,7 @@ public struct AOCDay1 {
 
         public func execute(with input: String) -> Int {
             var increases = 0
-            let lines = input.split(separator: "\n")
+            let lines = input.splitLines
             for (lineNumber, line) in lines.enumerated() {
                 guard let intLine = Int(line) else { return 0 }
 
