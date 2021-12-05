@@ -16,7 +16,7 @@ const (
 )
 
 func Run(input string) {
-	fmt.Println("Day 5 Part 2:", Part1(input))
+	fmt.Println("Day 5 Part 1:", Part1(input)) // 10169, 4693
 	fmt.Println("Day 5 Part 2:", Part2(input))
 }
 
@@ -25,13 +25,26 @@ func Part2(input string) int {
 }
 
 func Part1(input string) int {
-	plots := []string{}
+	lines := strings.Split(input, "\n")
 
-	for i := 0; i < (GRID_SIZE*GRID_SIZE)-1; i += 1 {
-		plots = append(plots, STARTING_PLOT)
+	gridSize := 0
+	for _, line := range lines {
+		coordinates := strings.Split(strings.TrimSpace(line), "->")
+		for _, coordinate := range coordinates {
+			intCoordinates := makeCoordinate(coordinate)
+			for _, coordinate := range intCoordinates {
+				if gridSize < coordinate {
+					gridSize = coordinate
+				}
+			}
+		}
 	}
 
-	lines := strings.Split(input, "\n")
+	plots := []string{}
+
+	for i := 0; i < ((gridSize+1)*(gridSize+1))-1; i += 1 {
+		plots = append(plots, STARTING_PLOT)
+	}
 
 	for _, line := range lines {
 		coordinates := strings.Split(strings.TrimSpace(line), "->")
@@ -50,11 +63,11 @@ func Part1(input string) int {
 				maximum = secondCoordinate[1]
 			}
 
-			fmt.Println(minimum, maximum)
+			// fmt.Println(minimum, maximum)
 
 			for i := minimum; i <= maximum; i += 1 {
-				plotIndex := (i*GRID_SIZE + firstCoordinate[0]) + 1
-				fmt.Println("vertical move", firstCoordinate[0], firstCoordinate[1], "to", secondCoordinate[0], secondCoordinate[1], "plotIndex", plotIndex)
+				plotIndex := (i*(gridSize+1) + firstCoordinate[0]) + 1
+				// fmt.Println("vertical move", firstCoordinate[0], firstCoordinate[1], "to", secondCoordinate[0], secondCoordinate[1], "plotIndex", plotIndex)
 				if plotIndex >= len(plots) {
 					continue
 				}
@@ -79,10 +92,10 @@ func Part1(input string) int {
 				maximum = secondCoordinate[0]
 			}
 
-			fmt.Println(minimum, maximum)
+			// fmt.Println(minimum, maximum)
 
 			for i := minimum; i <= maximum; i += 1 {
-				plotIndex := (firstCoordinate[1]*GRID_SIZE + i) + 1
+				plotIndex := (firstCoordinate[1]*(gridSize+1) + i) + 1
 				// fmt.Println("horizontal move", firstCoordinate[0], firstCoordinate[1], "to", secondCoordinate[0], secondCoordinate[1], "plotIndex", plotIndex)
 				if plotIndex >= len(plots) {
 					continue
@@ -107,7 +120,7 @@ func Part1(input string) int {
 		}
 		lastOrderedPlotIndex := len(orderedPlots) - 1
 		lastOrderedPlot := orderedPlots[lastOrderedPlotIndex]
-		if len(lastOrderedPlot) < GRID_SIZE {
+		if len(lastOrderedPlot) < (gridSize + 1) {
 			orderedPlots[lastOrderedPlotIndex] = append(lastOrderedPlot, plot)
 		} else {
 			orderedPlots = append(orderedPlots, []string{plot})
@@ -117,9 +130,9 @@ func Part1(input string) int {
 		}
 	}
 
-	for _, orderedPlot := range orderedPlots {
-		fmt.Println(len(orderedPlot), orderedPlot)
-	}
+	// for _, orderedPlot := range orderedPlots {
+	// fmt.Println(len(orderedPlot), orderedPlot)
+	// }
 
 	return tooManyOverlaps
 }

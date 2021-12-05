@@ -19,19 +19,19 @@ const exampleInput = `0,9 -> 5,9
 
 const inputPath = "input.txt"
 
-// func TestPart1(t *testing.T) {
-// 	input, err := utils.GetInputString(inputPath)
-// 	if err != nil {
-// 		t.Errorf("could not get input: %v", err)
-// 	}
+func TestPart1(t *testing.T) {
+	input, err := utils.GetInputString(inputPath)
+	if err != nil {
+		t.Errorf("could not get input: %v", err)
+	}
 
-// 	got := Part1(input)
-// 	want := 0
+	got := Part1(input)
+	want := 5147
 
-// 	if got != want {
-// 		t.Errorf("got %d, wanted %d", got, want)
-// 	}
-// }
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}
 
 func TestPart1Example(t *testing.T) {
 	got := Part1(exampleInput)
