@@ -6,27 +6,36 @@ import (
 	"github.com/kamaal111/AdventOfCode/2021/utils"
 )
 
-const exampleInput = ``
+const exampleInput = `0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2`
 
 const inputPath = "input.txt"
 
-func TestPart1(t *testing.T) {
-	input, err := utils.GetInputString(inputPath)
-	if err != nil {
-		t.Errorf("could not get input: %v", err)
-	}
+// func TestPart1(t *testing.T) {
+// 	input, err := utils.GetInputString(inputPath)
+// 	if err != nil {
+// 		t.Errorf("could not get input: %v", err)
+// 	}
 
-	got := Part1(input)
-	want := 0
+// 	got := Part1(input)
+// 	want := 0
 
-	if got != want {
-		t.Errorf("got %d, wanted %d", got, want)
-	}
-}
+// 	if got != want {
+// 		t.Errorf("got %d, wanted %d", got, want)
+// 	}
+// }
 
 func TestPart1Example(t *testing.T) {
 	got := Part1(exampleInput)
-	want := 0
+	want := 5
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
