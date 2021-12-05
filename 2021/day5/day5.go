@@ -62,8 +62,6 @@ func Part2(input string) int {
 				maximum = secondCoordinate[0]
 			}
 
-			// fmt.Println(minimum, maximum)
-
 			foundTry := false
 			for _, diagonalTry := range diagonalTries {
 				if diagonalTry[0] == minimum && diagonalTry[1] == maximum {
@@ -79,6 +77,7 @@ func Part2(input string) int {
 
 			for i := minimum; i <= maximum; i += 1 {
 				plotIndex := (i*(gridSize+1) + (maximum - i)) + 1
+				// fmt.Println("plotIndex:", plotIndex, firstCoordinate, secondCoordinate)
 				if plotIndex < 0 {
 					floatIndex := math.Abs(float64(plotIndex))
 					plotIndex = int(floatIndex)
