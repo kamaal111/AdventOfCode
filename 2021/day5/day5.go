@@ -137,11 +137,11 @@ func Part2(input string) int {
 
 			diagonalTries = append(diagonalTries, []int{minimum, maximum})
 
-			fmt.Println(minimum, maximum)
+			// fmt.Println(minimum, maximum)
 
 			for i := minimum; i <= maximum; i += 1 {
 				plotIndex := (i*(gridSize+1) + i) + 1
-				fmt.Println("diagonal move", firstCoordinate[0], firstCoordinate[1], "to", secondCoordinate[0], secondCoordinate[1], "plotIndex", plotIndex)
+				// fmt.Println("diagonal move", firstCoordinate[0], firstCoordinate[1], "to", secondCoordinate[0], secondCoordinate[1], "plotIndex", plotIndex)
 				if plotIndex >= len(plots) {
 					continue
 				}
@@ -175,9 +175,9 @@ func Part2(input string) int {
 		}
 	}
 
-	for _, orderedPlot := range orderedPlots {
-		fmt.Println(len(orderedPlot), orderedPlot)
-	}
+	// for _, orderedPlot := range orderedPlots {
+	// 	fmt.Println(len(orderedPlot), orderedPlot)
+	// }
 
 	return tooManyOverlaps
 }
