@@ -3,6 +3,7 @@ package day5
 import (
 	"fmt"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -17,7 +18,7 @@ const (
 
 func Run(input string) {
 	fmt.Println("Day 5 Part 1:", Part1(input)) // 10169, 4693
-	fmt.Println("Day 5 Part 2:", Part2(input)) // 6132
+	fmt.Println("Day 5 Part 2:", Part2(input)) // 6132, 6113, 6114, 6115
 }
 
 func Part2(input string) int {
@@ -49,7 +50,54 @@ func Part2(input string) int {
 		firstCoordinate := makeCoordinate(coordinates[0])
 		secondCoordinate := makeCoordinate(coordinates[1])
 
-		if firstCoordinate[0] == secondCoordinate[0] { // vertical move
+		if firstCoordinate[0] != secondCoordinate[0] && firstCoordinate[1] != secondCoordinate[1] { // diagonal move
+			minimum := 0
+			maximum := 0
+
+			if firstCoordinate[0] > secondCoordinate[0] {
+				minimum = secondCoordinate[0]
+				maximum = firstCoordinate[0]
+			} else {
+				minimum = firstCoordinate[0]
+				maximum = secondCoordinate[0]
+			}
+
+			// fmt.Println(minimum, maximum)
+
+			foundTry := false
+			for _, diagonalTry := range diagonalTries {
+				if diagonalTry[0] == minimum && diagonalTry[1] == maximum {
+					foundTry = true
+				}
+			}
+
+			if foundTry {
+				continue
+			}
+
+			diagonalTries = append(diagonalTries, []int{minimum, maximum})
+
+			for i := minimum; i <= maximum; i += 1 {
+				plotIndex := (i*(gridSize+1) + (maximum - i)) + 1
+				if plotIndex < 0 {
+					floatIndex := math.Abs(float64(plotIndex))
+					plotIndex = int(floatIndex)
+				}
+
+				if plotIndex >= len(plots) {
+					continue
+				}
+
+				switch plots[plotIndex] {
+				case STARTING_PLOT:
+					plots[plotIndex] = FIRST_PLOT
+				case FIRST_PLOT:
+					plots[plotIndex] = SECOND_PLOT
+				case SECOND_PLOT:
+					plots[plotIndex] = LOSING_PLOT
+				}
+			}
+		} else if firstCoordinate[0] == secondCoordinate[0] { // vertical move
 			minimum := 0
 			maximum := 0
 
@@ -107,53 +155,6 @@ func Part2(input string) int {
 					plots[plotIndex] = LOSING_PLOT
 				}
 			}
-		} else { // diagonal move
-			minimum := 0
-			maximum := 0
-
-			combinedCoordinate := []int{}
-			combinedCoordinate = append(combinedCoordinate, firstCoordinate...)
-			combinedCoordinate = append(combinedCoordinate, secondCoordinate...)
-
-			for _, coordinate := range combinedCoordinate {
-				if minimum > coordinate {
-					minimum = coordinate
-				}
-				if maximum < coordinate {
-					maximum = coordinate
-				}
-			}
-
-			foundTry := false
-			for _, diagonalTry := range diagonalTries {
-				if diagonalTry[0] == minimum && diagonalTry[1] == maximum {
-					foundTry = true
-				}
-			}
-
-			if foundTry {
-				continue
-			}
-
-			diagonalTries = append(diagonalTries, []int{minimum, maximum})
-
-			// fmt.Println(minimum, maximum)
-
-			for i := minimum; i <= maximum; i += 1 {
-				plotIndex := (i*(gridSize+1) + i) + 1
-				// fmt.Println("diagonal move", firstCoordinate[0], firstCoordinate[1], "to", secondCoordinate[0], secondCoordinate[1], "plotIndex", plotIndex)
-				if plotIndex >= len(plots) {
-					continue
-				}
-				switch plots[plotIndex] {
-				case STARTING_PLOT:
-					plots[plotIndex] = FIRST_PLOT
-				case FIRST_PLOT:
-					plots[plotIndex] = SECOND_PLOT
-				case SECOND_PLOT:
-					plots[plotIndex] = LOSING_PLOT
-				}
-			}
 		}
 	}
 
@@ -176,7 +177,7 @@ func Part2(input string) int {
 	}
 
 	// for _, orderedPlot := range orderedPlots {
-	// 	fmt.Println(len(orderedPlot), orderedPlot)
+	// fmt.Println(len(orderedPlot), orderedPlot)
 	// }
 
 	return tooManyOverlaps

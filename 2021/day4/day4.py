@@ -125,6 +125,7 @@ def evaluate_board(board: List[str]) -> bool:
     if x_count >= 5:
         rows: List[List[str]] = []
         columns: List[List[str]] = []
+        diagonals: List[List[str]] = []
 
         for i in range(5):
             row: List[str] = []
@@ -136,6 +137,13 @@ def evaluate_board(board: List[str]) -> bool:
 
             rows.append(row)
             columns.append(column)
+
+        for i in range(5):
+            diagonal: List[str] = []
+            for j in range(5):
+                if i == j:
+                    diagonal.append(board[i * 5 + j])
+            diagonals.append(diagonal)
 
         for row in rows:
             x_count_row = row.count("X")

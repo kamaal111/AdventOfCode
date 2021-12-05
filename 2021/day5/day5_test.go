@@ -42,19 +42,19 @@ func TestPart1Example(t *testing.T) {
 	}
 }
 
-// func TestPart2(t *testing.T) {
-// 	input, err := utils.GetInputString(inputPath)
-// 	if err != nil {
-// 		t.Errorf("could not get input: %v", err)
-// 	}
+func TestPart2(t *testing.T) {
+	input, err := utils.GetInputString(inputPath)
+	if err != nil {
+		t.Errorf("could not get input: %v", err)
+	}
 
-// 	got := Part2(input)
-// 	want := 0
+	got := Part2(input)
+	want := 16925
 
-// 	if got != want {
-// 		t.Errorf("got %d, wanted %d", got, want)
-// 	}
-// }
+	if got != want {
+		t.Errorf("got %d, wanted %d", got, want)
+	}
+}
 
 func TestPart2Example(t *testing.T) {
 	got := Part2(exampleInput)

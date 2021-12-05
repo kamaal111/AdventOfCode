@@ -35,7 +35,7 @@ def part2(input: str):
     grid_size += 1
 
     plots: List[str] = []
-    for _ in range((grid_size * grid_size) - 1):
+    for _ in range((grid_size * grid_size)):
         plots.append(STARTING_PLOT)
 
     diagonal_tries: List[List[int]] = []
@@ -78,12 +78,6 @@ def part2(input: str):
                     plots[plot_index] = SECOND_PLOT
 
         else: # diagonal
-            # if first_coordinate[0] > second_coordinate[0]:
-            #     minimum = second_coordinate[0]
-            #     maximum = first_coordinate[0]
-            # else:
-            #     minimum = first_coordinate[0]
-            #     maximum = second_coordinate[0]
             if first_coordinate[0] > second_coordinate[0]:
                 minimum_x = second_coordinate[0]
                 maximum_x = first_coordinate[0]
@@ -98,32 +92,36 @@ def part2(input: str):
                 minimum_y = first_coordinate[1]
                 maximum_y = second_coordinate[1]
 
-            foundTry = False
-            for diagonal_try in diagonal_tries:
-                if diagonal_try[0] == minimum_x and diagonal_try[1] == maximum_x:
-                    foundTry = True
-                if diagonal_try[0] == minimum_y and diagonal_try[1] == maximum_y:
-                    foundTry = True
-
-            if foundTry:
-                continue
-
-            if minimum_x > maximum_x:
-                minimum_x, maximum_x = maximum_x, minimum_x
-
-            if minimum_y > maximum_y:
-                minimum_y, maximum_y = maximum_y, minimum_y
-
             if minimum_x > minimum_y:
+                foundTry = False
+                for diagonal_try in diagonal_tries:
+                    if diagonal_try[0] == minimum_x and diagonal_try[1] == maximum_x:
+                        foundTry = True
+
+                if foundTry:
+                    continue
+
                 diagonal_tries.append([minimum_x, maximum_x])
                 for i in range(minimum_x, maximum_x + 1):
-                    plot_index = (i * grid_size + i) + 1
+                    plot_index = (i * grid_size + i)  + 1
+                    
+                    # if len(plots) <= plot_index:
+                    #     print(f"{plot_index=} {len(plots)=}")
+                    #     continue
 
                     if plots[plot_index] == STARTING_PLOT:
                         plots[plot_index] = FIRST_PLOT
                     elif plots[plot_index] == FIRST_PLOT:
                         plots[plot_index] = SECOND_PLOT
             else:
+                foundTry = False
+                for diagonal_try in diagonal_tries:
+                    if diagonal_try[0] == minimum_y and diagonal_try[1] == maximum_y:
+                        foundTry = True
+
+                if foundTry:
+                    continue
+
                 diagonal_tries.append([minimum_y, maximum_y])
                 for i in range(minimum_y, maximum_y + 1):
                     plot_index = (i * grid_size + i) + 1
