@@ -19,7 +19,7 @@ final class AOCDay6Tests: XCTestCase {
 
     func testDay6Part1Example() throws {
         let result = AOCDay6.part1.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 5934)
     }
 
     func testDay6Part2() throws {

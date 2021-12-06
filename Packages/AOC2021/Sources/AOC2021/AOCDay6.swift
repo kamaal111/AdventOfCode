@@ -22,7 +22,18 @@ struct AOCDay6 {
         fileprivate init() { }
 
         public func execute(with input: String) -> Int {
-            return 0
+            var fishDays = input.split(separator: ",").compactMap({ Int($0) })
+            for _ in 0..<80 {
+                for (fishDayIndex, fishDay) in fishDays.enumerated() {
+                    if fishDay < 1 {
+                        fishDays[fishDayIndex] = 6
+                        fishDays.append(8)
+                    } else {
+                        fishDays[fishDayIndex] -= 1
+                    }
+                }
+            }
+            return fishDays.count // 360219
         }
     }
 
