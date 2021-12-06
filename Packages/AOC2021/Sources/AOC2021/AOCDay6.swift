@@ -21,23 +21,28 @@ struct AOCDay6 {
     public struct Part1 {
         fileprivate init() { }
 
-        public func execute(with input: String) -> Int {
-            var fishDays = input.split(separator: ",").compactMap({ FishLifeForce(days: String($0), isOG: true) })
-            for day in 0..<80 {
+        public func execute(with input: String, days: Int = 80) -> Int {
+            var fishDays = input
+                .split(separator: ",")
+                .compactMap({ FishLifeForce(days: String($0), isOG: true) })
+
+//            print(0, fishDays.count)
+
+            for day in 0..<days {
                 for (fishDayIndex, fishDay) in fishDays.enumerated() {
                     if fishDay.days == 0 {
-                        if let offspring = fishDays[fishDayIndex].makeOffspring() {
-                            fishDays.append(offspring)
-                        }
-                        fishDays[fishDayIndex].reset()
+                        let offspring = fishDays[fishDayIndex].reset()
+                        fishDays.append(offspring)
                     } else {
-                        fishDays[fishDayIndex].days -= 1
+                        fishDays[fishDayIndex].live()
                     }
                 }
-                if (day + 1) == 9 {
-                    print(fishDays.map(\.days))
+
+                if (day + 1) <= days {
+//                    print((day + 1), fishDays.count)
                 }
             }
+
             return fishDays.count
         }
     }
@@ -57,7 +62,7 @@ struct FishLifeForce {
     var createdOffSpring: Bool = false
 
     init?(days: String, isOG: Bool) {
-        guard let daysInt = Int(days) else { return nil }
+        guard let daysInt = Int(days.trimmingByWhitespacesAndNewLines) else { fatalError("unknown day of \(days)") }
         self.init(days: daysInt, isOG: isOG)
     }
 
@@ -66,13 +71,17 @@ struct FishLifeForce {
         self.isOG = isOG
     }
 
+    mutating func live() {
+        days -= 1
+    }
+
     mutating func makeOffspring() -> FishLifeForce? {
         createdOffSpring = true
         return .init(days: 8, isOG: false)
     }
 
-    mutating func reset() {
-        createdOffSpring = false
+    mutating func reset() -> FishLifeForce {
         days = 6
+        return makeOffspring()!
     }
 }
