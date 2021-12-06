@@ -9,8 +9,7 @@ import XCTest
 @testable import AOC2021
 
 final class AOCDay6Tests: XCTestCase {
-    let exampleInput = """
-"""
+    let exampleInput = "3,4,3,1,2"
 
     func testDay6Part1() throws {
         let input = try XCTUnwrap(AOCDay6.input)
