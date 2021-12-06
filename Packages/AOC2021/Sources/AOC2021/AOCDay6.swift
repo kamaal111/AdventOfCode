@@ -38,26 +38,41 @@ struct AOCDay6 {
                 .split(separator: ",")
                 .compactMap({ FishLifeForce(days: String($0), isOG: true) })
 
-            return simulateFishLife(with: fishDays, to: 80)
+            return simulateFishLife(with: fishDays, to: 256)
         }
     }
 }
 
 func simulateFishLife(with initialFishes: [FishLifeForce], to days: Int) -> Int {
-    var fishDays = initialFishes
+    let initialDict: [Int: Int] = (0..<9).reduce([:], {
+        var result = $0
+        result[$1] = 0
+        return result
+    })
+    var fishDaysDict: [Int: Int] = initialFishes.reduce(initialDict, {
+        var initialDict = $0
+        initialDict[$1.days]! += 1
+        return initialDict
+    })
     for _ in 1..<(days + 1) {
-        for (fishDayIndex, fishDay) in fishDays.enumerated() {
-            if fishDay.days == 0 {
-                let offspring = fishDays[fishDayIndex].reset()
-                fishDays.append(offspring)
+        var tempDict: [Int: Int] = [:]
+        var resetedFishes = 0
+        for (key, value) in fishDaysDict.sorted(by: { $0.key > $1.key }) {
+            if key == 0 && value > 0 {
+                tempDict[8] = value
+                resetedFishes = value
             } else {
-                fishDays[fishDayIndex].live()
+                tempDict[key - 1] = value
             }
         }
+        if tempDict[6] != nil {
+            tempDict[6]! += resetedFishes
+        } else {
+            tempDict[6] = resetedFishes
+        }
+        fishDaysDict = tempDict
     }
-    let growth = initialFishes.map({ $0.predictedAmountOfOffsprings(totalDays: days) })
-    print(growth) // 5934
-    return fishDays.count
+    return fishDaysDict.reduce(0, { $0 + $1.value })
 }
 
 struct FishLifeForce {
@@ -73,10 +88,6 @@ struct FishLifeForce {
     init(days: Int, isOG: Bool) {
         self.days = days
         self.isOG = isOG
-    }
-
-    func predictedAmountOfOffsprings(totalDays: Int) -> Double {
-        return pow(Double(days), 7) / Double(totalDays)
     }
 
     mutating func live() {
