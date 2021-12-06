@@ -24,7 +24,7 @@ struct AOCDay6 {
         public func execute(with input: String) -> Int {
             let fishDays = input
                 .split(separator: ",")
-                .compactMap({ FishLifeForce(days: String($0), isOG: true) })
+                .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
             return simulateFishLife(with: fishDays, to: 80)
         }
@@ -36,28 +36,27 @@ struct AOCDay6 {
         public func execute(with input: String) -> Int {
             let fishDays = input
                 .split(separator: ",")
-                .compactMap({ FishLifeForce(days: String($0), isOG: true) })
+                .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
             return simulateFishLife(with: fishDays, to: 256)
         }
     }
 }
 
-func simulateFishLife(with initialFishes: [FishLifeForce], to days: Int) -> Int {
-    let initialDict: [Int: Int] = (0..<9).reduce([:], {
-        var result = $0
-        result[$1] = 0
-        return result
-    })
-    var fishDaysDict: [Int: Int] = initialFishes.reduce(initialDict, {
+func simulateFishLife(with initialFishes: [Int], to days: Int) -> Int {
+    var fishDaysDict: [Int: Int] = initialFishes.reduce([:], {
         var initialDict = $0
-        initialDict[$1.days]! += 1
+        if initialDict[$1] != nil {
+            initialDict[$1]! += 1
+        } else {
+            initialDict[$1] = 1
+        }
         return initialDict
     })
     for _ in 1..<(days + 1) {
         var tempDict: [Int: Int] = [:]
         var resetedFishes = 0
-        for (key, value) in fishDaysDict.sorted(by: { $0.key > $1.key }) {
+        for (key, value) in fishDaysDict {
             if key == 0 && value > 0 {
                 tempDict[8] = value
                 resetedFishes = value
@@ -73,34 +72,4 @@ func simulateFishLife(with initialFishes: [FishLifeForce], to days: Int) -> Int 
         fishDaysDict = tempDict
     }
     return fishDaysDict.reduce(0, { $0 + $1.value })
-}
-
-struct FishLifeForce {
-    var days: Int
-    var isOG: Bool
-    var offspringsMade: Int = 0
-
-    init?(days: String, isOG: Bool) {
-        guard let daysInt = Int(days.trimmingByWhitespacesAndNewLines) else { fatalError("unknown day of \(days)") }
-        self.init(days: daysInt, isOG: isOG)
-    }
-
-    init(days: Int, isOG: Bool) {
-        self.days = days
-        self.isOG = isOG
-    }
-
-    mutating func live() {
-        days -= 1
-    }
-
-    mutating func makeOffspring() -> FishLifeForce? {
-        offspringsMade += 1
-        return .init(days: 8, isOG: false)
-    }
-
-    mutating func reset() -> FishLifeForce {
-        days = 6
-        return makeOffspring()!
-    }
 }
