@@ -14,7 +14,9 @@ final class AOCDay6Tests: XCTestCase {
     func testDay6Part1() throws {
         let input = try XCTUnwrap(AOCDay6.input)
         let result = AOCDay6.part1.execute(with: input)
-        XCTAssertEqual(result, 0)
+        XCTAssertNotEqual(result, 360219)
+        XCTAssertNotEqual(result, 554471)
+//        XCTAssertEqual(result, 0)
     }
 
     func testDay6Part1Example() throws {

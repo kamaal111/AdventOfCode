@@ -22,18 +22,23 @@ struct AOCDay6 {
         fileprivate init() { }
 
         public func execute(with input: String) -> Int {
-            var fishDays = input.split(separator: ",").compactMap({ Int($0) })
-            for _ in 0..<80 {
+            var fishDays = input.split(separator: ",").compactMap({ FishLifeForce(days: String($0), isOG: true) })
+            for day in 0..<80 {
                 for (fishDayIndex, fishDay) in fishDays.enumerated() {
-                    if fishDay < 1 {
-                        fishDays[fishDayIndex] = 6
-                        fishDays.append(8)
+                    if fishDay.days == 0 {
+                        if let offspring = fishDays[fishDayIndex].makeOffspring() {
+                            fishDays.append(offspring)
+                        }
+                        fishDays[fishDayIndex].reset()
                     } else {
-                        fishDays[fishDayIndex] -= 1
+                        fishDays[fishDayIndex].days -= 1
                     }
                 }
+                if (day + 1) == 9 {
+                    print(fishDays.map(\.days))
+                }
             }
-            return fishDays.count // 360219
+            return fishDays.count
         }
     }
 
@@ -43,5 +48,31 @@ struct AOCDay6 {
         public func execute(with input: String) -> Int {
             return 0
         }
+    }
+}
+
+struct FishLifeForce {
+    var days: Int
+    var isOG: Bool
+    var createdOffSpring: Bool = false
+
+    init?(days: String, isOG: Bool) {
+        guard let daysInt = Int(days) else { return nil }
+        self.init(days: daysInt, isOG: isOG)
+    }
+
+    init(days: Int, isOG: Bool) {
+        self.days = days
+        self.isOG = isOG
+    }
+
+    mutating func makeOffspring() -> FishLifeForce? {
+        createdOffSpring = true
+        return .init(days: 8, isOG: false)
+    }
+
+    mutating func reset() {
+        createdOffSpring = false
+        days = 6
     }
 }
