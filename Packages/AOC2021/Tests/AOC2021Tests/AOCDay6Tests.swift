@@ -30,8 +30,8 @@ final class AOCDay6Tests: XCTestCase {
         XCTAssertEqual(result, 0)
     }
 
-    func testDay1Part2Example() throws {
+    func testDay6Part2Example() throws {
         let result = AOCDay6.part2.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 26984457539)
     }
 }
