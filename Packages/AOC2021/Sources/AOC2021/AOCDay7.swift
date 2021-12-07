@@ -27,17 +27,18 @@ struct AOCDay7 {
                 .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
             var leastFuel = Int.max
-            for (_, position) in horizontalPositions.enumerated() {
+            for (offset, _) in horizontalPositions.enumerated() {
+                let index = offset + 1
                 var sum = 0
-                for innerPosition in horizontalPositions {
+                for position in horizontalPositions {
                     let minimum: Int
                     let maximum: Int
-                    if innerPosition > position {
-                        minimum = position
-                        maximum = innerPosition
-                    } else {
-                        minimum = innerPosition
+                    if position > index {
+                        minimum = index
                         maximum = position
+                    } else {
+                        minimum = position
+                        maximum = index
                     }
                     sum += (maximum - minimum)
                 }
@@ -59,19 +60,16 @@ struct AOCDay7 {
                 .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
             var leastFuel = Int.max
-            for (index, position) in horizontalPositions.enumerated() {
+            for (offset, _) in horizontalPositions.enumerated() {
+                let index = offset + 1
                 var sum = 0
-                for innerPosition in horizontalPositions {
-                    let minimum: Int
-                    let maximum: Int
-                    if innerPosition > position {
-                        minimum = position
-                        maximum = innerPosition
-                    } else {
-                        minimum = innerPosition
-                        maximum = position
-                    }
-                    sum += (maximum - minimum)
+                for position in horizontalPositions {
+                    if position == index {
+                       continue
+                   }
+
+                    let difference = abs(index - position)
+                    sum += (difference * (difference + 1)) / 2
                 }
                 if sum < leastFuel {
                     leastFuel = sum
