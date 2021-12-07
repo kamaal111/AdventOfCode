@@ -11,4 +11,8 @@ extension String {
     var splitLines: [String.SubSequence] {
         self.split(separator: "\n")
     }
+
+    var splitCommas: [String.SubSequence] {
+        self.split(separator: ",")
+    }
 }

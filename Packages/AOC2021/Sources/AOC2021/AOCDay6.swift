@@ -23,7 +23,7 @@ struct AOCDay6 {
 
         public func execute(with input: String) -> Int {
             let fishDays = input
-                .split(separator: ",")
+                .splitCommas
                 .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
             return simulateFishLife(with: fishDays, to: 80)
@@ -35,7 +35,7 @@ struct AOCDay6 {
 
         public func execute(with input: String) -> Int {
             let fishDays = input
-                .split(separator: ",")
+                .splitCommas
                 .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
             return simulateFishLife(with: fishDays, to: 256)
