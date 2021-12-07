@@ -26,24 +26,27 @@ struct AOCDay7 {
                 .splitCommas
                 .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
 
-            var queue = Queue<Int>()
-//            while currentIndex < horizontalPositions.count {
-            for position in horizontalPositions {
-                queue.enqueue(position)
-            }
-
-            var values: [Int] = []
-            var currentNode: Node<Int>? = queue.list.head
-            while currentNode != nil {
-                if let value = currentNode?.value {
-                    values.append(value)
-                    currentNode = currentNode?.next
-                } else {
-                    break
+            var leastFuel = Int.max
+            for (_, position) in horizontalPositions.enumerated() {
+                var sum = 0
+                for innerPosition in horizontalPositions {
+                    let minimum: Int
+                    let maximum: Int
+                    if innerPosition > position {
+                        minimum = position
+                        maximum = innerPosition
+                    } else {
+                        minimum = innerPosition
+                        maximum = position
+                    }
+                    sum += (maximum - minimum)
+                }
+                if sum < leastFuel {
+                    leastFuel = sum
                 }
             }
-//            }
-            return 0
+
+            return leastFuel
         }
     }
 
@@ -51,7 +54,31 @@ struct AOCDay7 {
         fileprivate init() { }
 
         public func execute(with input: String) -> Int {
-            return 0
+            let horizontalPositions = input
+                .splitCommas
+                .compactMap({ Int(String($0).trimmingByWhitespacesAndNewLines) })
+
+            var leastFuel = Int.max
+            for (index, position) in horizontalPositions.enumerated() {
+                var sum = 0
+                for innerPosition in horizontalPositions {
+                    let minimum: Int
+                    let maximum: Int
+                    if innerPosition > position {
+                        minimum = position
+                        maximum = innerPosition
+                    } else {
+                        minimum = innerPosition
+                        maximum = position
+                    }
+                    sum += (maximum - minimum)
+                }
+                if sum < leastFuel {
+                    leastFuel = sum
+                }
+            }
+
+            return leastFuel
         }
     }
 }
@@ -170,6 +197,11 @@ struct Queue<T> {
             }
         }
         return values
+    }
+
+    mutating func shiftLeft() {
+        guard let discardedValue = dequeue() else { return }
+        enqueue(discardedValue)
     }
 
     mutating func enqueue(_ element: T) {
