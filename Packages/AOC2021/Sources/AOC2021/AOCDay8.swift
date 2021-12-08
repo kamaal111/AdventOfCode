@@ -21,41 +21,16 @@ struct AOCDay8 {
     public struct Part1 {
         fileprivate init() { }
 
-        /// 1 -> cf
-        /// 4 -> bdf | bcd
-        /// 7 -> acf
-        /// 8 -> abdeg | acdfg | abdfg | acdeg
         public func execute(with input: String) -> Int {
-            let singleMapping: [Int: [String]] = [
-                1: ["cf"],
-                4: [],
-                7: [],
-                8: []
-            ]
-            let combinedMapping: [Int: String] = [
-                1: "cf",
-                4: "bcdf",
-                7: "acf",
-                8: "abcdefg"
-            ]
             var sum = 0
-            for (lineNumber, line) in input.splitLines.enumerated() {
+            for (_, line) in input.splitLines.enumerated() {
                 let splittedLine = line.split(separator: "|")
                 let outputs = splittedLine[1]
                 for output in outputs.split(separator: " ") {
                     let orderedOutput = String(output.sorted())
-                    var broke = false
-                    mappingLoop: for item in combinedMapping {
-                        if item.value.contains(orderedOutput) {
-                            sum += 1
-                            broke = true
-                            print(lineNumber, "found", output)
-//                            break mappingLoop
-                        }
+                    if [2, 3, 4, 7].contains(orderedOutput.count) {
+                        sum += 1
                     }
-//                    if !broke {
-//                        print(lineNumber, "not found", output)
-//                    }
                 }
             }
             return sum
