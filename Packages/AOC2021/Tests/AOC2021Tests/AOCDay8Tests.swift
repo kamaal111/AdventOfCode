@@ -25,7 +25,7 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
     func testDay8Part1() throws {
         let input = try XCTUnwrap(AOCDay8.input)
         let result = AOCDay8.part1.execute(with: input)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 383)
     }
 
     func testDay8Part1Example() throws {
@@ -41,6 +41,6 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 
     func testDay8Part2Example() throws {
         let result = AOCDay8.part2.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 61229)
     }
 }
