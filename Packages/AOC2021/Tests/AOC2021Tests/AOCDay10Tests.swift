@@ -28,18 +28,18 @@ final class AOCDay10Tests: XCTestCase {
         XCTAssertEqual(result, 0)
     }
 
-    func testDay8Part1Example() throws {
+    func testDay10Part1Example() throws {
         let result = AOCDay10.part1.execute(with: exampleInput)
         XCTAssertEqual(result, 26397)
     }
 
-    func testDay8Part2() throws {
+    func testDay10Part2() throws {
         let input = try XCTUnwrap(AOCDay10.input)
         let result = AOCDay10.part2.execute(with: input)
         XCTAssertEqual(result, 0)
     }
 
-    func testDay8Part2Example() throws {
+    func testDay10Part2Example() throws {
         let result = AOCDay10.part2.execute(with: exampleInput)
         XCTAssertEqual(result, 0)
     }
