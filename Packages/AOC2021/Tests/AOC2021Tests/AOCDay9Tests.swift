@@ -9,7 +9,13 @@ import XCTest
 @testable import AOC2021
 
 final class AOCDay9Tests: XCTestCase {
-    let exampleInput = ""
+    let exampleInput = """
+2199943210
+3987894921
+9856789892
+8767896789
+9899965678
+"""
 
     func testDay9Part1() throws {
         let input = try XCTUnwrap(AOCDay9.input)
@@ -19,7 +25,7 @@ final class AOCDay9Tests: XCTestCase {
 
     func testDay8Part1Example() throws {
         let result = AOCDay9.part1.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 15)
     }
 
     func testDay8Part2() throws {

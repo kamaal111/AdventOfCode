@@ -9,7 +9,18 @@ import XCTest
 @testable import AOC2021
 
 final class AOCDay10Tests: XCTestCase {
-    let exampleInput = ""
+    let exampleInput = """
+[({(<(())[]>[[{[]{<()<>>
+[(()[<>])]({[<{<<[]>>(
+{([(<{}[<>[]}>{[]{[(<()>
+(((({<>}<{<{<>}{[]{[]{}
+[[<[([]))<([[{}[[()]]]
+[{[{({}]{}}([{[{{{}}([]
+{<[[]]>}<{[{[{[]{()[[[]
+[<(<(<(<{}))><([]([]()
+<{([([[(<>()){}]>(<<{{
+<{([{{}}[<[[[<>{}]]]>[]]
+"""
 
     func testDay10Part1() throws {
         let input = try XCTUnwrap(AOCDay10.input)
@@ -19,7 +30,7 @@ final class AOCDay10Tests: XCTestCase {
 
     func testDay8Part1Example() throws {
         let result = AOCDay10.part1.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 26397)
     }
 
     func testDay8Part2() throws {
