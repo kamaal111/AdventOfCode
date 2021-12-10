@@ -36,6 +36,6 @@ final class AOCDay9Tests: XCTestCase {
 
     func testDay9Part2Example() throws {
         let result = AOCDay9.part2.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 1134)
     }
 }
