@@ -1,5 +1,5 @@
 //
-//  AOCDay9.swift
+//  AOCDay10.swift
 //  
 //
 //  Created by Kamaal Farah on 10/12/2021.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct AOCDay9 {
+struct AOCDay10 {
     public static let part1 = Part1()
     public static let part2 = Part2()
 
     public static let input: String? = {
-        guard let inputURL = Bundle.module.url(forResource: "day9", withExtension: "txt") else { return nil }
+        guard let inputURL = Bundle.module.url(forResource: "day10", withExtension: "txt") else { return nil }
         return try? String(contentsOf: inputURL, encoding: .utf8)
     }()
 
