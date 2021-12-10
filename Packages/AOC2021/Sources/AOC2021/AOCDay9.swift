@@ -69,115 +69,143 @@ struct AOCDay9 {
             let amountOfNumbersInEachLine = lines.first!.count
             let joinedLines = lines.joined()
             var basins: [EdgeInsets] = []
-            var indicesFound: [Int] = []
 
             for (index, character) in joinedLines.enumerated() {
                 let intCharacter = character.int!
 
-                var lowerThanBottom = true
-                if (index + amountOfNumbersInEachLine) < joinedLines.count {
-                    let bottom = joinedLines[index + amountOfNumbersInEachLine].int!
-                    lowerThanBottom = bottom > intCharacter
+                var shifts = EdgeInsets(all: 0)
+                var lastHighestNumbers = EdgeInsets(all: intCharacter)
+                var lowerEdges = EdgeBools(all: true)
+
+                var bottomChanged = true
+                let bottomAccessIndex = (index + shifts.bottom) + amountOfNumbersInEachLine
+                if bottomAccessIndex < joinedLines.count {
+                    let bottom = joinedLines[bottomAccessIndex].int!
+                    if bottom > lastHighestNumbers.bottom {
+                        lastHighestNumbers.bottom = bottom
+                        shifts.bottom += 1
+                    } else {
+                        bottomChanged = false
+                    }
+                }
+                lowerEdges.bottom = bottomChanged
+
+                var topChanged = true
+                if (index + shifts.top) >= amountOfNumbersInEachLine {
+                    let topIndex = (index + shifts.top) - amountOfNumbersInEachLine
+                    let top = joinedLines[topIndex].int!
+                    if top > lastHighestNumbers.top {
+                        lastHighestNumbers.top = top
+                        shifts.top += 1
+                    } else {
+                        topChanged = false
+                    }
+                }
+                lowerEdges.top = topChanged
+
+                var rightChanged = true
+                if ((index + shifts.right) % amountOfNumbersInEachLine) != (amountOfNumbersInEachLine - 1) {
+                    let rightIndex = index + (1 + shifts.right)
+                    let right = joinedLines[rightIndex].int!
+                    if right > lastHighestNumbers.right {
+                        lastHighestNumbers.right = right
+                        shifts.right += 1
+                    } else {
+                        rightChanged = false
+                    }
+                }
+                lowerEdges.right = rightChanged
+
+                var leftChanged = true
+                if ((index - shifts.left) % amountOfNumbersInEachLine) != 0 {
+                    let leftIndex = index - (1 + shifts.left)
+                    let left = joinedLines[leftIndex].int!
+                    if left > lastHighestNumbers.left {
+                        lastHighestNumbers.left = left
+                        shifts.left += 1
+                    } else {
+                        leftChanged = false
+                    }
+                }
+                lowerEdges.left = leftChanged
+
+                if lowerEdges.someAreFalse {
+                    continue
                 }
 
-                var lowerThanTop = true
-                if index >= amountOfNumbersInEachLine {
-                    let top = joinedLines[index - amountOfNumbersInEachLine].int!
-                    lowerThanTop =  top > intCharacter
-                }
-
-                var lowerThanRight = true
-                if (index % amountOfNumbersInEachLine) != (amountOfNumbersInEachLine - 1) {
-                    let right = joinedLines[index + 1].int!
-                    lowerThanRight = right > intCharacter
-                }
-
-                var lowerThanLeft = true
-                if (index % amountOfNumbersInEachLine) != 0 {
-                    let left = joinedLines[index - 1].int!
-                    lowerThanLeft = left > intCharacter
-                }
-
-                if lowerThanTop && lowerThanRight && lowerThanLeft && lowerThanBottom {
-                    var shifts = EdgeInsets(all: 0)
-                    var lastHighestNumbers = EdgeInsets(all: intCharacter)
-                    var lowerEdges = EdgeBools(all: true)
-
-                    shiftingLoop: while true {
-                        if lowerEdges.bottom {
-                            var bottomChanged = false
-                            let bottomAccessIndex = (index + shifts.bottom) + amountOfNumbersInEachLine
-                            if bottomAccessIndex < joinedLines.count {
-                                let bottom = joinedLines[bottomAccessIndex].int!
-                                if bottom > lastHighestNumbers.bottom && !indicesFound.contains(bottomAccessIndex) {
-//                                    indicesFound.append(bottomAccessIndex)
-                                    lastHighestNumbers.bottom = bottom
-                                    shifts.bottom += 1
-                                    bottomChanged = true
-                                }
+                shiftingLoop: while true {
+                    if lowerEdges.bottom {
+                        var bottomChanged = false
+                        let bottomAccessIndex = (index + shifts.bottom) + amountOfNumbersInEachLine
+                        if bottomAccessIndex < joinedLines.count {
+                            let bottom = joinedLines[bottomAccessIndex].int!
+                            if bottom > lastHighestNumbers.bottom {
+                                lastHighestNumbers.bottom = bottom
+                                shifts.bottom += 1
+                                bottomChanged = true
                             }
-                            lowerEdges.bottom = bottomChanged
                         }
+                        lowerEdges.bottom = bottomChanged
+                    }
 
-                        if lowerEdges.top {
-                            var topChanged = false
-                            if (index + shifts.top) >= amountOfNumbersInEachLine {
-                                let topIndex = (index + shifts.top) - amountOfNumbersInEachLine
-                                let top = joinedLines[topIndex].int!
-                                if top > lastHighestNumbers.top && !indicesFound.contains(topIndex) {
-//                                    indicesFound.append(topIndex)
-                                    lastHighestNumbers.top = top
-                                    shifts.top += 1
-                                    topChanged = true
-                                }
+                    if lowerEdges.top {
+                        var topChanged = false
+                        if (index + shifts.top) >= amountOfNumbersInEachLine {
+                            let topIndex = (index + shifts.top) - amountOfNumbersInEachLine
+                            let top = joinedLines[topIndex].int!
+                            if top > lastHighestNumbers.top {
+                                lastHighestNumbers.top = top
+                                shifts.top += 1
+                                topChanged = true
                             }
-                            lowerEdges.top = topChanged
                         }
+                        lowerEdges.top = topChanged
+                    }
 
-                        if lowerEdges.right {
-                            var rightChanged = false
-                            if ((index + shifts.right) % amountOfNumbersInEachLine) != (amountOfNumbersInEachLine - 1) {
-                                let rightIndex = index + (1 + shifts.right)
-                                let right = joinedLines[rightIndex].int!
-                                if right > lastHighestNumbers.right && !indicesFound.contains(rightIndex) {
-//                                    indicesFound.append(rightIndex)
-                                    lastHighestNumbers.right = right
-                                    shifts.right += 1
-                                    rightChanged = true
-                                }
+                    if lowerEdges.right {
+                        var rightChanged = false
+                        if ((index + shifts.right) % amountOfNumbersInEachLine) != (amountOfNumbersInEachLine - 1) {
+                            let rightIndex = index + (1 + shifts.right)
+                            let right = joinedLines[rightIndex].int!
+                            if right > lastHighestNumbers.right {
+                                lastHighestNumbers.right = right
+                                shifts.right += 1
+                                rightChanged = true
                             }
-                            lowerEdges.right = rightChanged
                         }
+                        lowerEdges.right = rightChanged
+                    }
 
-                        if lowerEdges.left {
-                            var leftChanged = false
-                            if ((index - shifts.left) % amountOfNumbersInEachLine) != 0 {
-                                let leftIndex = index - (1 + shifts.left)
-                                let left = joinedLines[leftIndex].int!
-                                if left > lastHighestNumbers.left && !indicesFound.contains(leftIndex) {
-//                                    indicesFound.append(leftIndex)
-                                    lastHighestNumbers.left = left
-                                    shifts.left += 1
-                                    leftChanged = true
-                                }
+                    if lowerEdges.left {
+                        var leftChanged = false
+                        if ((index - shifts.left) % amountOfNumbersInEachLine) != 0 {
+                            let leftIndex = index - (1 + shifts.left)
+                            let left = joinedLines[leftIndex].int!
+                            if left > lastHighestNumbers.left {
+                                lastHighestNumbers.left = left
+                                shifts.left += 1
+                                leftChanged = true
                             }
-                            lowerEdges.left = leftChanged
                         }
+                        lowerEdges.left = leftChanged
+                    }
 
-                        if lowerEdges.allFalse {
-                            if shifts.sum > 0 {
-                                basins.append(shifts)
-    //                            indicesFound.append(index)
-                            }
-                            break shiftingLoop
+                    if lowerEdges.allFalse {
+                        if shifts.sum > 0 {
+                            basins.append(shifts)
                         }
+                        break shiftingLoop
                     }
                 }
             }
 
-            let sortedBasinSums = basins.map(\.sum).sorted(by: { $0 > $1 })
+            let sortedBasinSums = basins
+                .map(\.sum)
+                .sorted(by: { $0 > $1 })
             print(sortedBasinSums)
-            return sortedBasinSums.prefix(3).reduce(1, { $0 * $1 })
+            return sortedBasinSums
+                .prefix(3)
+                .reduce(1, { $0 * $1 })
         }
     }
 }
@@ -223,6 +251,10 @@ struct EdgeBools {
 
     var allFalse: Bool {
         !top && !right && !bottom && !left
+    }
+
+    var someAreFalse: Bool {
+        !top || !right || !bottom || !left
     }
 }
 
