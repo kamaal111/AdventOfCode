@@ -257,23 +257,3 @@ struct EdgeBools {
         !top || !right || !bottom || !left
     }
 }
-
-extension Character {
-    var string: String {
-        String(self)
-    }
-
-    var int: Int? {
-        string.int
-    }
-}
-
-extension StringProtocol {
-    subscript(offset: Int) -> Character {
-        self[index(startIndex, offsetBy: offset)]
-    }
-
-    var int: Int? {
-        Int(self)
-    }
-}
