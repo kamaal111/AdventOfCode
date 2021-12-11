@@ -8,7 +8,7 @@
 import Foundation
 import ShrimpExtensions
 
-struct AOCDay5 {
+public struct AOCDay5 {
     public static let part1 = Part1()
     public static let part2 = Part2()
 

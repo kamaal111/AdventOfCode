@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AOCDay6 {
+public struct AOCDay6 {
     public static let part1 = Part1()
     public static let part2 = Part2()
 
