@@ -15,7 +15,7 @@ let package = Package(
             targets: ["AOC2021"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/kamaal111/ShrimpExtensions.git", "2.2.0"..<"3.0.0"),
+        .package(url: "https://github.com/kamaal111/ShrimpExtensions.git", "2.8.0"..<"3.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

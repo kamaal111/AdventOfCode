@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C60629C29322499006BA919 /* AOC2022 */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AOC2022; sourceTree = "<group>"; };
 		2CE96757275D080E00481E4C /* AdventOfCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdventOfCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE9675A275D080E00481E4C /* AdventOfCodeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdventOfCodeApp.swift; sourceTree = "<group>"; };
 		2CE9675C275D080E00481E4C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -75,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE9676A275D08A100481E4C /* AOC2021 */,
+				2C60629C29322499006BA919 /* AOC2022 */,
 			);
 			path = Packages;
 			sourceTree = "<group>";
