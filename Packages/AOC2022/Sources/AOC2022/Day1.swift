@@ -20,14 +20,12 @@ extension AOC2022 {
             public static func excecute(with input: String) -> Int {
                 var highestCalories = 0
                 var currentStreak = 0
-                inputHook(with: input, newLine: {
+                inputHook(with: input, newElf: {
                     if currentStreak > highestCalories {
                         highestCalories = currentStreak
                     }
                     currentStreak = 0
-                }, newNumber: { number in
-                    currentStreak += number
-                })
+                }, calories: { currentStreak += $0 })
 
                 if currentStreak != 0 && currentStreak > highestCalories {
                     highestCalories = currentStreak
@@ -43,16 +41,14 @@ extension AOC2022 {
             public static func excecute(with input: String) -> Int {
                 var highestCalories = [0, 0, 0]
                 var currentStreak = 0
-                inputHook(with: input, newLine: {
+                inputHook(with: input, newElf: {
                     if currentStreak > highestCalories[2] {
                         highestCalories = newHighestCalories(
                             previousHighestCalories: highestCalories,
                             currentStreak: currentStreak)
                     }
                     currentStreak = 0
-                }, newNumber: { number in
-                    currentStreak += number
-                })
+                }, calories: { currentStreak += $0 })
 
                 if currentStreak != 0 && currentStreak > highestCalories[2] {
                     highestCalories = newHighestCalories(
@@ -75,13 +71,13 @@ extension AOC2022 {
     }
 }
 
-private func inputHook(with input: String, newLine: () -> Void, newNumber: (Int) -> Void) {
+private func inputHook(with input: String, newElf: () -> Void, calories: (Int) -> Void) {
     for line in input.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline) {
         if line == "" {
-            newLine()
+            newElf()
         } else {
             if let number = Int(line) {
-                newNumber(number)
+                calories(number)
             }
         }
     }
