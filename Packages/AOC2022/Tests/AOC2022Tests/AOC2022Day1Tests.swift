@@ -26,22 +26,22 @@ final class AOC2022Day1Tests: XCTestCase {
 10000
 """
 
-    func testPart1() throws {
+    func testPart1() {
         let result = AOC2022.Day1.Part1.excecute(with: AOC2022.Day1.input)
         XCTAssertEqual(result, 67450)
     }
 
-    func testPart1Example() throws {
+    func testPart1Example() {
         let result = AOC2022.Day1.Part1.excecute(with: exampleInput)
         XCTAssertEqual(result, 24000)
     }
 
-    func testPart2() throws {
+    func testPart2() {
         let result = AOC2022.Day1.Part2.excecute(with: AOC2022.Day1.input)
         XCTAssertEqual(result, 199357)
     }
 
-    func testPart2Example() throws {
+    func testPart2Example() {
         let result = AOC2022.Day1.Part2.excecute(with: exampleInput)
         XCTAssertEqual(result, 45000)
     }

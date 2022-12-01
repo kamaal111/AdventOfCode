@@ -44,7 +44,7 @@ extension AOC2022 {
                 var highestCalories = [0, 0, 0]
                 var currentStreak = 0
                 inputHook(with: input, newLine: {
-                    if currentStreak > highestCalories[0] {
+                    if currentStreak > highestCalories[2] {
                         highestCalories = newHighestCalories(
                             previousHighestCalories: highestCalories,
                             currentStreak: currentStreak)
@@ -54,7 +54,7 @@ extension AOC2022 {
                     currentStreak += number
                 })
 
-                if currentStreak != 0 && currentStreak > highestCalories[0] {
+                if currentStreak != 0 && currentStreak > highestCalories[2] {
                     highestCalories = newHighestCalories(
                         previousHighestCalories: highestCalories,
                         currentStreak: currentStreak)
@@ -66,8 +66,8 @@ extension AOC2022 {
             private static func newHighestCalories(previousHighestCalories: [Int], currentStreak: Int) -> [Int] {
                 var orderedHighestCalories = previousHighestCalories
                     .appended(currentStreak)
-                    .sorted(by: { $0 < $1 })
-                orderedHighestCalories.remove(at: 0)
+                    .sorted(by: { $0 > $1 })
+                _ = orderedHighestCalories.popLast()
 
                 return orderedHighestCalories
             }
