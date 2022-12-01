@@ -25,9 +25,7 @@ extension AOC2022 {
                         highestCalories = currentStreak
                     }
                     currentStreak = 0
-                }, calories: { number in
-                    currentStreak += number
-                })
+                }, calories: { currentStreak += $0 })
 
                 if currentStreak != 0 && currentStreak > highestCalories {
                     highestCalories = currentStreak
@@ -50,9 +48,7 @@ extension AOC2022 {
                             currentStreak: currentStreak)
                     }
                     currentStreak = 0
-                }, calories: { number in
-                    currentStreak += number
-                })
+                }, calories: { currentStreak += $0 })
 
                 if currentStreak != 0 && currentStreak > highestCalories[0] {
                     highestCalories = newHighestCalories(
