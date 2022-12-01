@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ShrimpExtensions
 
 extension AOC2022 {
     public struct Day1: DayScaffold {
@@ -17,7 +18,22 @@ extension AOC2022 {
             private init() { }
 
             public static func excecute(with input: String) -> Int {
-                0
+                var highestCalories = 0
+                var currentStreak = 0
+                inputHook(with: input, newLine: {
+                    if currentStreak > highestCalories {
+                        highestCalories = currentStreak
+                    }
+                    currentStreak = 0
+                }, newNumber: { number in
+                    currentStreak += number
+                })
+
+                if currentStreak != 0 && currentStreak > highestCalories {
+                    highestCalories = currentStreak
+                }
+
+                return highestCalories
             }
         }
 
@@ -25,7 +41,47 @@ extension AOC2022 {
             private init() { }
 
             public static func excecute(with input: String) -> Int {
-                0
+                var highestCalories = [0, 0, 0]
+                var currentStreak = 0
+                inputHook(with: input, newLine: {
+                    if currentStreak > highestCalories[0] {
+                        highestCalories = newHighestCalories(
+                            previousHighestCalories: highestCalories,
+                            currentStreak: currentStreak)
+                    }
+                    currentStreak = 0
+                }, newNumber: { number in
+                    currentStreak += number
+                })
+
+                if currentStreak != 0 && currentStreak > highestCalories[0] {
+                    highestCalories = newHighestCalories(
+                        previousHighestCalories: highestCalories,
+                        currentStreak: currentStreak)
+                }
+
+                return highestCalories.reduce(0, { $0 + $1 })
+            }
+
+            private static func newHighestCalories(previousHighestCalories: [Int], currentStreak: Int) -> [Int] {
+                var orderedHighestCalories = previousHighestCalories
+                    .appended(currentStreak)
+                    .sorted(by: { $0 < $1 })
+                orderedHighestCalories.remove(at: 0)
+
+                return orderedHighestCalories
+            }
+        }
+    }
+}
+
+private func inputHook(with input: String, newLine: () -> Void, newNumber: (Int) -> Void) {
+    for line in input.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline) {
+        if line == "" {
+            newLine()
+        } else {
+            if let number = Int(line) {
+                newNumber(number)
             }
         }
     }

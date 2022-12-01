@@ -14,11 +14,15 @@ let package = Package(
             name: "AOC2022",
             targets: ["AOC2022"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/kamaal111/ShrimpExtensions.git", "2.8.0"..<"3.0.0"),
+    ],
     targets: [
         .target(
             name: "AOC2022",
-            dependencies: [],
+            dependencies: [
+                "ShrimpExtensions",
+            ],
             resources: [.process("Inputs")]),
         .testTarget(
             name: "AOC2022Tests",
