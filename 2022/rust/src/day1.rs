@@ -48,12 +48,12 @@ fn part2(input: String) -> i32 {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+
     const FILE_PATH: &'static str = "../../Packages/AOC2022/Sources/AOC2022/Inputs/day1.txt";
 
     #[test]
     fn part1_works() {
-        use std::fs;
-
         let input = fs::read_to_string(FILE_PATH).expect("Could not read file");
         let result = super::part1(input);
         assert_eq!(result, 67450);
@@ -61,8 +61,6 @@ mod tests {
 
     #[test]
     fn part2_works() {
-        use std::fs;
-
         let input = fs::read_to_string(FILE_PATH).expect("Could not read file");
         let result = super::part2(input);
         assert_eq!(result, 199357);
