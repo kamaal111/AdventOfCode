@@ -15,14 +15,10 @@ private let OPPONENT_STRATEGY: [String: ShapePlay] = [
 ]
 
 extension AOC2022 {
-    public struct Day2: DayScaffold {
+    public enum Day2: DayScaffold {
         public static let resourceName = "day2"
 
-        private init() { }
-
-        public struct Part1 {
-            private init() { }
-
+        public enum Part1 {
             public static func excecute(with input: String) -> Int {
                 let myStrategy: [String: ShapePlay] = [
                     "X": .rock,
@@ -43,9 +39,7 @@ extension AOC2022 {
             }
         }
 
-        public struct Part2 {
-            private init() { }
-
+        public enum Part2 {
             public static func excecute(with input: String) -> Int {
                 let myStrategy: [String: PlayDecision] = [
                     "X": .lose,
@@ -114,8 +108,6 @@ private enum ShapePlay: Int {
     }
 
     func scoreAgainstOpponent(_ opponent: ShapePlay) -> Int {
-        let ownScore = score
-
         let decision: PlayDecision
         if self == opponent {
             decision = .draw
@@ -148,6 +140,6 @@ private enum ShapePlay: Int {
             }
         }
 
-        return ownScore + decision.score
+        return score + decision.score
     }
 }

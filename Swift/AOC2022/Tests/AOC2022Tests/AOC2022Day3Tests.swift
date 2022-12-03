@@ -18,23 +18,25 @@ ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw
 """
 
+    let input = AOC2022.Day3.input
+
     func testPart1() {
-        let result = AOC2022.Day3.Part1.excecute(with: AOC2022.Day3.input)
+        let result = AOC2022.Day3.Part1.execute(with: input)
         XCTAssertEqual(result, 8243)
     }
 
     func testPart1Example() {
-        let result = AOC2022.Day3.Part1.excecute(with: exampleInput)
+        let result = AOC2022.Day3.Part1.execute(with: exampleInput)
         XCTAssertEqual(result, 157)
     }
 
     func testPart2() {
-        let result = AOC2022.Day3.Part2.excecute(with: AOC2022.Day3.input)
+        let result = AOC2022.Day3.Part2.execute(with: input)
         XCTAssertEqual(result, 2631)
     }
 
     func testPart2Example() {
-        let result = AOC2022.Day3.Part2.excecute(with: exampleInput)
+        let result = AOC2022.Day3.Part2.execute(with: exampleInput)
         XCTAssertEqual(result, 70)
     }
 }

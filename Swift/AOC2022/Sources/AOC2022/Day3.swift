@@ -9,15 +9,11 @@ import Foundation
 import ShrimpExtensions
 
 extension AOC2022 {
-    public struct Day3: DayScaffold {
+    public enum Day3: DayScaffold {
         public static let resourceName = "day3"
 
-        private init() { }
-
-        public struct Part1 {
-            private init() { }
-
-            public static func excecute(with input: String) -> Int {
+        public enum Part1 {
+            public static func execute(with input: String) -> Int {
                 var priorities = 0
                 for line in input.splitLines {
                     let halfRucksackIndex = line.index(line.startIndex, offsetBy: line.count / 2)
@@ -30,10 +26,11 @@ extension AOC2022 {
                     let rightRucksackCompartmentGroupedByPriority = Dictionary(
                         grouping: rightRucksackCompartment,
                         by: characterToPriority)
-                    for (leftPriority, _) in leftRucksackCompartmentGroupedByPriority
-                    where rightRucksackCompartmentGroupedByPriority[leftPriority] != nil {
-                        priorities += leftPriority
-                        break
+                    for (leftPriority, _) in leftRucksackCompartmentGroupedByPriority {
+                        if rightRucksackCompartmentGroupedByPriority[leftPriority] != nil {
+                            priorities += leftPriority
+                            break
+                        }
                     }
                 }
 
@@ -41,24 +38,23 @@ extension AOC2022 {
             }
         }
 
-        public struct Part2 {
-            private init() { }
-
-            public static func excecute(with input: String) -> Int {
+        public enum Part2 {
+            public static func execute(with input: String) -> Int {
                 var priorities = 0
 
                 var group: [String.SubSequence] = []
                 for (index, line) in input.splitLines.enumerated() {
                     if ((index + 1) % 3) == 0 {
-                        let group1GroupedByPriority = Dictionary(grouping: line, by: characterToPriority)
-                        let group2GroupedByPriority = Dictionary(grouping: group[0], by: characterToPriority)
-                        let group3GroupedByPriority = Dictionary(grouping: group[1], by: characterToPriority)
+                        let rucksack1GroupedByPriority = Dictionary(grouping: line, by: characterToPriority)
+                        let rucksack2GroupedByPriority = Dictionary(grouping: group[0], by: characterToPriority)
+                        let rucksack3GroupedByPriority = Dictionary(grouping: group[1], by: characterToPriority)
 
-                        for (group1Priority, _) in group1GroupedByPriority
-                        where group2GroupedByPriority[group1Priority] != nil &&
-                        group3GroupedByPriority[group1Priority] != nil {
-                            priorities += group1Priority
-                            break
+                        for (rucksack1Priority, _) in rucksack1GroupedByPriority {
+                            if rucksack2GroupedByPriority[rucksack1Priority] != nil &&
+                                rucksack3GroupedByPriority[rucksack1Priority] != nil {
+                                priorities += rucksack1Priority
+                                break
+                            }
                         }
 
                         group = []

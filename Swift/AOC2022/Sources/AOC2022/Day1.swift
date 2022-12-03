@@ -9,14 +9,10 @@ import Foundation
 import ShrimpExtensions
 
 extension AOC2022 {
-    public struct Day1: DayScaffold {
+    public enum Day1: DayScaffold {
         public static let resourceName = "day1"
 
-        private init() { }
-
-        public struct Part1 {
-            private init() { }
-
+        public enum Part1 {
             public static func excecute(with input: String) -> Int {
                 var highestCalories = 0
                 var currentStreak = 0
@@ -35,9 +31,7 @@ extension AOC2022 {
             }
         }
 
-        public struct Part2 {
-            private init() { }
-
+        public enum Part2 {
             public static func excecute(with input: String) -> Int {
                 var highestCalories = [0, 0, 0]
                 var currentStreak = 0
