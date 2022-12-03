@@ -142,7 +142,7 @@ impl ShapePlay {
 mod tests {
     use std::fs;
 
-    const FILE_PATH: &'static str = "../../Packages/AOC2022/Sources/AOC2022/Inputs/day2.txt";
+    const FILE_PATH: &'static str = "../../Swift/AOC2022/Sources/AOC2022/Inputs/day2.txt";
 
     #[test]
     fn part1_works() {

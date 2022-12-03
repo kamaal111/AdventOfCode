@@ -16,14 +16,12 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/kamaal111/ShrimpExtensions.git", "2.8.0"..<"3.0.0"),
-        .package(url: "https://github.com/kamaal111/SalmonUI.git", "5.1.0"..<"6.0.0"),
     ],
     targets: [
         .target(
             name: "AOC2022",
             dependencies: [
                 "ShrimpExtensions",
-                "SalmonUI",
             ],
             resources: [.process("Inputs")]),
         .testTarget(

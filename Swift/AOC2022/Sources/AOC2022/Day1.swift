@@ -5,7 +5,7 @@
 //  Created by Kamaal M Farah on 26/11/2022.
 //
 
-import SwiftUI
+import Foundation
 import ShrimpExtensions
 
 extension AOC2022 {
@@ -66,19 +66,6 @@ extension AOC2022 {
                 _ = orderedHighestCalories.popLast()
 
                 return orderedHighestCalories
-            }
-        }
-
-        public struct Screen: View {
-            private let day = AOC2022.Days.day1
-
-            public init() { }
-
-            public var body: some View {
-                VStack {
-                    Text("Day 1")
-                }
-                .navigationTitle(Text(day.title))
             }
         }
     }
