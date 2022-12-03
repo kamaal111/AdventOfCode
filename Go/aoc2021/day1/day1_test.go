@@ -1,19 +1,23 @@
-package day2
+package day1
 
 import (
 	"testing"
 
-	"github.com/kamaal111/AdventOfCode/2021/utils"
+	"github.com/kamaal111/AdventOfCode/aoc2021/utils"
 )
 
-const inputPath = "input.txt"
+const inputPath = "../../../Swift/AOC2021/Sources/AOC2021/Inputs/day1.txt"
 
-const exampleInput = `forward 5
-down 5
-forward 8
-up 3
-down 8
-forward 2`
+const exampleInput = `199
+200
+208
+210
+200
+207
+240
+269
+260
+263`
 
 func TestPart1(t *testing.T) {
 	input, err := utils.GetInputString(inputPath)
@@ -22,7 +26,7 @@ func TestPart1(t *testing.T) {
 	}
 
 	got := Part1(input)
-	want := 2272262
+	want := 1374
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
@@ -31,7 +35,7 @@ func TestPart1(t *testing.T) {
 
 func TestPart1Example(t *testing.T) {
 	got := Part1(exampleInput)
-	want := 150
+	want := 7
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
@@ -45,7 +49,7 @@ func TestPart2(t *testing.T) {
 	}
 
 	got := Part2(input)
-	want := 2134882034
+	want := 1418
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
@@ -54,7 +58,7 @@ func TestPart2(t *testing.T) {
 
 func TestPart2Example(t *testing.T) {
 	got := Part2(exampleInput)
-	want := 900
+	want := 5
 
 	if got != want {
 		t.Errorf("got %d, wanted %d", got, want)
