@@ -10,7 +10,7 @@ import ShrimpExtensions
 
 extension AOC2022 {
     public enum Day4: DayScaffold {
-        public static let resourceName = "day3"
+        public static let resourceName = "day4"
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
