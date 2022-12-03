@@ -38,5 +38,3 @@ CrZsJsPPZsGzwwsLwLmpwMDw
         XCTAssertEqual(result, 70)
     }
 }
-
-
