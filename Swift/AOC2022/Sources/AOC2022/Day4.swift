@@ -15,10 +15,10 @@ extension AOC2022 {
         public enum Part1 {
             public static func execute(with input: String) -> Int {
                 amountOfOverlappingSchedules(input, where: { firstSchedule, secondSchedule in
-                    firstSchedule.contains(secondSchedule.lowerBound) &&
-                    firstSchedule.contains(secondSchedule.upperBound) ||
-                    secondSchedule.contains(firstSchedule.lowerBound) &&
-                    secondSchedule.contains(firstSchedule.upperBound)
+                    (firstSchedule.contains(secondSchedule.lowerBound) &&
+                    firstSchedule.contains(secondSchedule.upperBound)) ||
+                    (secondSchedule.contains(firstSchedule.lowerBound) &&
+                    secondSchedule.contains(firstSchedule.upperBound))
                 })
             }
         }
@@ -26,10 +26,10 @@ extension AOC2022 {
         public enum Part2 {
             public static func execute(with input: String) -> Int {
                 amountOfOverlappingSchedules(input, where: { firstSchedule, secondSchedule in
-                    firstSchedule.contains(secondSchedule.lowerBound) ||
-                    firstSchedule.contains(secondSchedule.upperBound) ||
-                    secondSchedule.contains(firstSchedule.lowerBound) ||
-                    secondSchedule.contains(firstSchedule.upperBound)
+                    (firstSchedule.contains(secondSchedule.lowerBound) ||
+                    firstSchedule.contains(secondSchedule.upperBound)) ||
+                    (secondSchedule.contains(firstSchedule.lowerBound) ||
+                    secondSchedule.contains(firstSchedule.upperBound))
                 })
             }
         }
