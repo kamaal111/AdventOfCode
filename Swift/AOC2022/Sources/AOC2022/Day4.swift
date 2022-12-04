@@ -14,46 +14,50 @@ extension AOC2022 {
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
-                var foundFullyOverlappingSchedules = 0
-                for schedulePairs in input.splitLines {
-                    let (firstSchedule, secondSchedule) = parseSchedulePairs(schedulePairs)
-                    if firstSchedule.contains(secondSchedule.lowerBound) &&
-                        firstSchedule.contains(secondSchedule.upperBound) {
-                        foundFullyOverlappingSchedules += 1
-                    } else if secondSchedule.contains(firstSchedule.lowerBound) &&
-                                secondSchedule.contains(firstSchedule.upperBound) {
-                        foundFullyOverlappingSchedules += 1
-                    }
-                }
-
-                return foundFullyOverlappingSchedules
+                amountOfOverlappingSchedules(input, where: { firstSchedule, secondSchedule in
+                    firstSchedule.contains(secondSchedule.lowerBound) &&
+                    firstSchedule.contains(secondSchedule.upperBound) ||
+                    secondSchedule.contains(firstSchedule.lowerBound) &&
+                    secondSchedule.contains(firstSchedule.upperBound)
+                })
             }
         }
 
         public enum Part2 {
             public static func execute(with input: String) -> Int {
-                var foundFullyOverlappingSchedules = 0
-                for schedulePairs in input.splitLines {
-                    let (firstSchedule, secondSchedule) = parseSchedulePairs(schedulePairs)
-                    if firstSchedule.contains(secondSchedule.lowerBound) ||
-                        firstSchedule.contains(secondSchedule.upperBound) {
-                        foundFullyOverlappingSchedules += 1
-                    } else if secondSchedule.contains(firstSchedule.lowerBound) ||
-                                secondSchedule.contains(firstSchedule.upperBound) {
-                        foundFullyOverlappingSchedules += 1
-                    }
-                }
-
-                return foundFullyOverlappingSchedules
+                amountOfOverlappingSchedules(input, where: { firstSchedule, secondSchedule in
+                    firstSchedule.contains(secondSchedule.lowerBound) ||
+                    firstSchedule.contains(secondSchedule.upperBound) ||
+                    secondSchedule.contains(firstSchedule.lowerBound) ||
+                    secondSchedule.contains(firstSchedule.upperBound)
+                })
             }
         }
     }
 }
 
+private func amountOfOverlappingSchedules(
+    _ input: String,
+    where predicate: (ClosedRange<Int>, ClosedRange<Int>) -> Bool) -> Int {
+        var overlappingSchedules = 0
+        for schedulePairs in input.splitLines {
+            let (firstSchedule, secondSchedule) = parseSchedulePairs(schedulePairs)
+            if predicate(firstSchedule, secondSchedule) {
+                overlappingSchedules += 1
+            }
+        }
+
+        return overlappingSchedules
+}
+
 private func parseSchedulePairs(_ rawSchedulePairs: String.SubSequence) -> (ClosedRange<Int>, ClosedRange<Int>) {
     let schedules = rawSchedulePairs.split(separator: ",")
-    let firstSchedule = schedules[0].split(separator: "-").map({ Int($0)! })
-    let secondSchedule = schedules[1].split(separator: "-").map({ Int($0)! })
 
-    return (firstSchedule[0]...firstSchedule[1], secondSchedule[0]...secondSchedule[1])
+    return (parseSchedule(schedules[0]), parseSchedule(schedules[1]))
+}
+
+private func parseSchedule(_ rawSchedule: String.SubSequence) -> ClosedRange<Int> {
+    let schedule = rawSchedule.split(separator: "-").map({ Int($0)! })
+
+    return schedule[0]...schedule[1]
 }
