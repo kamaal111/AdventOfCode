@@ -16,12 +16,18 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/kamaal111/ShrimpExtensions.git", "2.8.0"..<"3.0.0"),
+        .package(url: "https://github.com/apple/swift-collections.git", "1.0.3"..<"2.0.0"),
+        .package(url: "https://github.com/apple/swift-algorithms", "1.0.0"..<"2.0.0"),
+        .package(url: "https://github.com/apple/swift-numerics", "1.0.0"..<"2.0.0"),
     ],
     targets: [
         .target(
             name: "AOC2022",
             dependencies: [
                 "ShrimpExtensions",
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "Algorithms", package: "swift-algorithms"),
+                .product(name: "Numerics", package: "swift-numerics"),
             ],
             resources: [.process("Inputs")]),
         .testTarget(
