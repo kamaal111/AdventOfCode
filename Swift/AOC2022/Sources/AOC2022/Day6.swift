@@ -43,9 +43,3 @@ private func getMessageMarker(from input: String, startMarker: Int) -> Int {
 
     return .max
 }
-
-extension String {
-    func range(from start: Int, to end: Int? = nil) -> Substring {
-        self[self.index(self.startIndex, offsetBy: start)..<self.index(self.startIndex, offsetBy: end ?? count)]
-    }
-}
