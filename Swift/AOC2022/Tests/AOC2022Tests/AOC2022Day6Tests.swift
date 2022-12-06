@@ -9,28 +9,39 @@ import XCTest
 @testable import AOC2022
 
 final class AOC2022Day6Tests: XCTestCase {
-    let exampleInput = """
-"""
+    let exampleInput = [
+        "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
+        "bvwbjplbgvbhsrlpgdmjqwftvncz",
+        "nppdvjthqldpwncqszvftbrmjlhg",
+        "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg",
+        "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"
+    ]
 
     let input = AOC2022.Day6.input
 
     func testPart1() {
         let result = AOC2022.Day6.Part1.execute(with: input)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 1647)
     }
 
     func testPart1Example() {
-        let result = AOC2022.Day6.Part1.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        let results = [7, 5, 6, 10, 11]
+        for (index, input) in exampleInput.enumerated() {
+            let result = AOC2022.Day6.Part1.execute(with: input)
+            XCTAssertEqual(result, results[index])
+        }
     }
 
     func testPart2() {
         let result = AOC2022.Day6.Part2.execute(with: input)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 2447)
     }
 
     func testPart2Example() {
-        let result = AOC2022.Day6.Part2.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        let results = [19, 23, 23, 29, 26]
+        for (index, input) in exampleInput.enumerated() {
+            let result = AOC2022.Day6.Part2.execute(with: input)
+            XCTAssertEqual(result, results[index])
+        }
     }
 }
