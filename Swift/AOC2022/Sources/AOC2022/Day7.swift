@@ -28,6 +28,7 @@ extension AOC2022 {
         public enum Part2 {
             public static func execute(with input: String) -> Int {
                 let directory = makeDirectory(input)
+
                 let spaceUsed = directory.fileSizes
                 let unusedSpace = AVAILABLE_DISK_SIZE - spaceUsed
                 let directoriesToDelete = getDirectoriesToDelete(directory, acceptedFileSize: NEEDED_UNUSED_SPACE - unusedSpace)
@@ -117,15 +118,27 @@ private func getAcceptedFileSizes(_ directory: Directory) -> Int {
     return acceptedFileSizes
 }
 
-private struct FileInfo {
+private struct FileInfo: CustomStringConvertible {
     let size: Int
     let name: String
+    fileprivate var depth: Int?
+
+    // - MARK: CustomStringConvertible
+
+    var description: String {
+        "- \(name) (file, size=\(size))"
+    }
+
+    fileprivate func setDepth(_ depth: Int) -> FileInfo {
+        FileInfo(size: size, name: name, depth: depth)
+    }
 }
 
-private class Directory {
+private class Directory: CustomStringConvertible {
     let name: String
     private(set) var files: [FileInfo]
     private(set) var directories: [Directory]
+    private var depth: Int?
 
     init(name: String, files: [FileInfo] = [], directories: [Directory] = []) {
         self.name = name
@@ -145,5 +158,35 @@ private class Directory {
 
     func addFile(_ file: FileInfo) {
         files = files.appended(file)
+    }
+
+    // - MARK: CustomStringConvertible
+
+    var description: String {
+        let directoryWithDepth = setDepth()
+        var representation = "- \(name) (dir)"
+        for directory in directoryWithDepth.directories {
+            let spaces = (0..<directory.depth!).map({ _ in "  " }).joined()
+            representation += "\n\(spaces)\(directory.description)"
+        }
+        for file in directoryWithDepth.files {
+            let spaces = (0..<file.depth!).map({ _ in "  " }).joined()
+            representation += "\n\(spaces)\(file.description)"
+        }
+        return representation
+    }
+
+    @discardableResult
+    private func setDepth(depth: Int = 0) -> Directory {
+        if self.depth != nil {
+            return self
+        }
+
+        files = files.map({ $0.setDepth(depth + 1) })
+        self.depth = depth
+        for directory in directories {
+            directory.setDepth(depth: depth + 1)
+        }
+        return self
     }
 }
