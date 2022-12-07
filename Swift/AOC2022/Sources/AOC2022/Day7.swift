@@ -32,9 +32,13 @@ extension AOC2022 {
                 let unusedSpace = AVAILABLE_DISK_SIZE - spaceUsed
                 let directoriesToDelete = getDirectoriesToDelete(directory, acceptedFileSize: NEEDED_UNUSED_SPACE - unusedSpace)
                 return directoriesToDelete
-                    .sorted(by: { $0.fileSizes < $1.fileSizes })
-                    .first?
-                    .fileSizes ?? 0
+                    .reduce(Int.max, {
+                        if $1.fileSizes < $0 {
+                            return $1.fileSizes
+                        }
+
+                        return $0
+                    })
             }
         }
     }
@@ -43,7 +47,7 @@ extension AOC2022 {
 private func makeDirectory(_ input: String) -> Directory {
     var listingInDirectory = false
     var path: [String] = []
-    let pathTree = Directory(name: "/", files: [], directories: [])
+    let pathTree = Directory(name: "/")
 
     for line in input.splitLines {
         if line.hasPrefix("$ cd") {
@@ -70,11 +74,10 @@ private func makeDirectory(_ input: String) -> Directory {
             var newPath = pathTree
             for pathComponent in path {
                 if newPath.directories.find(by: \.name, is: pathComponent) == nil {
-                    newPath.addDirectory(Directory(name: pathComponent, files: [], directories: []))
+                    newPath.addDirectory(Directory(name: pathComponent))
                 }
-                if let createdPath = newPath.directories.find(by: \.name, is: pathComponent) {
-                    newPath = createdPath
-                }
+                let createdPath = newPath.directories.find(by: \.name, is: pathComponent)!
+                newPath = createdPath
             }
             if newPath.files.find(by: \.name, is: filename) == nil {
                 newPath.addFile(FileInfo(size: fileSize, name: filename))
@@ -124,7 +127,7 @@ private class Directory {
     private(set) var files: [FileInfo]
     private(set) var directories: [Directory]
 
-    init(name: String, files: [FileInfo], directories: [Directory]) {
+    init(name: String, files: [FileInfo] = [], directories: [Directory] = []) {
         self.name = name
         self.files = files
         self.directories = directories
@@ -134,14 +137,6 @@ private class Directory {
         let currentDirectoryFileSizes = files.reduce(0, { $0 + $1.size })
         let directoriesFileSizes = directories.reduce(0, { $0 + $1.fileSizes })
         return currentDirectoryFileSizes + directoriesFileSizes
-    }
-
-    private func flatten(_ previous: [Directory]) -> [Directory] {
-        if previous.isEmpty {
-            return previous
-        }
-
-        return previous.flatMap(\.directories)
     }
 
     func addDirectory(_ directory: Directory) {
