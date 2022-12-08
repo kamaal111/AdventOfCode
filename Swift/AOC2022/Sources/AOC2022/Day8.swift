@@ -80,7 +80,7 @@ extension AOC2022 {
                             continue
                         }
 
-                        let edges = Edges(top: top, right: right, bottom: bottom, left: left)
+                        let edges = Edges(top: top, left: left, right: right, bottom: bottom)
                         let sidesShorter = edges.sidesShorter(than: treeHeight)
 
                         if sidesShorter > 0 {
@@ -99,82 +99,76 @@ extension AOC2022 {
                 let rowLength = rows[0].count
                 let columnLength = rows.count
 
-                var visibleTrees = 0
+                var highestScenicScore = 0
                 for (rowIndex, row) in rows.enumerated() {
                     for (columnIndex, column) in row.enumerated() {
                         let treeHeight = column.int!
 
                         var right = 0
                         if columnIndex < columnLength - 1 {
-                            var tallestTree = 0
+                            var visibleTrees = 0
                             for nextTree in row.range(from: columnIndex + 1) {
+                                visibleTrees += 1
                                 let nextTreeHeight = nextTree.int!
-                                if nextTreeHeight > tallestTree {
-                                    tallestTree = nextTreeHeight
+                                if nextTreeHeight >= treeHeight {
+                                    break
                                 }
                             }
-                            right = tallestTree
-//                            right = row[columnIndex + 1].int!
+                            right = visibleTrees
                         }  else {
-                            visibleTrees += 1
                             continue
                         }
                         var left = 0
                         if columnIndex > 0 {
-                            var tallestTree = 0
-                            for nextTree in row.range(from: 0, to: columnIndex) {
+                            var visibleTrees = 0
+                            for nextTree in row.range(from: 0, to: columnIndex).reversed() {
+                                visibleTrees += 1
                                 let nextTreeHeight = nextTree.int!
-                                if nextTreeHeight > tallestTree {
-                                    tallestTree = nextTreeHeight
+                                if nextTreeHeight >= treeHeight {
+                                    break
                                 }
                             }
-                            left = tallestTree
-//                            left = row[columnIndex - 1].int!
+                            left = visibleTrees
                         } else {
-                            visibleTrees += 1
                             continue
                         }
                         var top = 0
                         if rowIndex > 0 {
-                            var tallestTree = 0
-                            for i in 0...(rowIndex - 1) {
+                            var visibleTrees = 0
+                            for i in (0...(rowIndex - 1)).reversed() {
+                                visibleTrees += 1
                                 let nextTreeHeight = rows[i][columnIndex].int!
-                                if nextTreeHeight > tallestTree {
-                                    tallestTree = nextTreeHeight
+                                if nextTreeHeight >= treeHeight {
+                                    break
                                 }
                             }
-                            top = tallestTree
-//                            top = rows[rowIndex - 1][columnIndex].int!
+                            top = visibleTrees
                         } else {
-                            visibleTrees += 1
                             continue
                         }
                         var bottom = 0
                         if rowIndex < rowLength - 1 {
-                            var tallestTree = 0
+                            var visibleTrees = 0
                             for i in ((rowIndex + 1)..<rowLength) {
+                                visibleTrees += 1
                                 let nextTreeHeight = rows[i][columnIndex].int!
-                                if nextTreeHeight > tallestTree {
-                                    tallestTree = nextTreeHeight
+                                if nextTreeHeight >= treeHeight {
+                                    break
                                 }
                             }
-                            bottom = tallestTree
-//                            bottom = rows[rowIndex  + 1][columnIndex].int!
+                            bottom = visibleTrees
                         } else {
-                            visibleTrees += 1
                             continue
                         }
 
-                        let edges = Edges(top: top, right: right, bottom: bottom, left: left)
-                        let sidesShorter = edges.sidesShorter(than: treeHeight)
-
-                        if sidesShorter > 0 {
-                            visibleTrees += 1
+                        let edges = Edges(top: top, left: left, right: right, bottom: bottom)
+                        if edges.scenicScore > highestScenicScore {
+                            highestScenicScore = edges.scenicScore
                         }
                     }
                 }
 
-                return visibleTrees
+                return highestScenicScore
             }
         }
     }
@@ -182,12 +176,16 @@ extension AOC2022 {
 
 struct Edges {
     let top: Int
+    let left: Int
     let right: Int
     let bottom: Int
-    let left: Int
 
     var array: [Int] {
         [right, left, top, bottom]
+    }
+
+    var scenicScore: Int {
+        top * right * bottom * left
     }
 
     func sidesShorter(than comparison: Int) -> Int {

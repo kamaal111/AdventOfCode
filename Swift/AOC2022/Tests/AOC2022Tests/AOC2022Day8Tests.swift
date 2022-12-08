@@ -34,7 +34,9 @@ final class AOC2022Day8Tests: XCTestCase {
 
     func testPart2() {
         let result = AOC2022.Day8.Part2.execute(with: input)
-        XCTAssertEqual(result, 0)
+        XCTAssertNotEqual(result, 50692)
+        XCTAssertNotEqual(result, 1176000)
+        XCTAssertEqual(result, 345744)
     }
 
     func testPart2Example() {
