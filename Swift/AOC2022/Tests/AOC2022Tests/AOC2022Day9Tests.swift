@@ -10,6 +10,14 @@ import XCTest
 
 final class AOC2022Day9Tests: XCTestCase {
     let exampleInput = """
+R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2
 """
 
     let input = AOC2022.Day9.input
@@ -17,12 +25,15 @@ final class AOC2022Day9Tests: XCTestCase {
 
     func testPart1() {
         let result = day.Part1.execute(with: input)
+        XCTAssertNotEqual(result, 6187)
+        XCTAssertNotEqual(result, 5646)
+        XCTAssertNotEqual(result, 5914)
         XCTAssertEqual(result, 0)
     }
 
     func testPart1Example() {
         let result = day.Part1.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 13)
     }
 
     func testPart2() {
