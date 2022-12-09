@@ -18,16 +18,10 @@ extension AOC2022 {
                 var headLocation = MarkedCell(coordinates: .zero, end: .head)
 
                 for line in input.splitLines {
-                    let command = line.split(separator: " ")
-                    let direction = command[0]
-                    let range = 0..<command[1].int!
-                    let currentMove = Move(rawValue: String(direction))!
-
                     let result = move(
                         head: headLocation.coordinates,
                         tail: locationsVisitedByTails.last!.coordinates,
-                        range: range,
-                        to: currentMove)
+                        command: String(line))
                     locationsVisitedByTails.append(contentsOf: result.tailPath.map({ MarkedCell(coordinates: $0, end: .tail) }))
                     headLocation.coordinates = result.head
                 }
@@ -42,37 +36,49 @@ extension AOC2022 {
                 0
             }
         }
+
+        static func move(head: Coordinates, tail: Coordinates, command: String) -> MoveResult {
+            let command = command.split(separator: " ")
+            let direction = Direction(rawValue: String(command[0]))!
+            let range = 0..<command[1].int!
+
+            var newHead = head
+            var tailPath: [Coordinates] = [tail]
+
+            for i in range {
+                let lastHead = newHead
+                switch direction {
+                case .right:
+                    newHead.x += 1
+                case .up:
+                    newHead.y += 1
+                case .down:
+                    newHead.y -= 1
+                case .left:
+                    newHead.x -= 1
+                }
+
+                if i == 0 {
+                    printStep(head: newHead, tail: tailPath.last!)
+                    continue
+                }
+
+                if newHead.isTouching(tailPath.last!) {
+                    tailPath.append(tailPath.last!)
+                    printStep(head: newHead, tail: tailPath.last!)
+                    continue
+                }
+
+                tailPath.append(lastHead)
+                printStep(head: newHead, tail: tailPath.last!)
+            }
+
+            return MoveResult(head: newHead, tailPath: tailPath)
+        }
     }
 }
 
-private func move(head: Coordinates, tail: Coordinates, range: Range<Int>, to direction: Move) -> MoveResult {
-    var newHead = head
-    var tailPath: [Coordinates] = [tail]
-
-    for _ in range {
-        let lastHead = newHead
-        switch direction {
-        case .right:
-            newHead.x += 1
-        case .up:
-            newHead.y += 1
-        case .down:
-            newHead.y -= 1
-        case .left:
-            newHead.x -= 1
-        }
-
-        if !tailPath.last!.areTouching(lastHead) {
-            tailPath.append(lastHead)
-        }
-
-        printStep(head: newHead, tail: tailPath.last!)
-    }
-
-    return MoveResult(head: newHead, tailPath: tailPath)
-}
-
-private struct MoveResult {
+struct MoveResult {
     let head: Coordinates
     let tailPath: [Coordinates]
 }
@@ -82,7 +88,7 @@ private func printStep(head: Coordinates, tail: Coordinates) {
     print("head", head)
 }
 
-private enum Move: String {
+enum Direction: String {
     case up = "U"
     case down = "D"
     case right = "R"

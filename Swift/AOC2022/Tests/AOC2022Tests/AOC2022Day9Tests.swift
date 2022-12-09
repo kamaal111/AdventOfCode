@@ -28,6 +28,9 @@ R 2
         XCTAssertNotEqual(result, 6187)
         XCTAssertNotEqual(result, 5646)
         XCTAssertNotEqual(result, 5914)
+        XCTAssertNotEqual(result, 3665)
+        XCTAssertNotEqual(result, 6148)
+        XCTAssertNotEqual(result, 6147)
         XCTAssertEqual(result, 0)
     }
 
@@ -45,4 +48,35 @@ R 2
         let result = day.Part2.execute(with: exampleInput)
         XCTAssertEqual(result, 0)
     }
+
+    // - MARK: Internals
+
+    func testMove() {
+        let cases = [
+            (day.move(head: Coordinates.zero, tail: Coordinates.zero, command: "R 4"), Coordinates(x: 4, y: 0)),
+            (day.move(head: Coordinates(x: 4, y: 0), tail: Coordinates(x: 3, y: 0), command: "U 4"), Coordinates(x: 4, y: 4)),
+            (day.move(head: Coordinates(x: 4, y: 4), tail: Coordinates(x: 4, y: 3), command: "L 3"), Coordinates(x: 1, y: 4)),
+            (day.move(head: Coordinates(x: 1, y: 4), tail: Coordinates(x: 2, y: 4), command: "D 1"), Coordinates(x: 1, y: 3)),
+            (day.move(head: Coordinates(x: 1, y: 3), tail: Coordinates(x: 2, y: 4), command: "R 4"), Coordinates(x: 5, y: 3)),
+            (day.move(head: Coordinates(x: 5, y: 3), tail: Coordinates(x: 4, y: 3), command: "D 1"), Coordinates(x: 5, y: 2)),
+            (day.move(head: Coordinates(x: 5, y: 2), tail: Coordinates(x: 4, y: 3), command: "L 5"), Coordinates(x: 0, y: 2)),
+            (day.move(head: Coordinates(x: 0, y: 2), tail: Coordinates(x: 1, y: 2), command: "R 2"), Coordinates(x: 2, y: 2)),
+        ]
+        for (index, (result, expectedHead)) in cases.enumerated() {
+            XCTAssertEqual(result.head, expectedHead)
+            XCTAssertEqual(result.tailPath.count, Self.tailTrails[index].count)
+            XCTAssertEqual(result.tailPath.map({ "\($0.x),\($0.y)" }), Self.tailTrails[index].map({ "\($0.x),\($0.y)" }))
+        }
+    }
+
+    private static let tailTrails: [[Coordinates]] = [
+        [Coordinates.zero, Coordinates(x: 1, y: 0), Coordinates(x: 2, y: 0), Coordinates(x: 3, y: 0)],
+        [Coordinates(x: 3, y: 0), Coordinates(x: 4, y: 1), Coordinates(x: 4, y: 2), Coordinates(x: 4, y: 3)],
+        [Coordinates(x: 4, y: 3), Coordinates(x: 3, y: 4), Coordinates(x: 2, y: 4)],
+        [Coordinates(x: 2, y: 4)],
+        [Coordinates(x: 2, y: 4), Coordinates(x: 2, y: 4), Coordinates(x: 3, y: 3), Coordinates(x: 4, y: 3)],
+        [Coordinates(x: 4, y: 3)],
+        [Coordinates(x: 4, y: 3), Coordinates(x: 4, y: 3), Coordinates(x: 3, y: 2), Coordinates(x: 2, y: 2), Coordinates(x: 1, y: 2)],
+        [Coordinates(x: 1, y: 2), Coordinates(x: 1, y: 2)]
+    ]
 }

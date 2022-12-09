@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ShrimpExtensions
 
 public struct Coordinates: Equatable, Hashable {
     public var x: Int
@@ -16,8 +17,18 @@ public struct Coordinates: Equatable, Hashable {
         self.y = y
     }
 
-    public func areTouching(_ other: Coordinates) -> Bool {
+    public func isTouching(_ other: Coordinates) -> Bool {
         abs(x - other.x) <= 1 && abs(y - other.y) <= 1
+    }
+
+    public func isDiagonal(to other: Coordinates) -> Bool {
+        let deltaY = other.y - y
+        let deltaX = other.x - x
+        let π = Double.pi
+        let angle = round(Double(atan2(Float(deltaY), Float(deltaX)) * 180) / π)
+        print("angle", angle)
+
+        return angle == 45
     }
 
     public static let zero = Coordinates(x: 0, y: 0)
