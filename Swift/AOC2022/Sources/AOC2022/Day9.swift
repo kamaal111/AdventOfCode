@@ -23,60 +23,13 @@ extension AOC2022 {
                     let range = 0..<command[1].int!
                     let currentMove = Move(rawValue: String(direction))!
 
-                    switch currentMove {
-                    case .right:
-                        print("--------------------")
-                        print("move", currentMove)
-                        for i in range {
-                            let lastHeadLocation = headLocation.coordinates
-                            headLocation.coordinates.x += 1
-                            if i != 0 && !locationsVisitedByTails.last!.coordinates.isDiagonal(from: lastHeadLocation) {
-                                locationsVisitedByTails.append(MarkedCell(coordinates: lastHeadLocation, end: .tail))
-                            }
-
-                            printStep(head: headLocation.coordinates, tail: locationsVisitedByTails.last!.coordinates)
-                        }
-                        print("--------------------")
-                    case .down:
-                        print("--------------------")
-                        print("move", currentMove)
-                        for i in range {
-                            let lastHeadLocation = headLocation.coordinates
-                            headLocation.coordinates.y -= 1
-                            if i != 0 && !locationsVisitedByTails.last!.coordinates.isDiagonal(from: lastHeadLocation) {
-                                locationsVisitedByTails.append(MarkedCell(coordinates: lastHeadLocation, end: .tail))
-                            }
-
-                            printStep(head: headLocation.coordinates, tail: locationsVisitedByTails.last!.coordinates)
-                        }
-                        print("--------------------")
-                    case .left:
-                        print("--------------------")
-                        print("move", currentMove)
-                        for i in range {
-                            let lastHeadLocation = headLocation.coordinates
-                            headLocation.coordinates.x -= 1
-                            if i != 0 && !locationsVisitedByTails.last!.coordinates.isDiagonal(from: lastHeadLocation) {
-                                locationsVisitedByTails.append(MarkedCell(coordinates: lastHeadLocation, end: .tail))
-                            }
-
-                            printStep(head: headLocation.coordinates, tail: locationsVisitedByTails.last!.coordinates)
-                        }
-                        print("--------------------")
-                    case .up:
-                        print("--------------------")
-                        print("move", currentMove)
-                        for i in range {
-                            let lastHeadLocation = headLocation.coordinates
-                            headLocation.coordinates.y += 1
-                            if i != 0 && !locationsVisitedByTails.last!.coordinates.isDiagonal(from: lastHeadLocation) {
-                                locationsVisitedByTails.append(MarkedCell(coordinates: lastHeadLocation, end: .tail))
-                            }
-
-                            printStep(head: headLocation.coordinates, tail: locationsVisitedByTails.last!.coordinates)
-                        }
-                        print("--------------------")
-                    }
+                    let result = move(
+                        head: headLocation.coordinates,
+                        tail: locationsVisitedByTails.last!.coordinates,
+                        range: range,
+                        to: currentMove)
+                    locationsVisitedByTails.append(contentsOf: result.tailPath.map({ MarkedCell(coordinates: $0, end: .tail) }))
+                    headLocation.coordinates = result.head
                 }
 
                 print("locationsVisitedByTails", locationsVisitedByTails.map({ "\($0.coordinates.x),\($0.coordinates.y)" }), locationsVisitedByTails.uniques().count)
@@ -92,6 +45,38 @@ extension AOC2022 {
     }
 }
 
+private func move(head: Coordinates, tail: Coordinates, range: Range<Int>, to direction: Move) -> MoveResult {
+    var newHead = head
+    var tailPath: [Coordinates] = [tail]
+
+    for _ in range {
+        let lastHead = newHead
+        switch direction {
+        case .right:
+            newHead.x += 1
+        case .up:
+            newHead.y += 1
+        case .down:
+            newHead.y -= 1
+        case .left:
+            newHead.x -= 1
+        }
+
+        if !tailPath.last!.areTouching(lastHead) {
+            tailPath.append(lastHead)
+        }
+
+        printStep(head: newHead, tail: tailPath.last!)
+    }
+
+    return MoveResult(head: newHead, tailPath: tailPath)
+}
+
+private struct MoveResult {
+    let head: Coordinates
+    let tailPath: [Coordinates]
+}
+
 private func printStep(head: Coordinates, tail: Coordinates) {
     print("tail", tail)
     print("head", head)
@@ -102,15 +87,6 @@ private enum Move: String {
     case down = "D"
     case right = "R"
     case left = "L"
-
-    func isDiagonal(_ other: Move) -> Bool {
-        switch self {
-        case .up, .down:
-            return other == .left || other == .right
-        case .right, .left:
-            return other == .up || other == .down
-        }
-    }
 }
 
 private struct MarkedCell: Hashable {

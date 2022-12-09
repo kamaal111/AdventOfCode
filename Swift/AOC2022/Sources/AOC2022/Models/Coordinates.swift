@@ -16,8 +16,8 @@ public struct Coordinates: Equatable, Hashable {
         self.y = y
     }
 
-    public func isDiagonal(from other: Coordinates) -> Bool {
-        (x - other.x) == (y - other.y)
+    public func areTouching(_ other: Coordinates) -> Bool {
+        abs(x - other.x) <= 1 && abs(y - other.y) <= 1
     }
 
     public static let zero = Coordinates(x: 0, y: 0)
