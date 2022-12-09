@@ -23,13 +23,13 @@ final class CoordinatesTests: XCTestCase {
     }
 
     func testIsDiagonal() {
-//        XCTAssert(Coordinates(x: 0, y: 0).isDiagonal(to: Coordinates(x: 0, y: 1)))
-        XCTAssert(Coordinates(x: 1, y: 2).isDiagonal(to: Coordinates(x: 5, y: 10)))
-//        XCTAssert(Coordinates(x: 1, y: 1).isDiagonal(to: Coordinates(x: 2, y: 1)))
+        XCTAssert(Coordinates(x: 1, y: 1).isDiagonal(to: Coordinates(x: 2, y: 2)))
         XCTAssert(Coordinates(x: 0, y: 0).isDiagonal(to: Coordinates(x: 3, y: 3)))
+        XCTAssert(Coordinates(x: 0, y: 0).isDiagonal(to: Coordinates(x: -3, y: -3)))
     }
 
     func testIsNotDiagonal() {
         XCTAssertFalse(Coordinates(x: 0, y: 0).isDiagonal(to: Coordinates(x: 0, y: 3)))
+        XCTAssertFalse(Coordinates(x: 10, y: 10).isDiagonal(to: Coordinates(x: 10, y: 10)))
     }
 }
