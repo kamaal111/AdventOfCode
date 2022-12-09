@@ -26,6 +26,7 @@ final class CoordinatesTests: XCTestCase {
         XCTAssert(Coordinates(x: 1, y: 1).isDiagonal(to: Coordinates(x: 2, y: 2)))
         XCTAssert(Coordinates(x: 0, y: 0).isDiagonal(to: Coordinates(x: 3, y: 3)))
         XCTAssert(Coordinates(x: 0, y: 0).isDiagonal(to: Coordinates(x: -3, y: -3)))
+        XCTAssert(Coordinates(x: -3, y: -3).isDiagonal(to: Coordinates(x: 3, y: 3)))
     }
 
     func testIsNotDiagonal() {

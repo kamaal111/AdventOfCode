@@ -25,10 +25,9 @@ public struct Coordinates: Equatable, Hashable {
         let deltaY = other.y - y
         let deltaX = other.x - x
         let π = Double.pi
-        let angle = round(Double(atan2(Float(deltaY), Float(deltaX)) * 180) / π)
-        print("angle", angle)
+        let angle = abs(round(Double(atan2(Float(deltaY), Float(deltaX)) * 180) / π))
 
-        return angle == 45
+        return angle == 45 || angle == 135
     }
 
     public static let zero = Coordinates(x: 0, y: 0)

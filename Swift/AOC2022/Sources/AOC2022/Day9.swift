@@ -31,22 +31,19 @@ extension AOC2022 {
             for line in input.splitLines {
                 let result = move(
                     head: headLocation.coordinates,
-                    tail: locationsVisitedByTails.last!.coordinates,
-                    tailHistory: locationsVisitedByTails,
+                    tailHistory: locationsVisitedByTails.map(\.coordinates),
                     command: String(line),
                     knots: knots)
                 locationsVisitedByTails.append(contentsOf: result.tailPath.map({ MarkedCell(coordinates: $0, end: .tail) }))
                 headLocation.coordinates = result.head
             }
 
-//            print("locationsVisitedByTails", locationsVisitedByTails.map({ "\($0.coordinates.x),\($0.coordinates.y)" }), locationsVisitedByTails.uniques().count)
             return locationsVisitedByTails.uniques()
         }
 
         static func move(
             head: Coordinates,
-            tail: Coordinates,
-            tailHistory: [MarkedCell],
+            tailHistory: [Coordinates],
             command: String,
             knots: Int) -> MoveResult {
                 let command = command.split(separator: " ")
@@ -54,10 +51,10 @@ extension AOC2022 {
                 let range = 0..<command[1].int!
 
                 var newHead = head
-                var tailPath: [Coordinates] = [tail]
+                var tailPath: [Coordinates] = [tailHistory.last!]
 
                 for _ in range {
-                    let lastHead = newHead
+                    var lastHead = newHead
                     switch direction {
                     case .right:
                         newHead.x += 1
@@ -69,24 +66,19 @@ extension AOC2022 {
                         newHead.x -= 1
                     }
 
-                    if newHead.isTouching(tailPath.last!) && newHead.isTouching(tailPath.last!) {
-                        printStep(head: newHead, tail: tailPath.last!)
-                        continue
-                    }
+                    for i in 0..<knots {
+                        guard let knot = tailHistory.at(-(i + 1)) else { continue }
 
-                    if newHead.isTouching(tailPath.last!) && newHead.isTouching(tailPath.last!) {
-                        printStep(head: newHead, tail: tailPath.last!)
-                        continue
-                    }
+                        if newHead.isTouching(tailPath.last!) && newHead.isTouching(tailPath.last!) {
+                            printStep(head: newHead, tail: tailPath.last!)
+                            lastHead = knot
+                            continue
+                        }
 
-                    if newHead.isTouching(tailPath.last!) {
-                        tailPath.append(tailPath.last!)
+                        tailPath.append(lastHead)
                         printStep(head: newHead, tail: tailPath.last!)
-                        continue
+                        lastHead = knot
                     }
-
-                    tailPath.append(lastHead)
-                    printStep(head: newHead, tail: tailPath.last!)
                 }
 
                 return MoveResult(head: newHead, tailPath: tailPath)
