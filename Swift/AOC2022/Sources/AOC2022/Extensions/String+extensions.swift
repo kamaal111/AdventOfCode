@@ -8,6 +8,10 @@
 import Foundation
 
 extension StringProtocol {
+    var int: Int? {
+        Int(self)
+    }
+
     subscript(offset: Int) -> Character {
         self[index(startIndex, offsetBy: offset)]
     }

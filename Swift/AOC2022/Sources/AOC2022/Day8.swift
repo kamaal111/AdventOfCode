@@ -71,8 +71,14 @@ private func process(_ input: String, tick: (ProcessTick) -> Void) {
     }
 }
 
-private struct Tree {
+private struct Tree: CustomStringConvertible {
     let height: Int
+
+    // - MARK: CustomStringConvertible
+
+    var description: String {
+        "\(height)"
+    }
 }
 
 private struct ProcessTick {
