@@ -24,13 +24,13 @@ final class AOC2022Day10Tests: XCTestCase {
     }
 
     func testPart2() {
-        let result = day.Part2.execute(with: input)
-        XCTAssertEqual(result, 0)
+//        let result = day.Part2.execute(with: input)
+//        XCTAssertEqual(result, "")
     }
 
     func testPart2Example() {
-        let result = day.Part2.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+//        let result = day.Part2.execute(with: exampleInput)
+//        XCTAssertEqual(result, expectedExampleResult)
     }
 
     // - MARK: Internals
@@ -64,6 +64,15 @@ final class AOC2022Day10Tests: XCTestCase {
         }
     }
 }
+
+private let expectedExampleResult = """
+##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######.....
+"""
 
 private let exampleInput = """
 addx 15

@@ -15,6 +15,22 @@ public struct Grid<Cell>: CustomStringConvertible {
         self.items = items
     }
 
+    public init(size: Size, defaultValue: Cell) {
+        var items: [[Cell]] = []
+        for _ in 0..<size.height {
+            var row: [Cell] = []
+            for _ in 0..<size.width {
+                row = row.appended(defaultValue)
+            }
+            items = items.appended(row)
+        }
+        self.items = items
+    }
+
+    public var size: Size {
+        Size(width: xLength, height: yLength)
+    }
+
     public var xLength: Int {
         items.first?.count ?? 0
     }
@@ -50,6 +66,10 @@ public struct Grid<Cell>: CustomStringConvertible {
     public func getColumn(_ y: Int) -> [Cell] {
         (0..<yLength)
             .compactMap({ getCell(x: $0, y: y) })
+    }
+
+    public mutating func setCell(x: Int, y: Int, with value: Cell) {
+        items[x][y] = value
     }
 
     public mutating func addRow(_ row: [Cell]) {

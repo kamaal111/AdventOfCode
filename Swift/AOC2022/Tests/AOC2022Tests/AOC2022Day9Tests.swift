@@ -58,7 +58,7 @@ U 20
     }
 
     func testPart2Example() {
-        let result = day.Part2.execute(with: exampleInput2)
+//        let result = day.Part2.execute(with: exampleInput2)
 //        XCTAssertEqual(result, 36)
     }
 

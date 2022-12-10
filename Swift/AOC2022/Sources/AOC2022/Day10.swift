@@ -9,6 +9,8 @@ import Foundation
 import ShrimpExtensions
 
 private let CHECKPOINTS = [20, 60, 100, 140, 180, 220]
+private let CRT_SIZE = Size(width: 40, height: 6)
+private let SPRITE_SIZE = 3
 
 extension AOC2022 {
     public enum Day10: DayScaffold {
@@ -23,9 +25,18 @@ extension AOC2022 {
         }
 
         public enum Part2 {
-            public static func execute(with input: String) -> Int {
-                0
+            public static func execute(with input: String) -> String {
+                drawSprites(input)
             }
+        }
+
+        static func drawSprites(_ input: String) -> String {
+            let grid = Grid(size: CRT_SIZE, defaultValue: "x")
+            let screen = grid.items
+                .reduce("", {
+                    $0 + $1.joined() + "\n"
+                })
+            return screen
         }
 
         static func simulateCycles(_ input: String, untill cycleEnd: Int) -> [Int: Int] {
@@ -37,6 +48,7 @@ extension AOC2022 {
                 result[$1] = 1
                 return result
             })
+
             for command in input.splitLines {
                 let result = parse(String(command))
                 let previousXValue = xValue
