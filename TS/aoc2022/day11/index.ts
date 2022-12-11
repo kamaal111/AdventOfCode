@@ -1,3 +1,6 @@
+import { enumerate } from '../utilities/enumerate';
+import { striding } from '../utilities/striding';
+
 export function part2(input: string): number {
   return keepAwayPlayInteractions(input, 10000, 1);
 }
@@ -94,7 +97,7 @@ function parseMonkeys(input: string): { [x: MonkeyID]: Monkey } {
   const strides = 7;
 
   return striding(enumerate(lines), strides)
-    .map(([monkeyIndex]) => {
+    .map(({ index: monkeyIndex }) => {
       const monkeyID: MonkeyID = monkeyIndex / strides;
       const monkeyInfo = lines
         .slice(monkeyIndex + 1, monkeyIndex + strides - 1)
@@ -115,21 +118,6 @@ function parseMonkeys(input: string): { [x: MonkeyID]: Monkey } {
       newMonkeys[monkey.id] = monkey;
       return newMonkeys;
     }, {});
-}
-
-function enumerate<T>(array: T[]): [number, T][] {
-  return array.map((value, index) => [index, value]);
-}
-
-function striding<T>(array: T[], stride: number): T[] {
-  const length = array.length;
-  const amountOfItems = Math.ceil(length / stride);
-  let newArray: T[] = [];
-  for (let index = 0; index < amountOfItems; index += 1) {
-    const element = array[index * stride];
-    newArray.push(element);
-  }
-  return newArray;
 }
 
 type MonkeyID = number;

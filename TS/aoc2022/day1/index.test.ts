@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import fs from 'fs/promises';
 import { part1, part2 } from '.';
+import { getInput } from '../utilities/getInput';
 
 const EXAMPLE_INPUT = `1000
 2000
@@ -20,7 +20,7 @@ const EXAMPLE_INPUT = `1000
 
 describe('day1', () => {
   test('part1', async () => {
-    const input = await getInput();
+    const input = await getInput('day1');
     expect(part1(input)).toBe(67450);
   });
 
@@ -29,7 +29,7 @@ describe('day1', () => {
   });
 
   test('part2', async () => {
-    const input = await getInput();
+    const input = await getInput('day1');
     expect(part2(input)).toBe(199357);
   });
 
@@ -37,19 +37,3 @@ describe('day1', () => {
     expect(part2(EXAMPLE_INPUT)).toBe(45000);
   });
 });
-
-let _input: string | null = null;
-
-async function getInput() {
-  if (_input != null) {
-    return _input;
-  }
-
-  const input = await fs.readFile(
-    '../../Swift/AOC2022/Sources/AOC2022/Inputs/day1.txt',
-    'utf-8',
-  );
-  _input = input.toString();
-
-  return _input;
-}
