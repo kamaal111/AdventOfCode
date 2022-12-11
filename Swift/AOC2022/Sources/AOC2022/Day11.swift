@@ -15,18 +15,18 @@ extension AOC2022 {
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
-                keepAwayPlayInteractions(input, rounds: 20)
+                keepAwayPlayInteractions(input, rounds: 20, worryLevelDivision: 3)
             }
         }
 
         public enum Part2 {
             public static func execute(with input: String) -> Int {
-                keepAwayPlayInteractions(input, rounds: 20)
+                keepAwayPlayInteractions(input, rounds: 20, worryLevelDivision: 1)
             }
         }
     }
 
-    static func keepAwayPlayInteractions(_ input: String, rounds: Int) -> Int {
+    static func keepAwayPlayInteractions(_ input: String, rounds: Int, worryLevelDivision: Int) -> Int {
         var monkeys = parseMonkeys(from: input)
 
         var round = 0
@@ -35,8 +35,8 @@ extension AOC2022 {
                 let monkey = monkeys[id]!
                 monkeys[id]!.itemsInspected += monkey.items.count
                 for item in monkey.items.reversed() {
-                    let newWorryLevel = calculateOperation(monkey.operation, worryLevel: item) / 3
-                    let monkeyToThrowTo = monkey.decision[(newWorryLevel % monkey.testDivisbleBy) == 0]!
+                    let newWorryLevel = calculateOperation(monkey.operation, worryLevel: item, worryLevelDivision: worryLevelDivision)
+                    let monkeyToThrowTo = monkeyToThrowToIndex(monkey, worryLevel: newWorryLevel)
                     monkeys[monkeyToThrowTo]!.items = monkeys[monkeyToThrowTo]!.items.appended(newWorryLevel)
                     _ = monkeys[id]!.items.popLast()
                 }
@@ -50,13 +50,20 @@ extension AOC2022 {
             .reduce(1, { $0 * $1.value.itemsInspected })
     }
 
-    static func calculateOperation(_ rawOperation: String, worryLevel: Int) -> Int {
+    static func monkeyToThrowToIndex(_ monkey: Monkey, worryLevel: Int) -> Monkey.ID {
+        monkey.decision[(worryLevel % monkey.testDivisbleBy) == 0]!
+    }
+
+    static func calculateOperation(_ rawOperation: String, worryLevel: Int, worryLevelDivision: Int) -> Int {
         if rawOperation.contains("*") {
             return formatOperation(rawOperation, worryLevel: worryLevel, operator: "*")
-                .reduce(1, *)
+                .reduce(1, {
+                    print($0, $1)
+                    return $0 * $1
+                }) / worryLevelDivision
         } else if rawOperation.contains("+") {
             return formatOperation(rawOperation, worryLevel: worryLevel, operator: "+")
-                .reduce(0, +)
+                .reduce(0, +) / worryLevelDivision
         }
 
         fatalError("Ain't no way")
