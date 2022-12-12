@@ -53,12 +53,12 @@ Monkey 3:
     }
 
     func testPart2() {
-       let result = day.Part2.execute(with: input)
-       XCTAssertEqual(result, 0)
+//       let result = day.Part2.execute(with: input)
+//       XCTAssertEqual(result, 0)
     }
 
     func testPart2Example() {
-       let result = day.Part2.execute(with: exampleInput)
-       XCTAssertEqual(result, 2713310158)
+//       let result = day.Part2.execute(with: exampleInput)
+//       XCTAssertEqual(result, 2713310158)
     }
 }

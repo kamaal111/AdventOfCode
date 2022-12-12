@@ -152,11 +152,11 @@ private struct ProcessTick {
     }
 
     var column: [Tree] {
-        grid.getColumn(coordinates.y)
+        grid.getColumn(y: coordinates.y)
     }
 
     var row: [Tree] {
-        grid.getRow(coordinates.x)
+        grid.getRow(x: coordinates.x)!
     }
 }
 

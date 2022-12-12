@@ -50,7 +50,7 @@ extension AOC2022 {
             .reduce(1, { $0 * $1.value.itemsInspected })
     }
 
-    static func monkeyToThrowToIndex(_ monkey: Monkey, worryLevel: Int) -> Monkey.ID {
+    private static func monkeyToThrowToIndex(_ monkey: Monkey, worryLevel: Int) -> Monkey.ID {
         monkey.decision[(worryLevel % monkey.testDivisbleBy) == 0]!
     }
 
@@ -80,7 +80,7 @@ extension AOC2022 {
             })
     }
 
-    static func parseMonkeys(from input: String) -> [Monkey.ID: Monkey] {
+    private static func parseMonkeys(from input: String) -> [Monkey.ID: Monkey] {
         let lines = input.splitLines
         let strides = 6
 
@@ -120,7 +120,7 @@ extension AOC2022 {
     }
 }
 
-struct Monkey: Identifiable {
+private struct Monkey: Identifiable {
     let id: Int
     var items: [Int]
     let operation: String
