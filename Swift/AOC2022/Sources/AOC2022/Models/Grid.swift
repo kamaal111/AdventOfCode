@@ -81,7 +81,7 @@ public struct Grid<Cell> {
     }
 
     public mutating func addRow(_ row: [Cell]) {
-        if width != row.count {
+        if let widthCount = items.last?.count, widthCount != row.count {
             assertionFailure("Should not add oneven row")
             return
         }

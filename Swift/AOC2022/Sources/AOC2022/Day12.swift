@@ -49,35 +49,129 @@ extension AOC2022 {
         }
 
         private static func makePaths(_ grid: Grid<Elevation>, from start: [Coordinates], to end: Coordinates) {
-            let max = 1
-
-//            var grid = grid
-            var i = 0
-            let currentPosition = start.last!
-            while i < max {
-                let currentElevation = grid.getCell(x: currentPosition.x, y: currentPosition.y)!
-                print("current", currentElevation)
-                if currentPosition.y < grid.width { // right
-                    let rightElevation = grid.getCell(at: currentPosition.right)!
-                    print("right", rightElevation)
-                }
-                if currentPosition.y > 0 { // left
-                    let leftElevation = grid.getCell(at: currentPosition.left)!
-                    print("left", leftElevation)
-                }
-                if currentPosition.x < grid.height { // down
-                    let downElevation = grid.getCell(at: currentPosition.down)!
-                    print("down", downElevation)
-                }
-                if currentPosition.x > 0 { // up
-                    let upElevation = grid.getCell(at: currentPosition.up)!
-                    print("up", upElevation)
-                }
-                i += 1
-            }
-//            print(grid)
+            let status = findEnd(grid, from: start, to: end, endPaths: [])
+            print("status", status)
         }
+
+        private static func findEnd(
+            _ grid: Grid<Elevation>,
+            from start: [Coordinates],
+            to end: Coordinates,
+            endPaths: [PathFindingStatus]) -> PathFindingStatus {
+                let currentPosition = start.last!
+                let currentElevation = grid.getCell(at: currentPosition)!
+
+                print("iter", start.count)
+                var isDeadEnd = true
+                var endPaths = endPaths
+                if currentPosition.y < grid.width - 1 && !start.contains(currentPosition.right) { // right
+                    let rightElevation = grid.getCell(at: currentPosition.right)!
+                    if currentElevation.canWalk(up: rightElevation) {
+                        let newPath = start.appended(currentPosition.right)
+                        if currentPosition.right == end {
+                            endPaths = endPaths.appended(.end(path: newPath))
+                        } else {
+                            let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
+                            switch status {
+                            case .end(path: let path):
+                                endPaths = endPaths.appended(.end(path: path))
+                            case .onGoing:
+                                isDeadEnd = false
+                            case .dead:
+                                break
+                            }
+                        }
+                    }
+                }
+
+                if currentPosition.y > 0 && !start.contains(currentPosition.left) { // left
+                    let leftElevation = grid.getCell(at: currentPosition.left)!
+                    if currentElevation.canWalk(up: leftElevation) {
+                        let newPath = start.appended(currentPosition.left)
+                        if currentPosition.left == end {
+                            endPaths = endPaths.appended(.end(path: newPath))
+                        } else {
+                            let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
+                            switch status {
+                            case .end(path: let path):
+                                endPaths = endPaths.appended(.end(path: path))
+                            case .onGoing:
+                                isDeadEnd = false
+                            case .dead:
+                                break
+                            }
+                        }
+                    }
+                }
+
+                if currentPosition.x < grid.height - 1 && !start.contains(currentPosition.down) { // down
+                    let downElevation = grid.getCell(at: currentPosition.down)!
+                    if currentElevation.canWalk(up: downElevation) {
+                        let newPath = start.appended(currentPosition.down)
+                        if currentPosition.down == end {
+                            endPaths = endPaths.appended(.end(path: newPath))
+                        } else {
+                            let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
+                            switch status {
+                            case .end(path: let path):
+                                endPaths = endPaths.appended(.end(path: path))
+                            case .onGoing:
+                                isDeadEnd = false
+                            case .dead:
+                                break
+                            }
+                        }
+                    }
+                }
+
+                if currentPosition.x > 0 && !start.contains(currentPosition.up) { // up
+                    let upElevation = grid.getCell(at: currentPosition.up)!
+                    if currentElevation.canWalk(up: upElevation) {
+                        let newPath = start.appended(currentPosition.up)
+                        if currentPosition.up == end {
+                            endPaths = endPaths.appended(.end(path: newPath))
+                        } else {
+                            let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
+                            switch status {
+                            case .end(path: let path):
+                                endPaths = endPaths.appended(.end(path: path))
+                            case .onGoing:
+                                isDeadEnd = false
+                            case .dead:
+                                break
+                            }
+                        }
+                    }
+                }
+
+                if !endPaths.isEmpty {
+                    let shortestPath = endPaths
+                        .compactMap({ status -> [Coordinates]? in
+                            switch status {
+                            case .onGoing, .dead:
+                                return nil
+                            case .end(let path):
+                                return path
+                            }
+                        })
+                        .sorted(by: \.count, using: .orderedAscending)
+                    print("shortestPath", shortestPath)
+                    return .end(path: shortestPath.first!)
+                }
+
+                if isDeadEnd {
+                    return .dead
+                }
+
+                return .onGoing
+            }
     }
+}
+
+enum PathFindingStatus: Equatable {
+    case dead
+    case onGoing
+    case end(path: [Coordinates])
 }
 
 private struct ParseResult {
@@ -94,5 +188,9 @@ private struct Elevation {
             return Int(character.asciiValue!) - 96
         }
         return Int(character.asciiValue!) - 38
+    }
+
+    func canWalk(up otherElevation: Elevation) -> Bool {
+        (otherElevation.height >= height && (otherElevation.height - height) <= 1) || otherElevation.height < height
     }
 }
