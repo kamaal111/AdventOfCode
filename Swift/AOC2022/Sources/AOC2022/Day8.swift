@@ -156,7 +156,7 @@ private struct ProcessTick {
     }
 
     var row: [Tree] {
-        grid.getRow(coordinates.x)
+        grid.getRow(coordinates.x)!
     }
 }
 

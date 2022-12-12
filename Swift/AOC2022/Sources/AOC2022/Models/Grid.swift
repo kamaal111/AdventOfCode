@@ -40,7 +40,7 @@ public struct Grid<Cell>: CustomStringConvertible {
     }
 
     public func getCell(x: Int, y: Int) -> Cell? {
-        getRow(x).at(y)
+        getRow(x)?.at(y)
     }
 
     public func cellIsBottomEdge(x: Int) -> Bool {
@@ -59,8 +59,8 @@ public struct Grid<Cell>: CustomStringConvertible {
         y >= (yLength - 1)
     }
 
-    public func getRow(_ x: Int) -> [Cell] {
-        items[x]
+    public func getRow(_ x: Int) -> [Cell]? {
+        items.at(x)
     }
 
     public func getColumn(_ y: Int) -> [Cell] {
@@ -73,6 +73,10 @@ public struct Grid<Cell>: CustomStringConvertible {
     }
 
     public mutating func addRow(_ row: [Cell]) {
+        if let lastRowCount = items.last?.count, row.count != row.count {
+            assertionFailure("Should not add oneven row")
+            return
+        }
         items = items.appended(row)
     }
 
