@@ -17,11 +17,30 @@ extension AOC2022 {
         public enum Part1 {
             public static func execute(with input: String) -> Int {
                 let pairs = parseInput(input)
-                for pair in pairs {
-                    comparePairs(left: pair.left, right: pair.right)
-                    break
+
+                var pairsInTheRightOrder: [Int] = []
+                for (index, pair) in pairs.enumerated() {
+                inner:
+                    for (leftIndex, leftElement) in pair.left.enumerated() {
+                        if let right = pair.right.at(leftIndex) {
+                            let comparison = comparePairs(left: leftElement, right: right)
+                            switch comparison {
+                            case .same:
+                                continue
+                            case .rightHigher:
+                                pairsInTheRightOrder = pairsInTheRightOrder.appended(index + 1)
+                                break inner
+                            case .rightLower:
+                                break inner
+                            }
+                        } else {
+                            break
+                        }
+                    }
                 }
-                return 0
+
+                print(pairsInTheRightOrder)
+                return pairsInTheRightOrder.reduce(0, { $0 + $1 })
             }
         }
 
@@ -31,10 +50,45 @@ extension AOC2022 {
             }
         }
 
-        private static func comparePairs(left: Any, right: Any) {
-            if left is AnyArray {
-                print("left is array", left)
+        private static func comparePairs(left: Any, right: Any) -> PairComparison {
+            if let left = left as? Int {
+                if let right = right as? Int {
+                    if left < right {
+                        return .rightHigher
+                    }
+                    if left > right {
+                        return .rightLower
+                    }
+                    return .same
+                }
+
+                return comparePairs(left: [left], right: right)
             }
+
+            if let right = right as? Int {
+                return comparePairs(left: left, right: [right])
+            }
+
+            if let left = left as? AnyArray, let right = right as? AnyArray {
+                for (index, leftElement) in left.enumerated() {
+                    if let rightElement = right.at(index) {
+                        let comparison = comparePairs(left: leftElement, right: rightElement)
+                        print(leftElement, rightElement, comparison)
+                        switch comparison {
+                        case .same:
+                            continue
+                        case .rightHigher:
+                            return .rightHigher
+                        case .rightLower:
+                            return .rightLower
+                        }
+                    } else {
+                        return .rightLower
+                    }
+                }
+            }
+
+            fatalError("yes")
         }
 
         private static func parseInput(_ input: String) -> [(left: [Any], right: [Any])] {
@@ -66,7 +120,7 @@ extension AOC2022 {
             var refined: [Any] = []
             for element in parsedLine {
                 if element is Int {
-                    refined = refined.appended(element)
+                    refined = refined.appended(element as! Int)
                 } else if element is NSArray {
                     let refinedArrayElement = refineParsedLine(element as! [Any])
                     refined = refined.appended(refinedArrayElement)
@@ -77,4 +131,10 @@ extension AOC2022 {
             return refined
         }
     }
+}
+
+private enum PairComparison {
+    case same
+    case rightHigher
+    case rightLower
 }
