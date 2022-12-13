@@ -8,7 +8,7 @@
 import Foundation
 import ShrimpExtensions
 
-public struct Grid<Cell>: CustomStringConvertible {
+public struct Grid<Cell> {
     private(set) var items: [[Cell]]
 
     public init(items: [[Cell]] = []) {
@@ -28,23 +28,27 @@ public struct Grid<Cell>: CustomStringConvertible {
     }
 
     public var size: Size {
-        Size(width: xLength, height: yLength)
+        Size(width: width, height: height)
     }
 
-    public var xLength: Int {
-        items.first?.count ?? 0
-    }
-
-    public var yLength: Int {
+    public var height: Int {
         items.count
     }
 
+    public var width: Int {
+        items.last?.count ?? 0
+    }
+
     public func getCell(x: Int, y: Int) -> Cell? {
-        getRow(x)?.at(y)
+        getRow(x: x)?.at(y)
+    }
+
+    public func getCell(at coordinates: Coordinates) -> Cell? {
+        getCell(x: coordinates.x, y: coordinates.y)
     }
 
     public func cellIsBottomEdge(x: Int) -> Bool {
-        x >= (xLength - 1)
+        x >= (height - 1)
     }
 
     public func cellIsTopEdge(x: Int) -> Bool {
@@ -56,15 +60,15 @@ public struct Grid<Cell>: CustomStringConvertible {
     }
 
     public func cellIsRightEdge(y: Int) -> Bool {
-        y >= (yLength - 1)
+        y >= (width - 1)
     }
 
-    public func getRow(_ x: Int) -> [Cell]? {
+    public func getRow(x: Int) -> [Cell]? {
         items.at(x)
     }
 
-    public func getColumn(_ y: Int) -> [Cell] {
-        (0..<yLength)
+    public func getColumn(y: Int) -> [Cell] {
+        (0..<width)
             .compactMap({ getCell(x: $0, y: y) })
     }
 
@@ -72,26 +76,15 @@ public struct Grid<Cell>: CustomStringConvertible {
         items[x][y] = value
     }
 
+    public mutating func setCell(at coordinates: Coordinates, with value: Cell) {
+        setCell(x: coordinates.x, y: coordinates.y, with: value)
+    }
+
     public mutating func addRow(_ row: [Cell]) {
-        if let lastRowCount = items.last?.count, row.count != row.count {
+        if let widthCount = items.last?.count, widthCount != row.count {
             assertionFailure("Should not add oneven row")
             return
         }
         items = items.appended(row)
-    }
-
-    // - MARK: CustomStringConvertible
-
-    public var description: String {
-        var string = ""
-        for row in items {
-            var rowString = ""
-            for cell in row {
-                rowString += "|\(String(describing: cell))|"
-            }
-            let seperator = (0..<rowString.count).map({ _ in "-" }).joined()
-            string += "\(seperator)\n\(rowString)\n\(seperator)\n"
-        }
-        return string
     }
 }
