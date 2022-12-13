@@ -10,6 +10,29 @@ import XCTest
 
 final class AOC2022Day13Tests: XCTestCase {
     let exampleInput = """
+[1,1,3,1,1]
+[1,1,5,1,1]
+
+[[1],[2,3,4]]
+[[1],4]
+
+[9]
+[[8,7,6]]
+
+[[4,4],4,4]
+[[4,4],4,4,4]
+
+[7,7,7,7]
+[7,7,7]
+
+[]
+[3]
+
+[[[]]]
+[[]]
+
+[1,[2,[3,[4,[5,6,7]]]],8,9]
+[1,[2,[3,[4,[5,6,0]]]],8,9]
 """
 
     let input = AOC2022.Day13.input
@@ -22,7 +45,7 @@ final class AOC2022Day13Tests: XCTestCase {
 
     func testPart1Example() {
         let result = day.Part1.execute(with: exampleInput)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 13)
     }
 
     func testPart2() {

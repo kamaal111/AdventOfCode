@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Algorithms
 import ShrimpExtensions
 
 extension AOC2022 {

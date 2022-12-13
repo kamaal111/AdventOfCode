@@ -12,6 +12,10 @@ extension StringProtocol {
         Int(self)
     }
 
+    func splitLines(omittingEmptySubsequences: Bool) -> [Self.SubSequence] {
+        return self.split(omittingEmptySubsequences: omittingEmptySubsequences, whereSeparator: \.isNewline)
+    }
+
     subscript(offset: Int) -> Character {
         self[index(startIndex, offsetBy: offset)]
     }
