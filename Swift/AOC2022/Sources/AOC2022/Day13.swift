@@ -8,7 +8,7 @@
 import Foundation
 import ShrimpExtensions
 
-typealias AnyArray = [Any]
+private typealias AnyArray = [Any]
 
 extension AOC2022 {
     public enum Day13: DayScaffold {
@@ -16,7 +16,7 @@ extension AOC2022 {
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
-                parseInput(input)
+                parseInputAsPairs(input)
                     .enumerated()
                     .reduce(0, {
                         let comparison = comparePairs(left: $1.element.left, right: $1.element.right)
@@ -30,8 +30,26 @@ extension AOC2022 {
 
         public enum Part2 {
             public static func execute(with input: String) -> Int {
-                let pairs = parseInput(input)
-                return 0
+                let startDivider = [[2]]
+                let endDivider = [[6]]
+                let singles = parseInputAsSingles("\(startDivider)\n\(endDivider)\n\(input)")
+                    .sorted(by: {
+                        comparePairs(left: $0, right: $1) == .rightHigher
+                    })
+
+                var startDividerIndex: Int?
+                var endDividerIndex: Int?
+                for (index, single) in singles.enumerated() {
+                    if startDividerIndex == nil && (single as? [[Int]]) == startDivider {
+                        startDividerIndex = index + 1
+                    }
+                    if startDividerIndex != nil && (single as? [[Int]]) == endDivider {
+                        endDividerIndex = index + 1
+                        break
+                    }
+                }
+
+                return startDividerIndex! * endDividerIndex!
             }
         }
 
@@ -41,81 +59,81 @@ extension AOC2022 {
                     if left < right {
                         return .rightHigher
                     }
+
                     if left > right {
                         return .rightLower
                     }
+
                     return .same
                 }
 
                 return comparePairs(left: [left], right: right)
             }
 
-            if let right = right as? Int {
+            if right is Int {
                 return comparePairs(left: left, right: [right])
             }
 
-            if let left = left as? AnyArray, let right = right as? AnyArray {
-                var left = left.reversed().asArray()
-                var right = right.reversed().asArray()
-                while !left.isEmpty && !right.isEmpty {
-                    let leftElement = left.popLast()!
-                    let rightElement = right.popLast()!
-                    let comparison = comparePairs(left: leftElement, right: rightElement)
-                    if comparison == .same {
-                        continue
-                    }
+            var left = (left as! AnyArray).reversed().asArray()
+            var right = (right as! AnyArray).reversed().asArray()
+            while !left.isEmpty && !right.isEmpty {
+                let leftElement = left.popLast()!
+                let rightElement = right.popLast()!
+                let comparison = comparePairs(left: leftElement, right: rightElement)
+                if comparison != .same {
                     return comparison
                 }
-                if left.count > right.count {
-                    return .rightLower
-                }
-                if left.count < right.count {
-                    return .rightHigher
-                }
-                return .same
             }
 
-            fatalError("Impossibru")
+            if left.count > right.count {
+                return .rightLower
+            }
+
+            if left.count < right.count {
+                return .rightHigher
+            }
+
+            return .same
         }
 
-        private static func parseInput(_ input: String) -> [(left: [Any], right: [Any])] {
-            var pairs: [([Any], [Any])] = []
-            var single: [Any]?
-            for line in input.splitLines(omittingEmptySubsequences: false) {
-                if let parsedLine = parseLine(line) {
-                    if let unwrappedSingle = single {
-                        pairs = pairs.appended((unwrappedSingle, parsedLine))
-                        single = nil
-                    } else {
-                        single = parsedLine
-                    }
+        private static func parseInputAsSingles(_ input: String) -> [AnyArray] {
+            input
+                .splitLines
+                .map(parseLine)
+        }
+
+        private static func parseInputAsPairs(_ input: String) -> [(left: AnyArray, right: AnyArray)] {
+            var pairs: [(AnyArray, AnyArray)] = []
+            var single: AnyArray?
+            for line in input.splitLines {
+                let parsedLine = parseLine(line)
+                if let unwrappedSingle = single {
+                    pairs = pairs.appended((unwrappedSingle, parsedLine))
+                    single = nil
+                } else {
+                    single = parsedLine
                 }
             }
             return pairs
         }
 
-        private static func parseLine(_ line: String.SubSequence) -> [Any]? {
-            guard line != "" else { return nil }
-            guard line.count > 2 else { return [] }
-
+        private static func parseLine(_ line: String.SubSequence) -> AnyArray {
             let data = line.data(using: .utf8)!
-            let array = try! JSONSerialization.jsonObject(with: data, options: []) as! [Any]
+            let array = try! JSONSerialization.jsonObject(with: data, options: []) as! AnyArray
             return refineParsedLine(array)
         }
 
-        private static func refineParsedLine(_ parsedLine: [Any]) -> [Any] {
-            var refined: [Any] = []
-            for element in parsedLine {
-                if element is Int {
-                    refined = refined.appended(element as! Int)
-                } else if element is NSArray {
-                    let refinedArrayElement = refineParsedLine(element as! [Any])
-                    refined = refined.appended(refinedArrayElement)
-                } else {
-                    fatalError("What are you? \(type(of: element))")
-                }
-            }
-            return refined
+        private static func refineParsedLine(_ parsedLine: AnyArray) -> AnyArray {
+            parsedLine
+                .map({
+                    if $0 is NSNumber {
+                        return $0 as! Int
+                    }
+                    if $0 is NSArray {
+                        return refineParsedLine($0 as! AnyArray)
+                    }
+                    fatalError("What are you? \(type(of: $0))")
+                })
         }
     }
 }

@@ -50,7 +50,7 @@ final class AOC2022Day13Tests: XCTestCase {
 
     func testPart2() {
        let result = day.Part2.execute(with: input)
-       XCTAssertEqual(result, 0)
+       XCTAssertEqual(result, 25935)
     }
 
     func testPart2Example() {
