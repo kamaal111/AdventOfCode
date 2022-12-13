@@ -48,35 +48,6 @@ extension AOC2022 {
             return ParseResult(grid: grid, start: start, end: end)
         }
 
-<<<<<<< HEAD
-        private static func makePaths(_ grid: Grid<Elevation>, from start: Coordinates, to end: Coordinates) {
-            let max = 1
-
-            var grid = grid
-            var i = 0
-            var currentPosition = Coordinates(x: 1, y: 4)
-            while i < max {
-                print("current", grid.getCell(x: currentPosition.x, y: currentPosition.y))
-                if currentPosition.y < grid.yLength { // right
-                    print("right", grid.getCell(x: currentPosition.x, y: currentPosition.y + 1))
-                }
-                if currentPosition.y > 0 { // left
-                    print("left", grid.getCell(x: currentPosition.x, y: currentPosition.y - 1))
-                }
-                if currentPosition.x < grid.xLength { // down
-                    print("down", grid.getCell(x: currentPosition.x + 1, y: currentPosition.y))
-                }
-                if currentPosition.x > 0 { // up
-                    print("up", grid.getCell(x: currentPosition.x - 1, y: currentPosition.y))
-                }
-                i += 1
-            }
-//            print(grid)
-        }
-    }
-}
-
-=======
         private static func makePaths(_ grid: Grid<Elevation>, from start: [Coordinates], to end: Coordinates) {
             let status = findEnd(grid, from: start, to: end, endPaths: [])
             print("status", status)
@@ -203,7 +174,6 @@ enum PathFindingStatus: Equatable {
     case end(path: [Coordinates])
 }
 
->>>>>>> 74fd8643c2b964cb0fac81689f5cd603ba7aa60d
 private struct ParseResult {
     let grid: Grid<Elevation>
     let start: Coordinates
@@ -219,11 +189,8 @@ private struct Elevation {
         }
         return Int(character.asciiValue!) - 38
     }
-<<<<<<< HEAD
-=======
 
     func canWalk(up otherElevation: Elevation) -> Bool {
         (otherElevation.height >= height && (otherElevation.height - height) <= 1) || otherElevation.height < height
     }
->>>>>>> 74fd8643c2b964cb0fac81689f5cd603ba7aa60d
 }
