@@ -9,6 +9,26 @@ import XCTest
 @testable import AOC2022
 
 final class CoordinatesTests: XCTestCase {
+    func testTo() {
+        XCTAssertEqual(Coordinates(x: 0, y: 0).to(Coordinates(x: 0, y: 3)), [
+            Coordinates(x: 0, y: 1),
+            Coordinates(x: 0, y: 2),
+        ])
+        XCTAssertEqual(Coordinates(x: 0, y: 0).to(Coordinates(x: 0, y: -3)), [
+            Coordinates(x: 0, y: -1),
+            Coordinates(x: 0, y: -2),
+        ])
+        XCTAssertEqual(Coordinates(x: 0, y: 0).to(Coordinates(x: 3, y: 0)), [
+            Coordinates(x: 1, y: 0),
+            Coordinates(x: 2, y: 0),
+        ])
+        XCTAssertEqual(Coordinates(x: 0, y: 0).to(Coordinates(x: -3, y: 0)), [
+            Coordinates(x: -1, y: 0),
+            Coordinates(x: -2, y: 0),
+        ])
+        XCTAssertEqual(Coordinates(x: 0, y: 0).to(Coordinates(x: 0, y: 0)), [])
+    }
+
     func testAreTouching() {
         XCTAssert(Coordinates(x: 0, y: 0).isTouching(Coordinates(x: 0, y: 0)))
         XCTAssert(Coordinates(x: 5, y: 3).isTouching(Coordinates(x: 5, y: 2)))

@@ -17,9 +17,9 @@ public struct Grid<Cell> {
 
     public init(size: Size, defaultValue: Cell) {
         var items: [[Cell]] = []
-        for _ in 0..<size.width {
+        for _ in 0..<size.height {
             var row: [Cell] = []
-            for _ in 0..<size.height {
+            for _ in 0..<size.width {
                 row = row.appended(defaultValue)
             }
             items = items.appended(row)
@@ -68,9 +68,31 @@ public struct Grid<Cell> {
     }
 
     public func getColumn(y: Int) -> [Cell] {
-        (0..<width)
-            .compactMap({ getCell(x: $0, y: y) })
+        getColumn(x: 0, y: y)
     }
+
+    public func getColumn(x: Int, y: Int) -> [Cell] {
+        (x..<height)
+            .compactMap({ getCell(x: $0, y: y)})
+    }
+
+    public func getColumn(
+        x: Int,
+        y: Int,
+        until predicate: ((cell: Cell, coordinate: Coordinates)) -> Bool) -> [(cell: Cell, coordinate: Coordinates)] {
+            var cells: [(Cell, Coordinates)] = []
+            for i in x..<height {
+                let coordinate = Coordinates(x: i, y: y)
+                if let cell = getCell(at: coordinate) {
+                    let cellWithCoordinate = (cell, coordinate)
+                    if predicate(cellWithCoordinate) {
+                        break
+                    }
+                    cells = cells.appended(cellWithCoordinate)
+                }
+            }
+            return cells
+        }
 
     public mutating func setCell(x: Int, y: Int, with value: Cell) {
         items[x][y] = value
@@ -78,6 +100,12 @@ public struct Grid<Cell> {
 
     public mutating func setCell(at coordinates: Coordinates, with value: Cell) {
         setCell(x: coordinates.x, y: coordinates.y, with: value)
+    }
+
+    public mutating func setCells(_ coordinates: [Coordinates], with value: Cell) {
+        for coordinate in coordinates {
+            setCell(at: coordinate, with: value)
+        }
     }
 
     public mutating func addRow(_ row: [Cell]) {

@@ -63,11 +63,11 @@ extension AOC2022 {
                 print("iter", start.count)
                 var isDeadEnd = true
                 var endPaths = endPaths
-                if currentPosition.y < grid.width - 1 && !start.contains(currentPosition.right) { // right
-                    let rightElevation = grid.getCell(at: currentPosition.right)!
+                if currentPosition.y < grid.width - 1 && !start.contains(currentPosition.east) { // right
+                    let rightElevation = grid.getCell(at: currentPosition.east)!
                     if currentElevation.canWalk(up: rightElevation) {
-                        let newPath = start.appended(currentPosition.right)
-                        if currentPosition.right == end {
+                        let newPath = start.appended(currentPosition.east)
+                        if currentPosition.east == end {
                             endPaths = endPaths.appended(.end(path: newPath))
                         } else {
                             let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
@@ -83,11 +83,11 @@ extension AOC2022 {
                     }
                 }
 
-                if currentPosition.y > 0 && !start.contains(currentPosition.left) { // left
-                    let leftElevation = grid.getCell(at: currentPosition.left)!
+                if currentPosition.y > 0 && !start.contains(currentPosition.west) { // left
+                    let leftElevation = grid.getCell(at: currentPosition.west)!
                     if currentElevation.canWalk(up: leftElevation) {
-                        let newPath = start.appended(currentPosition.left)
-                        if currentPosition.left == end {
+                        let newPath = start.appended(currentPosition.west)
+                        if currentPosition.west == end {
                             endPaths = endPaths.appended(.end(path: newPath))
                         } else {
                             let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
@@ -103,11 +103,11 @@ extension AOC2022 {
                     }
                 }
 
-                if currentPosition.x < grid.height - 1 && !start.contains(currentPosition.down) { // down
-                    let downElevation = grid.getCell(at: currentPosition.down)!
+                if currentPosition.x < grid.height - 1 && !start.contains(currentPosition.south) { // down
+                    let downElevation = grid.getCell(at: currentPosition.south)!
                     if currentElevation.canWalk(up: downElevation) {
-                        let newPath = start.appended(currentPosition.down)
-                        if currentPosition.down == end {
+                        let newPath = start.appended(currentPosition.south)
+                        if currentPosition.south == end {
                             endPaths = endPaths.appended(.end(path: newPath))
                         } else {
                             let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
@@ -123,11 +123,11 @@ extension AOC2022 {
                     }
                 }
 
-                if currentPosition.x > 0 && !start.contains(currentPosition.up) { // up
-                    let upElevation = grid.getCell(at: currentPosition.up)!
+                if currentPosition.x > 0 && !start.contains(currentPosition.north) { // up
+                    let upElevation = grid.getCell(at: currentPosition.north)!
                     if currentElevation.canWalk(up: upElevation) {
-                        let newPath = start.appended(currentPosition.up)
-                        if currentPosition.up == end {
+                        let newPath = start.appended(currentPosition.north)
+                        if currentPosition.north == end {
                             endPaths = endPaths.appended(.end(path: newPath))
                         } else {
                             let status = findEnd(grid, from: newPath, to: end, endPaths: endPaths)
@@ -179,7 +179,7 @@ private struct ParseResult {
     let end: Coordinates
 }
 
-private struct Elevation {
+private struct Elevation: Equatable {
     let character: Character
 
     var height: Int {

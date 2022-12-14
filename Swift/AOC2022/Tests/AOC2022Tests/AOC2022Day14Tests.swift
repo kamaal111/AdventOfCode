@@ -19,6 +19,8 @@ final class AOC2022Day14Tests: XCTestCase {
 
     func testPart1() {
         let result = day.Part1.execute(with: input)
+        XCTAssertNotEqual(result, 399)
+        XCTAssertNotEqual(result, 443)
         XCTAssertEqual(result, 0)
     }
 

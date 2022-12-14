@@ -15,6 +15,7 @@ function keepAwayPlayInteractions(
   const monkeyIDs = Object.keys(monkeys);
   let round = 0;
   while (round < rounds) {
+    console.log('round', round);
     for (const monkeyID of monkeyIDs) {
       const monkey: Monkey = monkeys[monkeyID];
       monkey.itemsInspected += monkey.items.length;
@@ -30,7 +31,7 @@ function keepAwayPlayInteractions(
         monkeys[monkeyToThrowTo].items.push(newWorryLevel);
       }
     }
-    console.log('round', round);
+
     round += 1;
   }
 
@@ -104,9 +105,13 @@ function parseMonkeys(input: string): { [x: MonkeyID]: Monkey } {
         .map((value) => value.split(':')[1]);
       const items = monkeyInfo[0].split(',').map((value) => BigInt(value));
       const operation = monkeyInfo[1].split('=')[1].trimStart();
-      const testDivisibleBy = Number(monkeyInfo[2].split(' ').at(-1)!);
-      const decisionTrue = Number(monkeyInfo[3].split(' ').at(-1)!);
-      const decisionFalse = Number(monkeyInfo[4].split(' ').at(-1)!);
+      const remainingMonkeyInfo = monkeyInfo.slice(2, 5).map((value) => {
+        const splittedValue = value.split(" ")
+        return Number(splittedValue[splittedValue.length - 1])
+      })
+      const testDivisibleBy = remainingMonkeyInfo[0];
+      const decisionTrue = remainingMonkeyInfo[1];
+      const decisionFalse = remainingMonkeyInfo[2];
 
       return new Monkey(monkeyID, items, operation, testDivisibleBy, {
         true: decisionTrue,
