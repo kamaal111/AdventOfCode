@@ -17,9 +17,9 @@ public struct Grid<Cell> {
 
     public init(size: Size, defaultValue: Cell) {
         var items: [[Cell]] = []
-        for _ in 0..<size.height {
+        for _ in 0..<size.width {
             var row: [Cell] = []
-            for _ in 0..<size.width {
+            for _ in 0..<size.height {
                 row = row.appended(defaultValue)
             }
             items = items.appended(row)
