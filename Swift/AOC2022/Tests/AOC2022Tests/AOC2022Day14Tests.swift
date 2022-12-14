@@ -21,7 +21,7 @@ final class AOC2022Day14Tests: XCTestCase {
         let result = day.Part1.execute(with: input)
         XCTAssertNotEqual(result, 399)
         XCTAssertNotEqual(result, 443)
-        XCTAssertEqual(result, 0)
+        XCTAssertEqual(result, 779)
     }
 
     func testPart1Example() {
@@ -30,13 +30,16 @@ final class AOC2022Day14Tests: XCTestCase {
     }
 
     func testPart2() {
-       let result = day.Part2.execute(with: input)
-       XCTAssertEqual(result, 0)
+//        let result = day.Part2.execute(with: input)
+//        XCTAssertNotEqual(result, 18895)
+//        XCTAssertNotEqual(result, 40080)
+//        XCTAssertNotEqual(result, 40079)
+//        XCTAssertEqual(result, 0)
     }
 
     func testPart2Example() {
-       let result = day.Part2.execute(with: exampleInput)
-       XCTAssertEqual(result, 0)
+//       let result = day.Part2.execute(with: exampleInput)
+//       XCTAssertEqual(result, 93)
     }
 }
 

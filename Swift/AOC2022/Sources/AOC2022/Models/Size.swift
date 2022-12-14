@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Size {
+public struct Size: Equatable {
     public var width: Int
     public var height: Int
 

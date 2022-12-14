@@ -16,65 +16,98 @@ extension AOC2022 {
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
-                let grid = parseInput(input)
+                let grid = parseInput(input, withAbyss: true)
                 return pourSand(in: grid)
             }
         }
 
         public enum Part2 {
             public static func execute(with input: String) -> Int {
-                0
+                let grid = parseInput(input, withAbyss: false)
+                return pourSand(in: grid)
             }
         }
 
-        private static func pourSand(
-            in grid: Grid<Plot>,
-            start: Coordinates = STARTING_POINT.south,
-            units: Int = 0,
-            iterations: Int = 0) -> Int {
-                print("units", units, iterations)
-                guard iterations < 12_429 else {
-                    // close to stack overflow
+        private static func pourSand(in grid: Grid<Plot>) -> Int {
+            let floor = 0..<(grid.height + 1)
+            var start = STARTING_POINT.south
+            var units = 0
+            var grid = grid
+
+            var iteration = 0
+            while true {
+                print(iteration, units)
+                iteration += 1
+                let trajectory = grid.getColumn(x: start.x, y: start.y, until: { $0.cell != .air })
+                guard let landing = trajectory.last, landing.cell != .start else {
+                    // Can't pour anymore
                     return units
                 }
 
-                let trajectory = grid.getColumn(x: start.x, y: start.y, until: { $0.cell != .air })
-                let landing = trajectory.last!
-                let southCell = grid.getCell(at: landing.coordinate.south)!
+                let southCoordinates = landing.coordinate.south
+                if !floor.contains(southCoordinates.x) {
+                    grid.setCell(at: landing.coordinate, with: .sand)
+                    units += 1
+                    start = STARTING_POINT.south
+                    continue
+                }
+
+                guard let southCell = grid.getCell(at: southCoordinates) else {
+                    let air = (0..<grid.width)
+                        .map({ _ in Plot.air }) // breath air
+                    grid.addRow(air)
+                    start = southCoordinates
+                    continue
+                }
                 if southCell == .abyss {
                     return units
                 }
 
                 let southWestCoordinates = landing.coordinate.southWest
-                let southWest = grid.getCell(at: southWestCoordinates)!
-                switch southWest {
-                case .start:
-                    fatalError("No Way Jose")
-                case .air:
-                    return pourSand(in: grid, start: southWestCoordinates, units: units, iterations: iterations + 1)
-                case .rock, .sand:
-                    break // Go on to south east
-                case .abyss:
-                    return units
+                if floor.contains(southWestCoordinates.x) {
+                    let southWest = grid.getCell(at: southWestCoordinates)!
+                    switch southWest {
+                    case .start:
+                        fatalError("No Way Jose")
+                    case .air:
+                        start = southWestCoordinates
+                        continue
+                    case .rock, .sand:
+                        break // Go on to south east
+                    case .abyss:
+                        return units
+                    }
                 }
 
                 let southEastCoordinates = landing.coordinate.southEast
+                if !floor.contains(southEastCoordinates.x) {
+                    grid.setCell(at: landing.coordinate, with: .sand)
+                    units += 1
+                    start = STARTING_POINT.south
+                    continue
+                }
+
                 let southEast = grid.getCell(at: southEastCoordinates)
                 switch southEast {
                 case .start:
                     fatalError("Huh?")
                 case .air:
-                    return pourSand(in: grid, start: southEastCoordinates, units: units, iterations: iterations + 1)
+                    start = southEastCoordinates
+                    continue
                 case .rock, .sand, .none:
-                    var grid = grid
                     grid.setCell(at: landing.coordinate, with: .sand)
-                    return pourSand(in: grid, start: STARTING_POINT.south, units: units + 1, iterations: iterations + 1)
+                    units += 1
+                    start = STARTING_POINT.south
+                    continue
                 case .abyss:
                     return units
                 }
             }
 
-        private static func parseInput(_ input: String) -> Grid<Plot> {
+            fatalError("Just don't escape")
+        }
+
+        private static func parseInput(_ input: String, withAbyss: Bool) -> Grid<Plot> {
             var size = Size(width: 0, height: 0)
             var rockLine: [[Coordinates]] = []
 
@@ -104,9 +137,16 @@ extension AOC2022 {
                     point = next
                 }
             }
-            let abyss = (0..<size.width)
-                .map({ _ in Plot.abyss })
-            grid.addRow(abyss)
+
+            if size != grid.size {
+                fatalError("Why are you doing this to me?")
+            }
+
+            if withAbyss {
+                let abyss = (0..<size.width)
+                    .map({ _ in Plot.abyss })
+                grid.addRow(abyss)
+            }
 
             return grid
         }
