@@ -95,7 +95,7 @@ public struct Grid<Cell> {
         }
 
     public mutating func setCell(x: Int, y: Int, with value: Cell) {
-        items[x][y] = value
+        items[y][x] = value
     }
 
     public mutating func setCell(at coordinates: Coordinates, with value: Cell) {

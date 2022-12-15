@@ -57,10 +57,12 @@ extension AOC2022 {
                     lowestSize.height = coordinates.beacon.y
                 }
             }
+
+//            let widthDifference = highestSize.width 
             print(lowestSize, highestSize)
         }
 
-        private static func parseLine(_ line: String.SubSequence) -> (sensor: Coordinates, beacon: Coordinates) {
+        private static func parseLine(_ line: String.SubSequence) -> Scan {
             let coordinates = line
                 .split(separator: ":")
                 .map({
@@ -77,7 +79,18 @@ extension AOC2022 {
                     return Coordinates(x: coordinate[0], y: coordinate[1])
                 })
 
-            return (coordinates[0], coordinates[1])
+            return Scan(sensor: coordinates[0], beacon: coordinates[1])
         }
     }
+}
+
+private struct Scan {
+    let sensor: Coordinates
+    let beacon: Coordinates
+}
+
+private enum Mark {
+    case sensor(coordinates: Coordinates)
+    case beacon(coordinates: Coordinates)
+    case empty(coordinates: Coordinates)
 }
