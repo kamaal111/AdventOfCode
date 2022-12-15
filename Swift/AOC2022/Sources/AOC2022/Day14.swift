@@ -40,6 +40,13 @@ extension AOC2022 {
                 iteration += 1
                 let trajectory = grid.getColumn(x: start.x, y: start.y, until: { $0.cell != .air })
                 guard let landing = trajectory.last, landing.cell != .start else {
+                    if start != STARTING_POINT.south {
+                        grid.setCell(at: start, with: .sand)
+                        units += 1
+                        start = STARTING_POINT.south
+                        continue
+                    }
+
                     // Can't pour anymore
                     return units
                 }
