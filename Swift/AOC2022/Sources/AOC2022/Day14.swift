@@ -8,7 +8,8 @@
 import Foundation
 import ShrimpExtensions
 
-private let STARTING_POINT = Coordinates(x: 0, y: 500)
+private let STARTING_POINT = Coordinates(x: 500, y: 0)
+private let DRIP_POINT = STARTING_POINT.south
 
 extension AOC2022 {
     public enum Day14: DayScaffold {
@@ -29,82 +30,69 @@ extension AOC2022 {
         }
 
         private static func pourSand(in grid: Grid<Plot>) -> Int {
-            let floor = 0..<(grid.height + 1)
-            var start = STARTING_POINT.south
+            var start = DRIP_POINT
+            var iterations = 0
             var units = 0
             var grid = grid
 
-            var iteration = 0
-            while true {
-                print(iteration, units)
-                iteration += 1
-                let trajectory = grid.getColumn(x: start.x, y: start.y, until: { $0.cell != .air })
-                guard let landing = trajectory.last, landing.cell != .start else {
-                    if start != STARTING_POINT.south {
-                        grid.setCell(at: start, with: .sand)
-                        units += 1
-                        start = STARTING_POINT.south
-                        continue
-                    }
+            func rest(_ coordinates: Coordinates) {
+                units += 1
+                start = DRIP_POINT
+                grid.setCell(at: coordinates, with: .sand)
+            }
 
-                    // Can't pour anymore
-                    return units
-                }
+            func roll(_ coordinates: Coordinates) {
+                start = coordinates
+            }
+
+            while true {
+                iterations += 1
+                print("iterations=\(iterations); units=\(units); start=(x: \(start.x), y: \(start.y))")
+                let trajectory = grid
+                    .getColumn(start: start.y, x: start.x, until: { $0.cell != .air })
+                    .prepended((.start, start))
+                let landing = trajectory.last!
 
                 let southCoordinates = landing.coordinate.south
-                if !floor.contains(southCoordinates.x) {
-                    grid.setCell(at: landing.coordinate, with: .sand)
-                    units += 1
-                    start = STARTING_POINT.south
+                let southCell = grid.getCell(at: southCoordinates)!
+                switch southCell {
+                case .start:
+                    if southCoordinates == DRIP_POINT {
+                        fatalError("Not in the first part")
+                    }
+                case .air:
+                    roll(southCoordinates) // roll deeper
                     continue
-                }
-
-                guard let southCell = grid.getCell(at: southCoordinates) else {
-                    let air = (0..<grid.width)
-                        .map({ _ in Plot.air }) // breath air
-                    grid.addRow(air)
-                    start = southCoordinates
-                    continue
-                }
-                if southCell == .abyss {
+                case .rock, .sand:
+                    break // look left and then right before crossing
+                case .abyss:
                     return units
                 }
 
                 let southWestCoordinates = landing.coordinate.southWest
-                if floor.contains(southWestCoordinates.x) {
-                    let southWest = grid.getCell(at: southWestCoordinates)!
-                    switch southWest {
-                    case .start:
-                        fatalError("No Way Jose")
-                    case .air:
-                        start = southWestCoordinates
-                        continue
-                    case .rock, .sand:
-                        break // Go on to south east
-                    case .abyss:
-                        return units
-                    }
-                }
-
-                let southEastCoordinates = landing.coordinate.southEast
-                if !floor.contains(southEastCoordinates.x) {
-                    grid.setCell(at: landing.coordinate, with: .sand)
-                    units += 1
-                    start = STARTING_POINT.south
-                    continue
-                }
-
-                let southEast = grid.getCell(at: southEastCoordinates)
-                switch southEast {
+                let southWestCell = grid.getCell(at: southWestCoordinates)!
+                switch southWestCell {
                 case .start:
                     fatalError("Huh?")
                 case .air:
-                    start = southEastCoordinates
+                    roll(southWestCoordinates)
+                    continue
+                case .rock, .sand:
+                    break // check south east
+                case .abyss:
+                    return units
+                }
+
+                let southEastCoordinates = landing.coordinate.southEast
+                let southEastCell = grid.getCell(at: southEastCoordinates)
+                switch southEastCell {
+                case .start:
+                    fatalError("It will not work this time either")
+                case .air:
+                    roll(southEastCoordinates)
                     continue
                 case .rock, .sand, .none:
-                    grid.setCell(at: landing.coordinate, with: .sand)
-                    units += 1
-                    start = STARTING_POINT.south
+                    rest(landing.coordinate)
                     continue
                 case .abyss:
                     return units
@@ -122,11 +110,11 @@ extension AOC2022 {
                 let parsedLine = parseLine(line)
                 rockLine = rockLine.appended(parsedLine)
                 for coordinate in parsedLine {
-                    if (coordinate.x + 1) > size.height {
-                        size.height = coordinate.x + 1
+                    if (coordinate.x + 1) > size.width {
+                        size.width = coordinate.x + 1
                     }
-                    if (coordinate.y + 1) > size.width {
-                        size.width = coordinate.y + 1
+                    if (coordinate.y + 1) > size.height {
+                        size.height = coordinate.y + 1
                     }
                 }
             }
@@ -139,7 +127,8 @@ extension AOC2022 {
                 while point != nil {
                     let next = line.popLast()
                     if let next {
-                        grid.setCells(point!.to(next).concat([point!, next]), with: .rock)
+                        let rockCoordinates = point!.to(next).concat([point!, next])
+                        grid.setCells(rockCoordinates, with: .rock)
                     }
                     point = next
                 }
@@ -163,8 +152,21 @@ extension AOC2022 {
                 .split(separator: "->")
                 .map({
                     let coordinates = $0.trimmingCharacters(in: .whitespaces).splitCommas
-                    return Coordinates(x: coordinates[1].int!, y: coordinates[0].int!)
+                    return Coordinates(x: coordinates[0].int!, y: coordinates[1].int!)
                 })
+        }
+
+        private static func drawGrid(_ grid: Grid<Plot>, from start: Int) {
+            let drawnGrid = grid
+                .items
+                .map({
+                    $0
+                        .range(from: start)
+                        .map(\.rawValue)
+                        .joined()
+                })
+                .joined(separator: "\n")
+            print(drawnGrid)
         }
     }
 }

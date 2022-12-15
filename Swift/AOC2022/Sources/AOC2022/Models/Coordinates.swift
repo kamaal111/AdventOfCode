@@ -62,7 +62,7 @@ public struct Coordinates: Equatable, Hashable {
     }
 
     public var southEast: Coordinates {
-        Coordinates(x: x + 1, y: y + 1)
+        southEast(1)
     }
 
     public var east: Coordinates {
@@ -70,7 +70,7 @@ public struct Coordinates: Equatable, Hashable {
     }
 
     public var southWest: Coordinates {
-        Coordinates(x: x + 1, y: y - 1)
+        southWest(1)
     }
 
     public var west: Coordinates {
@@ -78,19 +78,27 @@ public struct Coordinates: Equatable, Hashable {
     }
 
     public func north(_ amount: Int) -> Coordinates {
-        Coordinates(x: x - amount, y: y)
+        Coordinates(x: x, y: y - amount)
     }
 
     public func south(_ amount: Int) -> Coordinates {
-        Coordinates(x: x + amount, y: y)
-    }
-
-    public func east(_ amount: Int) -> Coordinates {
         Coordinates(x: x, y: y + amount)
     }
 
+    public func east(_ amount: Int) -> Coordinates {
+        Coordinates(x: x + amount, y: y)
+    }
+
+    public func southEast(_ amount: Int) -> Coordinates {
+        Coordinates(x: x + amount, y: y + amount)
+    }
+
+    public func southWest(_ amount: Int) -> Coordinates {
+        Coordinates(x: x - amount, y: y + amount)
+    }
+
     public func west(_ amount: Int) -> Coordinates {
-        Coordinates(x: x, y: y - amount)
+        Coordinates(x: x - amount, y: y)
     }
 
     public func isTouching(_ other: Coordinates) -> Bool {

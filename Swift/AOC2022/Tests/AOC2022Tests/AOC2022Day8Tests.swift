@@ -24,6 +24,7 @@ final class AOC2022Day8Tests: XCTestCase {
         XCTAssertNotEqual(result, 7280)
         XCTAssertNotEqual(result, 5418)
         XCTAssertNotEqual(result, 1325)
+        XCTAssertNotEqual(result, 2849)
         XCTAssertEqual(result, 1533)
     }
 

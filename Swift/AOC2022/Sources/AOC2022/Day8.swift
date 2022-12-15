@@ -86,7 +86,7 @@ private struct ProcessTick {
     let coordinates: Coordinates
 
     var tree: Tree {
-        row[coordinates.y]
+        row[coordinates.x]
     }
 
     var scenicEdges: Edges {
@@ -121,42 +121,42 @@ private struct ProcessTick {
     }
 
     var isEdge: Bool {
-        grid.cellIsRightEdge(y: coordinates.y) ||
-        grid.cellIsLeftEdge(y: coordinates.y) ||
-        grid.cellIsTopEdge(x: coordinates.x) ||
-        grid.cellIsBottomEdge(x: coordinates.x)
+        grid.cellIsRightEdge(x: coordinates.x) ||
+        grid.cellIsLeftEdge(x: coordinates.x) ||
+        grid.cellIsTopEdge(y: coordinates.y) ||
+        grid.cellIsBottomEdge(y: coordinates.y)
     }
 
     var treesToTheRight: [Tree] {
         row
-            .range(from: coordinates.y + 1)
+            .range(from: coordinates.x + 1)
             .asArray()
     }
 
     var treesToTheLeft: [Tree] {
         row
-            .range(from: 0, to: coordinates.y)
+            .range(from: 0, to: coordinates.x)
             .reversed()
     }
 
     var treesAbove: [Tree] {
         column
-            .range(from: 0, to: coordinates.x)
+            .range(from: 0, to: coordinates.y)
             .reversed()
     }
 
     var treesBelow: [Tree] {
         column
-            .range(from: coordinates.x + 1)
+            .range(from: coordinates.y + 1)
             .asArray()
     }
 
     var column: [Tree] {
-        grid.getColumn(y: coordinates.y)
+        grid.getColumn(x: coordinates.x)
     }
 
     var row: [Tree] {
-        grid.getRow(x: coordinates.x)!
+        grid.getRow(y: coordinates.y)!
     }
 }
 

@@ -40,49 +40,49 @@ public struct Grid<Cell> {
     }
 
     public func getCell(x: Int, y: Int) -> Cell? {
-        getRow(x: x)?.at(y)
+        getRow(y: y)?.at(x)
     }
 
     public func getCell(at coordinates: Coordinates) -> Cell? {
         getCell(x: coordinates.x, y: coordinates.y)
     }
 
-    public func cellIsBottomEdge(x: Int) -> Bool {
-        x >= (height - 1)
+    public func cellIsBottomEdge(y: Int) -> Bool {
+        y >= (height - 1)
     }
 
-    public func cellIsTopEdge(x: Int) -> Bool {
-        x == 0
-    }
-
-    public func cellIsLeftEdge(y: Int) -> Bool {
+    public func cellIsTopEdge(y: Int) -> Bool {
         y == 0
     }
 
-    public func cellIsRightEdge(y: Int) -> Bool {
-        y >= (width - 1)
+    public func cellIsLeftEdge(x: Int) -> Bool {
+        x == 0
     }
 
-    public func getRow(x: Int) -> [Cell]? {
-        items.at(x)
+    public func cellIsRightEdge(x: Int) -> Bool {
+        x >= (width - 1)
     }
 
-    public func getColumn(y: Int) -> [Cell] {
-        getColumn(x: 0, y: y)
+    public func getRow(y: Int) -> [Cell]? {
+        items.at(y)
     }
 
-    public func getColumn(x: Int, y: Int) -> [Cell] {
-        (x..<height)
-            .compactMap({ getCell(x: $0, y: y)})
+    public func getColumn(x: Int) -> [Cell] {
+        getColumn(start: 0, x: x)
+    }
+
+    public func getColumn(start: Int, x: Int) -> [Cell] {
+        (start..<height)
+            .compactMap({ getCell(x: x, y: $0)})
     }
 
     public func getColumn(
+        start: Int,
         x: Int,
-        y: Int,
         until predicate: ((cell: Cell, coordinate: Coordinates)) -> Bool) -> [(cell: Cell, coordinate: Coordinates)] {
             var cells: [(Cell, Coordinates)] = []
-            for i in x..<height {
-                let coordinate = Coordinates(x: i, y: y)
+            for i in start..<height {
+                let coordinate = Coordinates(x: x, y: i + start)
                 if let cell = getCell(at: coordinate) {
                     let cellWithCoordinate = (cell, coordinate)
                     if predicate(cellWithCoordinate) {
