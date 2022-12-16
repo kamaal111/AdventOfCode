@@ -30,8 +30,8 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3
     let day = AOC2022.Day15.self
 
     func testPart1() {
-        let result = day.Part1.execute(with: input)
-        XCTAssertEqual(result, 0)
+//        let result = day.Part1.execute(with: input)
+//        XCTAssertEqual(result, 0)
     }
 
     func testPart1Example() {

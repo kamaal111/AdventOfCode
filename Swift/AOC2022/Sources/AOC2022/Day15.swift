@@ -14,7 +14,7 @@ extension AOC2022 {
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
-                parseInput(input)
+                _ = parseInput(input)
                 return 0
             }
         }
@@ -25,44 +25,82 @@ extension AOC2022 {
             }
         }
 
-        private static func parseInput(_ input: String) {
-            var highestSize = Size(width: 0, height: 0)
-            var lowestSize = Size(width: 0, height: 0)
+        private static func parseInput(_ input: String) -> Grid<Mark> {
+            var highestSize = Size.zero
+            var lowestSize = Size.zero
+            var sensorsAndBeacons: [(sensor: Coordinates, beacon: Coordinates)] = []
 
             for line in input.splitLines {
-                let coordinates = parseLine(line)
-                if coordinates.sensor.x > highestSize.width {
-                    highestSize.width = coordinates.sensor.x
-                }
-                if coordinates.sensor.y > highestSize.height {
-                    highestSize.height = coordinates.sensor.y
-                }
-                if coordinates.beacon.x > highestSize.width {
-                    highestSize.width = coordinates.beacon.x
-                }
-                if coordinates.beacon.y > highestSize.height {
-                    highestSize.height = coordinates.beacon.y
-                }
-
-                if coordinates.sensor.x < lowestSize.width {
-                    lowestSize.width = coordinates.sensor.x
-                }
-                if coordinates.sensor.y < lowestSize.height {
-                    lowestSize.height = coordinates.sensor.y
-                }
-                if coordinates.beacon.x < lowestSize.width {
-                    lowestSize.width = coordinates.beacon.x
-                }
-                if coordinates.beacon.y < lowestSize.height {
-                    lowestSize.height = coordinates.beacon.y
-                }
+                let sensorsAndBeacon = parseLine(line)
+                sensorsAndBeacons = sensorsAndBeacons.appended(sensorsAndBeacon)
+                highestSize = newHighestGridSize(
+                    previousSize: highestSize,
+                    sensor: sensorsAndBeacon.sensor,
+                    beacon: sensorsAndBeacon.beacon)
+                lowestSize = newLowestGridSize(
+                    previousSize: lowestSize,
+                    sensor: sensorsAndBeacon.sensor,
+                    beacon: sensorsAndBeacon.beacon)
             }
 
-//            let widthDifference = highestSize.width 
-            print(lowestSize, highestSize)
+            let fullWidth = highestSize.width - lowestSize.width + 1
+            let fullHeight = highestSize.height - lowestSize.height + 1
+            let fullSize = Size(width: fullWidth, height: fullHeight)
+            var grid = Grid(size: fullSize, defaultValue: Mark.empty)
+
+            for sensorAndBeacon in sensorsAndBeacons {
+                let correctionX = fullSize.width - highestSize.width - 1
+                let correctionY = fullSize.height - highestSize.height - 1
+                let sensorCoordinates = sensorAndBeacon.sensor
+                let corectedSensorCoordinates = Coordinates(
+                    x: correctionX + sensorCoordinates.x,
+                    y: correctionY + sensorCoordinates.y)
+                let beaconCoordinates = sensorAndBeacon.beacon
+                let correctedBeaconCoordinates = Coordinates(
+                    x: correctionX + beaconCoordinates.x,
+                    y: correctionY + beaconCoordinates.y)
+                grid.setCell(at: corectedSensorCoordinates, with: .sensor(closestBeacon: correctedBeaconCoordinates))
+                grid.setCell(at: correctedBeaconCoordinates, with: .beacon)
+            }
+
+            return grid
         }
 
-        private static func parseLine(_ line: String.SubSequence) -> Scan {
+        private static func newHighestGridSize(previousSize: Size, sensor: Coordinates, beacon: Coordinates) -> Size {
+            var previousSize = previousSize
+            if sensor.x > previousSize.width {
+                previousSize.width = sensor.x
+            }
+            if sensor.y > previousSize.height {
+                previousSize.height = sensor.y
+            }
+            if beacon.x > previousSize.width {
+                previousSize.width = beacon.x
+            }
+            if beacon.y > previousSize.height {
+                previousSize.height = beacon.y
+            }
+            return previousSize
+        }
+
+        private static func newLowestGridSize(previousSize: Size, sensor: Coordinates, beacon: Coordinates) -> Size {
+            var previousSize = previousSize
+            if sensor.x < previousSize.width {
+                previousSize.width = sensor.x
+            }
+            if sensor.y < previousSize.height {
+                previousSize.height = sensor.y
+            }
+            if beacon.x < previousSize.width {
+                previousSize.width = beacon.x
+            }
+            if beacon.y < previousSize.height {
+                previousSize.height = beacon.y
+            }
+            return previousSize
+        }
+
+        private static func parseLine(_ line: String.SubSequence) -> (sensor: Coordinates, beacon: Coordinates) {
             let coordinates = line
                 .split(separator: ":")
                 .map({
@@ -79,18 +117,24 @@ extension AOC2022 {
                     return Coordinates(x: coordinate[0], y: coordinate[1])
                 })
 
-            return Scan(sensor: coordinates[0], beacon: coordinates[1])
+            return (sensor: coordinates[0], beacon: coordinates[1])
         }
     }
 }
 
-private struct Scan {
-    let sensor: Coordinates
-    let beacon: Coordinates
-}
-
 private enum Mark {
-    case sensor(coordinates: Coordinates)
-    case beacon(coordinates: Coordinates)
-    case empty(coordinates: Coordinates)
+    case sensor(closestBeacon: Coordinates)
+    case beacon
+    case empty
+
+    var stringValue: String {
+        switch self {
+        case .sensor:
+            return "S"
+        case .beacon:
+            return "B"
+        case .empty:
+            return "."
+        }
+    }
 }

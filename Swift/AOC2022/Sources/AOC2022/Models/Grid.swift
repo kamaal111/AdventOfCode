@@ -94,6 +94,17 @@ public struct Grid<Cell> {
             return cells
         }
 
+    public func draw(from start: Int = 0, mapping: (Cell) -> String) -> String {
+        items
+            .map({
+                $0
+                    .range(from: start)
+                    .map(mapping)
+                    .joined()
+            })
+            .joined(separator: "\n")
+    }
+
     public mutating func setCell(x: Int, y: Int, with value: Cell) {
         items[y][x] = value
     }
