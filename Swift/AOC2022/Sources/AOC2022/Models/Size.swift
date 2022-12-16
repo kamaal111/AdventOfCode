@@ -15,4 +15,6 @@ public struct Size: Equatable {
         self.width = width
         self.height = height
     }
+
+    public static let zero = Size(width: 0, height: 0)
 }
