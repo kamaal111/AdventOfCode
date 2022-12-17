@@ -161,7 +161,7 @@ extension AOC2022 {
                 .items
                 .map({
                     $0
-                        .range(from: start)
+                        .ranged(from: start)
                         .map(\.rawValue)
                         .joined()
                 })

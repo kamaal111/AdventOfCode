@@ -90,14 +90,14 @@ public struct Grid<Cell> {
 
             return (start..<height)
                 .asArray()
-                .map(mapYToCellAndCoordinates, untill: predicate)
+                .map(mapYToCellAndCoordinates, until: predicate)
         }
 
     public func draw(from start: Int = 0, mapping: (Cell) -> String) -> String {
         items
             .map({
                 $0
-                    .range(from: start)
+                    .ranged(from: start)
                     .map(mapping)
                     .joined()
             })

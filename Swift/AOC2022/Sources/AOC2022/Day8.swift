@@ -129,25 +129,25 @@ private struct ProcessTick {
 
     var treesToTheRight: [Tree] {
         row
-            .range(from: coordinates.x + 1)
+            .ranged(from: coordinates.x + 1)
             .asArray()
     }
 
     var treesToTheLeft: [Tree] {
         row
-            .range(from: 0, to: coordinates.x)
+            .ranged(from: 0, to: coordinates.x)
             .reversed()
     }
 
     var treesAbove: [Tree] {
         column
-            .range(from: 0, to: coordinates.y)
+            .ranged(from: 0, to: coordinates.y)
             .reversed()
     }
 
     var treesBelow: [Tree] {
         column
-            .range(from: coordinates.y + 1)
+            .ranged(from: coordinates.y + 1)
             .asArray()
     }
 

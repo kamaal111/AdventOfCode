@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kamaal111/ShrimpExtensions.git",
       "state" : {
-        "revision" : "4c962e09fab2ab8929914002dcdac684bdcd7a02",
-        "version" : "2.9.0"
+        "revision" : "905f3cd824d34f00a98ecd7b7b276b5a489956fd",
+        "version" : "3.0.0"
       }
     },
     {

@@ -45,8 +45,8 @@ extension AOC2022 {
         }
 
         return monkeys
-            .sorted(by: { $0.value.itemsInspected > $1.value.itemsInspected })
-            .range(from: 0, to: 2)
+            .sorted(by: \.value.itemsInspected, using: .orderedDescending)
+            .ranged(from: 0, to: 2)
             .reduce(1, { $0 * $1.value.itemsInspected })
     }
 
@@ -90,7 +90,7 @@ extension AOC2022 {
             .map({
                 let monkeyID: Monkey.ID = $0.offset / strides
                 let monkeyInfo = lines
-                    .range(from: $0.offset + 1, to: $0.offset + strides)
+                    .ranged(from: $0.offset + 1, to: $0.offset + strides)
                     .map({
                         let keyValue = $0.split(separator: ":")
                         return keyValue[1]
