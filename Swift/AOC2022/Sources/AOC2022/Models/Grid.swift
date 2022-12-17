@@ -82,13 +82,13 @@ public struct Grid<Cell> {
         until predicate: ((cell: Cell, coordinate: Coordinates)) -> Bool) -> [(cell: Cell, coordinate: Coordinates)] {
             var cells: [(Cell, Coordinates)] = []
             for i in start..<height {
-                let coordinate = Coordinates(x: x, y: i + start)
+                let coordinate = Coordinates(x: x, y: i)
                 if let cell = getCell(at: coordinate) {
                     let cellWithCoordinate = (cell, coordinate)
+                    cells = cells.appended(cellWithCoordinate)
                     if predicate(cellWithCoordinate) {
                         break
                     }
-                    cells = cells.appended(cellWithCoordinate)
                 }
             }
             return cells
@@ -125,5 +125,11 @@ public struct Grid<Cell> {
             return
         }
         items = items.appended(row)
+    }
+}
+
+extension Grid where Cell == CustomStringConvertible {
+    public func draw(from start: Int = 0) -> String {
+        draw(from: start, mapping: \.description)
     }
 }

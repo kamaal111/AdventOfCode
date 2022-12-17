@@ -16,4 +16,10 @@ extension Array {
 
         return self[start..<end]
     }
+
+    func removedLast() -> [Element] {
+        var array = self
+        array.removeLast()
+        return array
+    }
 }

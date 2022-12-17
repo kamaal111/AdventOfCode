@@ -50,7 +50,7 @@ extension AOC2022 {
                 print("iterations=\(iterations); units=\(units); start=(x: \(start.x), y: \(start.y))")
                 let trajectory = grid
                     .getColumn(start: start.y, x: start.x, until: { $0.cell != .air })
-                    .prepended((.start, start))
+                    .removedLast()
                 let landing = trajectory.last!
 
                 let southCoordinates = landing.coordinate.south

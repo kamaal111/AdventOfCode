@@ -67,6 +67,25 @@ final class GridTests: XCTestCase {
         }
     }
 
+    func testGetColumnUntill() {
+        let grid = Grid(items: [
+            ["🔥", "🧊", "💧"],
+            ["☀️", "💥", "☄️"],
+            ["💨", "🫧", "⚡️"],
+        ])
+        let cases = [
+            (0, ["🔥", "☀️"], "☀️", 0),
+            (1, ["🧊", "💥", "🫧"], "🫧", 0),
+            (2, ["💧"], "💧", 0),
+            (1, ["💥", "🫧"], "🫧", 1),
+            (1, ["🫧"], "🫧", 2),
+        ]
+        for (columnNumber, expectedColumn, untill, start) in cases {
+            let column = grid.getColumn(start: start, x: columnNumber, until: { $0.cell == untill })
+            XCTAssertEqual(column.map(\.cell), expectedColumn)
+        }
+    }
+
     func testAddRow() {
         var grid = Grid(size: Size(width: 2, height: 2), defaultValue: "🔥")
         grid.addRow(["🧊", "💧"])
