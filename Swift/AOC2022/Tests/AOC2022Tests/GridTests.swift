@@ -79,6 +79,8 @@ final class GridTests: XCTestCase {
             (2, ["💧"], "💧", 0),
             (1, ["💥", "🫧"], "🫧", 1),
             (1, ["🫧"], "🫧", 2),
+            (1, [], "🫧", 3),
+            (1, [], "🫧", 4),
         ]
         for (columnNumber, expectedColumn, untill, start) in cases {
             let column = grid.getColumn(start: start, x: columnNumber, until: { $0.cell == untill })

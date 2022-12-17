@@ -17,9 +17,22 @@ extension Array {
         return self[start..<end]
     }
 
+    func map<T>(_ transform: (Element) -> T, untill predicate: (T) -> Bool) -> [T] {
+        var array: [T] = []
+        for element in self {
+            let transformedElement = transform(element)
+            array.append(transformedElement)
+            if predicate(transformedElement) {
+                return array
+            }
+        }
+
+        return array
+    }
+
     func removedLast() -> [Element] {
         var array = self
-        array.removeLast()
+        _ = array.popLast()
         return array
     }
 }
