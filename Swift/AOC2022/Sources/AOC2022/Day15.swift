@@ -14,7 +14,7 @@ extension AOC2022 {
 
         public enum Part1 {
             public static func execute(with input: String) -> Int {
-                parseInput(input)
+                _ = parseInput(input)
                 return 0
             }
         }
@@ -25,7 +25,7 @@ extension AOC2022 {
             }
         }
 
-        private static func parseInput(_ input: String) {
+        private static func parseInput(_ input: String) -> Grid<Mark> {
             var highestSize = Size.zero
             var lowestSize = Size.zero
             var sensorsAndBeacons: [(sensor: Coordinates, beacon: Coordinates)] = []
@@ -63,7 +63,7 @@ extension AOC2022 {
                 grid.setCell(at: correctedBeaconCoordinates, with: .beacon)
             }
 
-            print(grid.draw(mapping: \.stringValue))
+            return grid
         }
 
         private static func newHighestGridSize(previousSize: Size, sensor: Coordinates, beacon: Coordinates) -> Size {
