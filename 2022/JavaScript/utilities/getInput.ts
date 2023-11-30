@@ -9,7 +9,7 @@ export async function getInput(day: string): Promise<string> {
   }
 
   const input = await fs.readFile(
-    `../../Swift/AOC2022/Sources/AOC2022/Inputs/${day}.txt`,
+    `../Swift/Sourcs/AOC2022/Inputs/${day}.txt`,
     'utf-8',
   );
   _inputs[day] = input.toString();

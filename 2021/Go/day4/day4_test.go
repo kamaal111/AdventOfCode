@@ -26,7 +26,7 @@ const exampleInput = `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20
 22 11 13  6  5
  2  0 12  3  7`
 
-const inputPath = "../../../Swift/AOC2021/Sources/AOC2021/Inputs/day4.txt"
+const inputPath = "../Swift/Sources/AOC2021/Inputs/day4.txt"
 
 func TestPart1(t *testing.T) {
 	input, err := utils.GetInputString(inputPath)

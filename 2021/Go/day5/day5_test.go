@@ -17,7 +17,7 @@ const exampleInput = `0,9 -> 5,9
 0,0 -> 8,8
 5,5 -> 8,2`
 
-const inputPath = "../../../Swift/AOC2021/Sources/AOC2021/Inputs/day5.txt"
+const inputPath = "../Swift/Sources/AOC2021/Inputs/day5.txt"
 
 func TestPart1(t *testing.T) {
 	input, err := utils.GetInputString(inputPath)

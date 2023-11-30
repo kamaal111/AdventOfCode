@@ -6,7 +6,7 @@ import (
 	"github.com/kamaal111/AdventOfCode/aoc2021/utils"
 )
 
-const inputPath = "../../../Swift/AOC2021/Sources/AOC2021/Inputs/day1.txt"
+const inputPath = "../Swift/Sources/AOC2021/Inputs/day1.txt"
 
 const exampleInput = `199
 200

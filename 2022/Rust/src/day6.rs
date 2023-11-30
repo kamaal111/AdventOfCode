@@ -38,7 +38,7 @@ fn unique(characters: &std::str::Chars) -> Vec<char> {
 mod tests {
     use std::fs;
 
-    const FILE_PATH: &'static str = "../../Swift/AOC2022/Sources/AOC2022/Inputs/day6.txt";
+    const FILE_PATH: &'static str = "../Swift/Sources/AOC2022/Inputs/day6.txt";
 
     #[test]
     fn part1_works() {
