@@ -31,7 +31,7 @@ export function part2(input: string): number {
     const { red, green, blue } = cubeSet.reduce(
       (highestPossibleSet, cubeSubsets) => {
         const newHighestPossibleSet = highestPossibleSet;
-        for (const [key, value] of Object.entries(highestPossibleSet)) {
+        for (const [key, value] of Object.entries(newHighestPossibleSet)) {
           const cubeSubsetValue = cubeSubsets[key];
           if (cubeSubsetValue > value) {
             newHighestPossibleSet[key] = cubeSubsetValue;
