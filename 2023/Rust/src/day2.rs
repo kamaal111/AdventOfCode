@@ -101,7 +101,7 @@ fn make_set(input: String) -> Vec<Game> {
 mod tests {
     use std::fs;
 
-    const FILE_PATH: &'static str = "../Inputs/day2.txt";
+    const FILE_PATH: &'static str = "../Swift/Sources/AOC2023/Inputs/day2.txt";
 
     #[test]
     fn part1_works() {
