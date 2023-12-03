@@ -1,6 +1,10 @@
 import { test, expect, describe } from "bun:test";
 
 import { part1, part2 } from ".";
+import {
+  part1 as part1Refactored,
+  part2 as part2Refactored,
+} from "./refactored";
 import { getInput } from "../utils/getInput";
 
 const EXAMPLE_INPUT = `
@@ -21,6 +25,12 @@ describe("day3", () => {
     const input = await getInput("day3");
     const result = part1(input);
     expect(result).toBeGreaterThan(518219);
+    expect(result).toBe(522726);
+  });
+
+  test("part1 refactored", async () => {
+    const input = await getInput("day3");
+    const result = part1Refactored(input);
     expect(result).toBe(522726);
   });
 
@@ -45,5 +55,14 @@ describe("day3", () => {
 
   test("part2 with example input raw", () => {
     expect(467 * 35 + 755 * 598).toBe(467835);
+  });
+
+  test("part2 refactored with example input", async () => {
+    expect(part2Refactored(EXAMPLE_INPUT)).toBe(467835);
+  });
+
+  test("part2 refactored", async () => {
+    const input = await getInput("day3");
+    expect(part2Refactored(input)).toBe(81721933);
   });
 });
