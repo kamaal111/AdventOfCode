@@ -30,7 +30,41 @@ export function part1(input: string) {
 
 export function part2(input: string) {
   const { seeds, maps } = parseInput(input);
-  return 0;
+  let lowestLocation = Number.MAX_SAFE_INTEGER;
+  makeSeedPairs(seeds).forEach((seedPair, index, seedPairs) => {
+    console.log(
+      `processing ${index + 1}/${seedPairs.length} with ${
+        seedPair.range
+      } seeds`,
+    );
+
+    for (let index = 0; index < seedPair.range; index += 1) {
+      let current = seedPair.start + index;
+      for (const mapKey of MAP_KEYS) {
+        current = mapping(current, maps, mapKey);
+      }
+
+      console.log(
+        `location found ${seedPair.start + index}/${
+          seedPair.start + seedPair.range
+        }`,
+      );
+      lowestLocation = Math.min(lowestLocation, current);
+    }
+  });
+  return lowestLocation;
+}
+
+function makeSeedPairs(seeds: number[]) {
+  return seeds.reduce<Array<{ start: number; range: number }>>(
+    (pairs, seed, index) => {
+      if (index % 2 === 0) return [...pairs, { start: seed, range: 0 }];
+      const newPairs = pairs;
+      newPairs[newPairs.length - 1].range = seed;
+      return newPairs;
+    },
+    [],
+  );
 }
 
 export function mapping(value: number, maps: Maps, key: MapKeys) {
