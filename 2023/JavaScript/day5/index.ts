@@ -1,11 +1,14 @@
-type MapKeys =
-  | "seed-to-soil"
-  | "soil-to-fertilizer"
-  | "fertilizer-to-water"
-  | "water-to-light"
-  | "light-to-temperature"
-  | "temperature-to-humidity"
-  | "humidity-to-location";
+const MAP_KEYS = [
+  "seed-to-soil",
+  "soil-to-fertilizer",
+  "fertilizer-to-water",
+  "water-to-light",
+  "light-to-temperature",
+  "temperature-to-humidity",
+  "humidity-to-location",
+] as const;
+
+type MapKeys = (typeof MAP_KEYS)[number];
 
 type Maps = Record<
   MapKeys,
@@ -18,28 +21,22 @@ type Maps = Record<
 
 export function part1(input: string) {
   const { seeds, maps } = parseInput(input);
-  const soils = seeds.map((seed) => mapping(seed, maps, "seed-to-soil"));
-  console.log("soils", soils);
-  const fertilizers = soils.map((soil) =>
-    mapping(soil, maps, "soil-to-fertilizer"),
-  );
-  console.log("fertilizers", fertilizers);
-  return 0;
+  let current = seeds;
+  for (const mapKey of MAP_KEYS) {
+    current = current.map((value) => mapping(value, maps, mapKey));
+  }
+  return Math.min(...current);
 }
 
 export function part2(input: string) {
+  const { seeds, maps } = parseInput(input);
   return 0;
 }
 
 export function mapping(value: number, maps: Maps, key: MapKeys) {
   for (const { destinationRange, sourceRangeStart, rangeLength } of maps[key]) {
-    const destinationRangeEnd = destinationRange + rangeLength - 1;
-    if (value >= destinationRange && value <= destinationRangeEnd) {
-      const diff = Math.abs(
-        value - value - destinationRange + sourceRangeStart,
-      );
-      const newValue = value + diff;
-      return newValue;
+    if (value >= sourceRangeStart && value < sourceRangeStart + rangeLength) {
+      return destinationRange + value - sourceRangeStart;
     }
   }
 
@@ -73,15 +70,9 @@ export function parseInput(input: string) {
       return { ...acc, maps };
     },
     {
-      maps: {
-        "seed-to-soil": [],
-        "soil-to-fertilizer": [],
-        "fertilizer-to-water": [],
-        "water-to-light": [],
-        "light-to-temperature": [],
-        "temperature-to-humidity": [],
-        "humidity-to-location": [],
-      },
+      maps: MAP_KEYS.reduce((maps, key) => {
+        return { ...maps, [key]: [] };
+      }, {}) as Maps,
       keys: [],
     },
   );
