@@ -94,7 +94,9 @@ export function parseInput(input: string) {
         return { ...acc, keys: [...acc.keys, key] };
       }
 
-      const key = acc.keys.at(-1)!;
+      const key = acc.keys.at(-1);
+      if (key == null) return acc;
+
       const [destinationRange, sourceRangeStart, rangeLength] = line
         .split(" ")
         .map((value) => Number(value));
