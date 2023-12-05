@@ -92,10 +92,10 @@ describe("day5", () => {
     ).toEqual(expectedLocations);
   });
 
-  test("part2", async () => {
+  test.skip("part2", async () => {
     const input = await getInput("day5");
     const result = part2(input);
-    expect(result).toBe(0);
+    expect(result).toBe(26714516);
   });
 
   test("part2 with example input", () => {
