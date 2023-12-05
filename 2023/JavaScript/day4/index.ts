@@ -1,7 +1,8 @@
 import isNumber from "../utils/isNumber";
+import { sum } from "../utils/sum";
 
 export function part1(input: string): number {
-  return parseGames(input).reduce((sum, game) => {
+  const points = parseGames(input).map((game) => {
     const { winningNumbers, myNumbers } = game.numbers;
     const points = myNumbers
       .filter((number) => winningNumbers.includes(number))
@@ -9,8 +10,9 @@ export function part1(input: string): number {
         if (points === 0) return 1;
         return points * 2;
       }, 0);
-    return sum + points;
-  }, 0);
+    return points;
+  });
+  return sum(points);
 }
 
 export function part2(input: string): number {
@@ -39,7 +41,7 @@ export function part2(input: string): number {
     },
     {},
   );
-  return Object.values(collectedCards).reduce((sum, value) => sum + value, 0);
+  return sum(Object.values(collectedCards));
 }
 
 function parseGames(input: string): Array<{

@@ -1,3 +1,5 @@
+import { min } from "../utils/min";
+
 const MAP_KEYS = [
   "seed-to-soil",
   "soil-to-fertilizer",
@@ -24,7 +26,7 @@ export function part1(input: string) {
   const locations = MAP_KEYS.reduce((current, mapKey) => {
     return current.map((value) => mapping(value, maps, mapKey));
   }, seeds);
-  return Math.min(...locations);
+  return min(locations);
 }
 
 // Brute force done in 8.5 minutes

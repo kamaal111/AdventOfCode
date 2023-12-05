@@ -5,7 +5,7 @@ import { getInput } from "../utils/getInput";
 
 const EXAMPLE_INPUT = ``;
 
-describe("day5", () => {
+describe("day6", () => {
   test("part1", async () => {
     const input = await getInput("day6");
     expect(part1(input)).toBe(0);
@@ -15,7 +15,7 @@ describe("day5", () => {
     expect(part1(EXAMPLE_INPUT)).toBe(0);
   });
 
-  test.skip("part2", async () => {
+  test("part2", async () => {
     const input = await getInput("day6");
     const result = part2(input);
     expect(result).toBe(0);

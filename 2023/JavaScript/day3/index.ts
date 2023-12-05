@@ -1,202 +1,142 @@
-interface Coordinates {
-  x: number;
-  y: number;
-}
-
-interface EngineSchematicCell {
-  value: string;
-  coordinates: Coordinates;
-}
-
-type EngineSchematic = EngineSchematicCell[][];
+import Matrix, { type MatrixElement } from "../models/matrix";
+import { compactMap } from "../utils/compactMap";
+import isNumber from "../utils/isNumber";
+import { sum } from "../utils/sum";
 
 export function part1(input: string): number {
-  const engineSchematic = parseEngineSchematic(input);
-  const partNumbersValues: EngineSchematicCell[][] = [];
-  for (const line of engineSchematic) {
-    let groupedNumbers: EngineSchematicCell[] = [];
-    for (const item of line) {
-      if (isNumber(item.value)) {
-        groupedNumbers.push({
-          value: item.value,
-          coordinates: item.coordinates,
-        });
-      } else {
-        const hasAdjacentSymbol = checkIfHasAdjacentSymbol(
-          groupedNumbers,
-          engineSchematic,
-        );
-        if (hasAdjacentSymbol) {
-          partNumbersValues.push(groupedNumbers);
-        }
+  const engineSchematic = Matrix.fromStringCharacters(input.split("\n"));
+  const partNumbers = engineSchematic.elements
+    .flatMap((elements) => {
+      const { groupedNumbers, foundPartNumbers } = elements.reduce<{
+        groupedNumbers: Array<MatrixElement<string>>;
+        foundPartNumbers: Array<Array<MatrixElement<string>>>;
+      }>(
+        (acc, element) => {
+          if (isNumber(element.value)) {
+            return {
+              ...acc,
+              groupedNumbers: [...acc.groupedNumbers, element],
+            };
+          }
 
-        groupedNumbers = [];
-      }
-    }
+          if (!checkIfHasAdjacentSymbol(acc.groupedNumbers, engineSchematic)) {
+            return { ...acc, groupedNumbers: [] };
+          }
 
-    if (groupedNumbers.length > 0) {
-      const hasAdjacentSymbol = checkIfHasAdjacentSymbol(
-        groupedNumbers,
-        engineSchematic,
+          return {
+            foundPartNumbers: [...acc.foundPartNumbers, acc.groupedNumbers],
+            groupedNumbers: [],
+          };
+        },
+        { groupedNumbers: [], foundPartNumbers: [] },
       );
-      if (hasAdjacentSymbol) {
-        partNumbersValues.push(groupedNumbers);
-      }
-    }
-  }
 
-  const partNumbers = partNumbersValues.map((items) =>
-    Number(items.map(({ value }) => value).join("")),
-  );
-  return partNumbers.reduce((sum, number) => sum + number, 0);
+      if (checkIfHasAdjacentSymbol(groupedNumbers, engineSchematic)) {
+        foundPartNumbers.push(groupedNumbers);
+      }
+
+      return foundPartNumbers;
+    })
+    .map((items) => Number(items.map(({ value }) => value).join("")));
+  return sum(partNumbers);
 }
 
 export function part2(input: string): number {
-  const engineSchematic = parseEngineSchematic(input);
-  let sum = 0;
-  for (let index = 0; index < engineSchematic.length; index += 1) {
-    const line = engineSchematic[index];
-    for (const item of line) {
-      if (item.value === "*") {
-        const gearItems = findGearItems(item, engineSchematic);
-        if (gearItems.length !== 2) continue;
+  const engineSchematic = Matrix.fromStringCharacters(input.split("\n"));
+  const products = compactMap(engineSchematic.elements.flat(), (cell) => {
+    if (cell?.value !== "*") return null;
 
-        const gearItemNumbers = gearItems.map((items) =>
-          Number(items.map(({ value }) => value).join("")),
-        );
-        sum += gearItemNumbers[0] * gearItemNumbers[1];
-      }
-    }
-  }
+    const gearItems = findGearItems(cell, engineSchematic);
+    if (gearItems.length !== 2) return null;
 
-  return sum;
+    const gearItemNumbers = gearItems.map((items) => {
+      return Number(items.map(({ value }) => value).join(""));
+    });
+    return gearItemNumbers[0] * gearItemNumbers[1];
+  });
+  return sum(products);
+}
+
+function checkIfHasAdjacentSymbol(
+  groupedNumbers: Array<MatrixElement<string>>,
+  engineSchematic: Matrix<string>,
+): boolean {
+  return groupedNumbers.some((number) => {
+    return engineSchematic
+      .getNeighbors(number.row, number.column)
+      .some((neighbor) => {
+        return neighbor.value !== "." && !isNumber(neighbor.value);
+      });
+  });
+}
+
+function cellIsIncluded(
+  cell: MatrixElement<string>,
+  cells: Array<MatrixElement<string>>,
+): boolean {
+  return cells.some(({ column, row }) => {
+    return column === cell.column && row === cell.row;
+  });
 }
 
 function groupNumbers(
-  cell: EngineSchematicCell,
-  engineSchematic: EngineSchematic,
-): EngineSchematicCell[] {
-  const leftCells: EngineSchematicCell[] = [];
-  let currentCell = cell;
+  cell: MatrixElement<string>,
+  engineSchematic: Matrix<string>,
+): Array<MatrixElement<string>> {
+  const leftCells: Array<MatrixElement<string>> = [];
+  let currentCell: MatrixElement<string> | undefined = cell;
   while (isNumber(currentCell.value)) {
-    if (!isNumber(currentCell.value)) break;
-
     leftCells.push(currentCell);
-    const nextCell =
-      engineSchematic[currentCell.coordinates.x]?.[
-        currentCell.coordinates.y - 1
-      ];
-    if (nextCell == null) break;
+
+    const nextCell = engineSchematic.get(
+      currentCell.row,
+      currentCell.column - 1,
+    );
+    if (nextCell == null || !isNumber(nextCell.value)) break;
     currentCell = nextCell;
   }
 
-  const items: EngineSchematicCell[] = leftCells.reverse();
-  if (isNumber(currentCell?.value)) {
-    const currentCellIsInItems = items
-      .map(({ coordinates }) => JSON.stringify(coordinates))
-      .includes(JSON.stringify(currentCell.coordinates));
-    if (!currentCellIsInItems) items.push(currentCell);
-  }
-
-  currentCell = engineSchematic[cell.coordinates.x][cell.coordinates.y + 1];
-  if (!isNumber(currentCell?.value)) return items;
-
-  while (isNumber(currentCell.value)) {
-    if (!isNumber(currentCell.value)) break;
-
+  const items = leftCells.reverse();
+  if (isNumber(currentCell?.value) && !cellIsIncluded(currentCell, items)) {
     items.push(currentCell);
-    const nextCell =
-      engineSchematic[currentCell.coordinates.x]?.[
-        currentCell.coordinates.y + 1
-      ];
-    if (nextCell == null) break;
+  }
+
+  currentCell = engineSchematic.get(cell.row, cell.column + 1);
+  while (currentCell != null && isNumber(currentCell?.value)) {
+    items.push(currentCell);
+    const nextCell = engineSchematic.get(
+      currentCell.row,
+      currentCell.column + 1,
+    );
+    if (nextCell == null || !isNumber(nextCell.value)) break;
     currentCell = nextCell;
   }
 
-  if (isNumber(currentCell?.value)) {
-    const currentCellIsInItems = items
-      .map(({ coordinates }) => JSON.stringify(coordinates))
-      .includes(JSON.stringify(currentCell.coordinates));
-    if (!currentCellIsInItems) items.push(currentCell);
+  if (
+    currentCell != null &&
+    isNumber(currentCell.value) &&
+    !cellIsIncluded(currentCell, items)
+  ) {
+    items.push(currentCell);
   }
 
   return items;
 }
 
 function findGearItems(
-  gearSymbol: EngineSchematicCell,
-  engineSchematic: EngineSchematic,
-): EngineSchematicCell[][] {
-  const gearItems: EngineSchematicCell[][] = [];
-
-  function wasAlreadyFound(cell: EngineSchematicCell): boolean {
-    return gearItems
-      .flatMap((item) =>
-        item.map(({ coordinates }) => JSON.stringify(coordinates)),
-      )
-      .includes(JSON.stringify(cell.coordinates));
-  }
-
-  const { x, y } = gearSymbol.coordinates;
-  for (let j = -1; j <= 1; j += 1) {
-    for (let i = -1; i <= 1; i += 1) {
-      const cell = engineSchematic[x + j]?.[y + i];
-
+  gearSymbol: MatrixElement<string>,
+  engineSchematic: Matrix<string>,
+): Array<Array<MatrixElement<string>>> {
+  return engineSchematic
+    .getNeighbors(gearSymbol.row, gearSymbol.column)
+    .reduce<Array<Array<MatrixElement<string>>>>((gearItems, cell) => {
       if (
-        cell?.value === null ||
         !isNumber(cell.value) ||
-        wasAlreadyFound(cell)
+        gearItems.some((row) => cellIsIncluded(cell, row))
       ) {
-        continue;
+        return gearItems;
       }
 
-      const groupedNumbers = groupNumbers(cell, engineSchematic);
-      gearItems.push(groupedNumbers);
-    }
-  }
-  return gearItems;
-}
-
-function checkIfHasAdjacentSymbol(
-  group: EngineSchematicCell[],
-  engineSchematic: EngineSchematic,
-): boolean {
-  function itemIsASymbol(item?: EngineSchematicCell): boolean {
-    if (item == null) return false;
-
-    return item.value !== "." && !isNumber(item.value);
-  }
-
-  for (const item of group) {
-    const { x, y } = item.coordinates;
-    for (let j = -1; j <= 1; j += 1) {
-      for (let i = -1; i <= 1; i += 1) {
-        const cell = engineSchematic[x + j]?.[y + i];
-        if (!itemIsASymbol(cell)) continue;
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-function parseEngineSchematic(input: string): EngineSchematic {
-  const engineSchematic: EngineSchematic = [];
-  const lines = input.split("\n");
-  for (let x = 0; x < lines.length; x += 1) {
-    const line = lines[x].split("");
-    const lineItems: EngineSchematicCell[] = [];
-    for (let y = 0; y < line.length; y += 1) {
-      const item = line[y];
-      lineItems.push({ value: item, coordinates: { x, y } });
-    }
-    engineSchematic.push(lineItems);
-  }
-
-  return engineSchematic;
-}
-
-function isNumber(value?: string): boolean {
-  if (value == null) return false;
-  return !Number.isNaN(Number(value));
+      return [...gearItems, groupNumbers(cell, engineSchematic)];
+    }, []);
 }

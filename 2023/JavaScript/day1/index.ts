@@ -1,3 +1,7 @@
+import { compactMap } from "../utils/compactMap";
+import isNumber from "../utils/isNumber";
+import { sum } from "../utils/sum";
+
 const spelledOutDigitsMap = {
   one: 1,
   two: 2,
@@ -13,31 +17,32 @@ const spelledOutDigitsMap = {
 const spelledOutDigits = Object.keys(spelledOutDigitsMap);
 
 export function part1(input: string): number {
-  return calibirateLines(input.split("\n"));
+  return calibrateLines(input.split("\n"));
 }
 
 export function part2(input: string): number {
-  return calibirateLines(input.split("\n").map(digitizeLine));
+  return calibrateLines(input.split("\n").map(digitizeLine));
 }
 
-function calibirateLines(lines: string[]): number {
-  return lines.reduce((sum, line) => {
-    const digits: string[] = [];
-    for (let index = 0; index < line.length; index += 1) {
-      const character = line[index];
-      if (Number.isNaN(Number(character))) continue;
+function calibrateLines(lines: string[]): number {
+  return sum(
+    compactMap(lines, (line) => {
+      const digits: string[] = [];
+      for (let index = 0; index < line.length; index += 1) {
+        const character = line[index];
+        if (!isNumber(character)) continue;
 
-      if (digits.length < 2) {
-        digits.push(character);
-      } else {
-        digits[1] = character;
+        if (digits.length < 2) {
+          digits.push(character);
+        } else {
+          digits[1] = character;
+        }
       }
-    }
-
-    if (digits.length === 0) return sum;
-    if (digits.length === 1) return sum + Number(`${digits[0]}${digits[0]}`);
-    return sum + Number(digits.join(""));
-  }, 0);
+      if (digits.length === 0) return null;
+      if (digits.length === 1) return Number(`${digits[0]}${digits[0]}`);
+      return Number(digits.join(""));
+    }),
+  );
 }
 
 function digitizeLine(line: string): string {
@@ -45,7 +50,7 @@ function digitizeLine(line: string): string {
 
   for (let index = 0; index < line.length; index += 1) {
     const character = line[index];
-    if (!Number.isNaN(Number(character))) {
+    if (isNumber(character)) {
       digitizedLine.push(character);
       continue;
     }

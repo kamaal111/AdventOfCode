@@ -1,3 +1,5 @@
+import { sum } from "../utils/sum";
+
 interface CubeSubset {
   red: number;
   blue: number;
@@ -7,27 +9,20 @@ interface CubeSubset {
 const possibleConfiguration = { red: 12, green: 13, blue: 14 };
 
 export function part1(input: string): number {
-  let sum = 0;
-  const cubeSets = makeSets(input);
-  for (const [id, cubeSubesets] of Object.entries(cubeSets)) {
-    const cubeSubsetsConfigurationsArePossible = cubeSubesets.every(
-      (cubeSubeset) => {
-        return Object.entries(cubeSubeset).every(
+  const possibleIDs = Object.entries(makeSets(input))
+    .filter(([_, cubeSubsets]) => {
+      return cubeSubsets.every((cubeSubset) => {
+        return Object.entries(cubeSubset).every(
           ([key, value]) => value <= possibleConfiguration[key],
         );
-      },
-    );
-    if (cubeSubsetsConfigurationsArePossible) {
-      sum += Number(id);
-    }
-  }
-
-  return sum;
+      });
+    })
+    .map(([id]) => Number(id));
+  return sum(possibleIDs);
 }
 
 export function part2(input: string): number {
-  let sum = 0;
-  for (const [, cubeSet] of Object.entries(makeSets(input))) {
+  const products = Object.values(makeSets(input)).map((cubeSet) => {
     const { red, green, blue } = cubeSet.reduce(
       (highestPossibleSet, cubeSubsets) => {
         const newHighestPossibleSet = highestPossibleSet;
@@ -41,10 +36,9 @@ export function part2(input: string): number {
       },
       { red: 0, green: 0, blue: 0 },
     );
-
-    sum += red * green * blue;
-  }
-  return sum;
+    return red * green * blue;
+  });
+  return sum(products);
 }
 
 function makeSets(input: string): Record<string, CubeSubset[]> {
