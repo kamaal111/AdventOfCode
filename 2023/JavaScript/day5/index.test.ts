@@ -40,16 +40,56 @@ humidity-to-location map:
 describe("day5", () => {
   test("part1", async () => {
     const input = await getInput("day5");
-    expect(part1(input)).toBe(0);
+    expect(part1(input)).toBe(84470622);
   });
 
   test("part1 with example input", () => {
+    expect(part1(EXAMPLE_INPUT)).toBe(35);
+  });
+
+  test("part1 with example input mappings", () => {
+    // Seed 79, soil 81, fertilizer 81, water 81, light 74, temperature 78, humidity 78, location 82.
+    // Seed 14, soil 14, fertilizer 53, water 49, light 42, temperature 42, humidity 43, location 43.
+    // Seed 55, soil 57, fertilizer 57, water 53, light 46, temperature 82, humidity 82, location 86.
+    // Seed 13, soil 13, fertilizer 52, water 41, light 34, temperature 34, humidity 35, location 35.
     const { seeds, maps } = parseInput(EXAMPLE_INPUT);
-    const expectedSeeds = [81, 14, 57, 13];
-    expect(seeds.map((seed) => mapping(seed, maps, "seed-to-soil"))).toEqual(
-      expectedSeeds,
+    const expectedSoils = [81, 14, 57, 13];
+    const expectedFertilizers = [81, 53, 57, 52];
+    const expectedWaters = [81, 49, 53, 41];
+    const expectedLights = [74, 42, 46, 34];
+    const expectedTemperatures = [78, 42, 82, 34];
+    const expectedHumidities = [78, 43, 82, 35];
+    const expectedLocations = [82, 43, 86, 35];
+
+    expect(seeds.map((value) => mapping(value, maps, "seed-to-soil"))).toEqual(
+      expectedSoils,
     );
-    // expect(part1(EXAMPLE_INPUT)).toBe(35);
+    expect(
+      expectedSoils.map((value) => mapping(value, maps, "soil-to-fertilizer")),
+    ).toEqual(expectedFertilizers);
+    expect(
+      expectedFertilizers.map((value) =>
+        mapping(value, maps, "fertilizer-to-water"),
+      ),
+    ).toEqual(expectedWaters);
+    expect(
+      expectedWaters.map((value) => mapping(value, maps, "water-to-light")),
+    ).toEqual(expectedLights);
+    expect(
+      expectedLights.map((value) =>
+        mapping(value, maps, "light-to-temperature"),
+      ),
+    ).toEqual(expectedTemperatures);
+    expect(
+      expectedTemperatures.map((value) =>
+        mapping(value, maps, "temperature-to-humidity"),
+      ),
+    ).toEqual(expectedHumidities);
+    expect(
+      expectedHumidities.map((value) =>
+        mapping(value, maps, "humidity-to-location"),
+      ),
+    ).toEqual(expectedLocations);
   });
 
   test("part2", async () => {
@@ -59,6 +99,6 @@ describe("day5", () => {
   });
 
   test("part2 with example input", () => {
-    expect(part2(EXAMPLE_INPUT)).toBe(0);
+    expect(part2(EXAMPLE_INPUT)).toBe(46);
   });
 });
