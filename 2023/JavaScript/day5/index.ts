@@ -28,6 +28,7 @@ export function part1(input: string) {
   return Math.min(...current);
 }
 
+// Brute force done in 8.5 minutes
 export function part2(input: string) {
   const { seeds, maps } = parseInput(input);
   let lowestLocation = Number.MAX_SAFE_INTEGER;
@@ -44,11 +45,13 @@ export function part2(input: string) {
         current = mapping(current, maps, mapKey);
       }
 
-      console.log(
-        `location found ${seedPair.start + index}/${
-          seedPair.start + seedPair.range
-        }`,
-      );
+      if (index % 500_000 === 0) {
+        console.log(
+          `location found ${seedPair.start + index}/${
+            seedPair.start + seedPair.range
+          }`,
+        );
+      }
       lowestLocation = Math.min(lowestLocation, current);
     }
   });
