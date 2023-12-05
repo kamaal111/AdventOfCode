@@ -21,48 +21,53 @@ type Maps = Record<
 
 export function part1(input: string) {
   const { seeds, maps } = parseInput(input);
-  let current = seeds;
-  for (const mapKey of MAP_KEYS) {
-    current = current.map((value) => mapping(value, maps, mapKey));
-  }
-  return Math.min(...current);
+  const locations = MAP_KEYS.reduce((current, mapKey) => {
+    return current.map((value) => mapping(value, maps, mapKey));
+  }, seeds);
+  return Math.min(...locations);
 }
 
 // Brute force done in 8.5 minutes
 export function part2(input: string) {
   const { seeds, maps } = parseInput(input);
-  let lowestLocation = Number.MAX_SAFE_INTEGER;
-  makeSeedPairs(seeds).forEach((seedPair, index, seedPairs) => {
-    console.log(
-      `processing ${index + 1}/${seedPairs.length} with ${
-        seedPair.range
-      } seeds`,
-    );
+  return makeSeedPairs(seeds).reduce(
+    (lowestLocation, seedPair, index, seedPairs) => {
+      console.log(
+        `processing ${index + 1}/${seedPairs.length} with ${
+          seedPair.range
+        } seeds`,
+      );
+      let newLowestLocation = lowestLocation;
+      for (let index = 0; index < seedPair.range; index += 1) {
+        const current = MAP_KEYS.reduce((current, mapKey) => {
+          return mapping(current, maps, mapKey);
+        }, seedPair.start + index);
 
-    for (let index = 0; index < seedPair.range; index += 1) {
-      let current = seedPair.start + index;
-      for (const mapKey of MAP_KEYS) {
-        current = mapping(current, maps, mapKey);
+        if (index % 500_000 === 0) {
+          console.log(
+            `location found ${seedPair.start + index}/${
+              seedPair.start + seedPair.range
+            }`,
+          );
+        }
+        if (current < newLowestLocation) {
+          newLowestLocation = current;
+        }
       }
-
-      if (index % 500_000 === 0) {
-        console.log(
-          `location found ${seedPair.start + index}/${
-            seedPair.start + seedPair.range
-          }`,
-        );
-      }
-      lowestLocation = Math.min(lowestLocation, current);
-    }
-  });
-  return lowestLocation;
+      return newLowestLocation;
+    },
+    Number.MAX_SAFE_INTEGER,
+  );
 }
 
 function makeSeedPairs(seeds: number[]) {
   return seeds.reduce<Array<{ start: number; range: number }>>(
     (pairs, seed, index) => {
-      if (index % 2 === 0) return [...pairs, { start: seed, range: 0 }];
-      const newPairs = pairs;
+      if (index % 2 === 0) {
+        return [...pairs, { start: seed, range: 0 }];
+      }
+
+      const newPairs = [...pairs];
       newPairs[newPairs.length - 1].range = seed;
       return newPairs;
     },
@@ -71,17 +76,21 @@ function makeSeedPairs(seeds: number[]) {
 }
 
 export function mapping(value: number, maps: Maps, key: MapKeys) {
-  for (const { destinationRange, sourceRangeStart, rangeLength } of maps[key]) {
-    if (value >= sourceRangeStart && value < sourceRangeStart + rangeLength) {
-      return destinationRange + value - sourceRangeStart;
-    }
-  }
+  const mappingFound = maps[key].find(({ sourceRangeStart, rangeLength }) => {
+    return value >= sourceRangeStart && value < sourceRangeStart + rangeLength;
+  });
+  if (mappingFound == null) return value;
+  const { destinationRange, sourceRangeStart } = mappingFound;
 
-  return value;
+  return destinationRange + value - sourceRangeStart;
 }
 
 export function parseInput(input: string) {
-  const [seeds, ...lines] = input.split("\n");
+  const [rawSeeds, ...lines] = input.split("\n");
+  const seeds = rawSeeds
+    .split(" ")
+    .slice(1)
+    .map((value) => Number(value));
   const { maps } = lines.reduce<{
     maps: Maps;
     keys: MapKeys[];
@@ -101,11 +110,7 @@ export function parseInput(input: string) {
         .split(" ")
         .map((value) => Number(value));
       const maps = { ...acc.maps };
-      maps[key].push({
-        destinationRange,
-        sourceRangeStart,
-        rangeLength,
-      });
+      maps[key].push({ destinationRange, sourceRangeStart, rangeLength });
       return { ...acc, maps };
     },
     {
@@ -116,11 +121,5 @@ export function parseInput(input: string) {
     },
   );
 
-  return {
-    seeds: seeds
-      .split(" ")
-      .slice(1)
-      .map((value) => Number(value)),
-    maps,
-  };
+  return { seeds, maps };
 }
