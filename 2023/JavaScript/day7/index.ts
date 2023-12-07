@@ -1,87 +1,110 @@
-const CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
-const CARDS_VALUES: Record<string, number> = CARDS.reduce(
-  (mapping, card, index) => {
-    return { ...mapping, [card]: index };
-  },
-  {},
-);
+const CARDS_VALUES = [
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "T",
+  "J",
+  "Q",
+  "K",
+  "A",
+];
+const CARD_VALUES_WITH_JOKER = [
+  "J",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "T",
+  "Q",
+  "K",
+  "A",
+];
 
-export const CARDS_TYPES = {
-  FIVE_OF_A_KIND: 0,
-  FOUR_OF_A_KIND: 1,
-  FULL_HOUSE: 2,
-  THREE_OF_A_KIND: 3,
-  TWO_PAIR: 4,
-  ONE_PAIR: 5,
-  HIGH_CARD: 6,
+const CARDS_TYPES = {
+  FIVE_OF_A_KIND: 1,
+  FOUR_OF_A_KIND: 2,
+  FULL_HOUSE: 3,
+  THREE_OF_A_KIND: 4,
+  TWO_PAIR: 5,
+  ONE_PAIR: 6,
+  HIGH_CARD: 7,
 } as const;
 
 export function part1(input: string) {
-  return countWinnings(sortHands(parseInput(input)));
+  return countWinnings(sortHands(parseInput(input)).map(({ bid }) => bid));
 }
 
 export function part2(input: string) {
-  return countWinnings(sortHands(parseInput(input), true));
+  return countWinnings(
+    sortHands(parseInput(input), true).map(({ bid }) => bid),
+  );
 }
 
-function countWinnings(
-  hands: Array<{
-    type: number;
-    hand: string[];
-    bid: number;
-    score: number[];
-  }>,
-) {
-  return hands.reduce((winnings, hand, index) => {
-    return winnings + hand.bid * (index + 1);
+function countWinnings(bids: number[]) {
+  return bids.reduce((winnings, bid, index) => {
+    return winnings + bid * (index + 1);
   }, 0);
 }
 
-// Five of a kind, where all five cards have the same label: AAAAA
-// Four of a kind, where four cards have the same label and one card has a different label: AA8AA
-// Full house, where three cards have the same label, and the remaining two cards share a different label: 23332
-// Three of a kind, where three cards have the same label, and the remaining two cards are each different from any other card in the hand: TTT98
-// Two pair, where two cards share one label, two other cards share a second label, and the remaining card has a third label: 23432
-// One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
-// High card, where all cards' labels are distinct: 23456
 export function typeHand(
-  handCards: { hand: string[]; bid: number },
+  hand: string[],
   withJokers: boolean,
-): {
-  type: (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES];
-  hand: string[];
-  bid: number;
-  score: number[];
-} {
-  const { hand } = handCards;
-  const score = hand.map((card) => CARDS_VALUES[card]);
+): (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES] {
   const cardOccurrences: Record<string, number> = {};
   for (const card of hand) {
     cardOccurrences[card] = (cardOccurrences[card] ?? 0) + 1;
   }
 
   const occurrences = Object.values(cardOccurrences);
-  if (occurrences.length === 1) {
-    return { ...handCards, type: CARDS_TYPES.FIVE_OF_A_KIND, score };
+  if (occurrences.length === 1) return CARDS_TYPES.FIVE_OF_A_KIND;
+  const amountOfJokers = cardOccurrences.J ?? 0;
+  if (withJokers && amountOfJokers > 0) {
+    return typeHandWithJoker(occurrences, amountOfJokers);
   }
+
   if (occurrences.length === 2) {
-    if (occurrences.includes(4)) {
-      return { ...handCards, type: CARDS_TYPES.FOUR_OF_A_KIND, score };
-    }
-    return { ...handCards, type: CARDS_TYPES.FULL_HOUSE, score };
+    if (occurrences.includes(4)) return CARDS_TYPES.FOUR_OF_A_KIND;
+    return CARDS_TYPES.FULL_HOUSE;
   }
   if (occurrences.length === 3) {
-    if (occurrences.includes(3)) {
-      return { ...handCards, type: CARDS_TYPES.THREE_OF_A_KIND, score };
-    }
+    if (occurrences.includes(3)) return CARDS_TYPES.THREE_OF_A_KIND;
+    if (occurrences.includes(2)) return CARDS_TYPES.TWO_PAIR;
+  }
+
+  if (occurrences.length === 4) return CARDS_TYPES.ONE_PAIR;
+  return CARDS_TYPES.HIGH_CARD;
+}
+
+function typeHandWithJoker(
+  occurrences: number[],
+  jokers: number,
+): (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES] {
+  if (occurrences.length === 2) {
+    if (occurrences.includes(4)) return CARDS_TYPES.FIVE_OF_A_KIND;
+    if (jokers === 1) return CARDS_TYPES.FOUR_OF_A_KIND;
+    if (jokers > 1) return CARDS_TYPES.FIVE_OF_A_KIND;
+    return CARDS_TYPES.FULL_HOUSE;
+  }
+
+  if (occurrences.length === 3) {
+    if (occurrences.includes(3)) return CARDS_TYPES.FOUR_OF_A_KIND;
     if (occurrences.includes(2)) {
-      return { ...handCards, type: CARDS_TYPES.TWO_PAIR, score };
+      if (jokers === 1) return CARDS_TYPES.FULL_HOUSE;
+      return CARDS_TYPES.FOUR_OF_A_KIND;
     }
   }
-  if (occurrences.length === 4) {
-    return { ...handCards, type: CARDS_TYPES.ONE_PAIR, score };
-  }
-  return { ...handCards, type: CARDS_TYPES.HIGH_CARD, score };
+
+  if (occurrences.length === 4) return CARDS_TYPES.THREE_OF_A_KIND;
+  return CARDS_TYPES.ONE_PAIR;
 }
 
 function sortHands(
@@ -91,17 +114,30 @@ function sortHands(
   }>,
   withJokers: boolean = false,
 ) {
+  const values = (withJokers ? CARD_VALUES_WITH_JOKER : CARDS_VALUES).reduce<
+    Record<string, number>
+  >((mapping, card, index) => {
+    return { ...mapping, [card]: index };
+  }, {});
+
   return hands
-    .map((handCards) => typeHand(handCards, withJokers))
+    .map(({ hand, bid }) => {
+      const score = hand.map((card) => values[card]);
+      const type = typeHand(hand, withJokers);
+      return { score, type, bid };
+    })
     .toSorted((a, b) => {
-      if (a.type === b.type) {
-        for (let index = 0; index < a.score.length; index += 1) {
-          const aScore = a.score[index];
-          const bScore = b.score[index];
-          if (aScore !== bScore) return aScore - bScore;
+      if (a.type > b.type) return -1;
+      if (a.type < b.type) return 1;
+      for (let index = 0; index < a.score.length; index += 1) {
+        const aScore = a.score[index];
+        const bScore = b.score[index];
+        if (aScore !== bScore) {
+          if (aScore > bScore) return 1;
+          if (aScore < bScore) return -1;
         }
       }
-      return b.type - a.type;
+      return 0;
     });
 }
 
