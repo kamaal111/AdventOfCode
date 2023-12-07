@@ -1,3 +1,6 @@
+import { Counter } from "../utils/counter";
+import { zip } from "../utils/zip";
+
 const CARDS_VALUES = [
   "2",
   "3",
@@ -39,6 +42,8 @@ const CARDS_TYPES = {
   HIGH_CARD: 7,
 } as const;
 
+type CardType = (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES];
+
 export function part1(input: string) {
   return countWinnings(sortHands(parseInput(input)).map(({ bid }) => bid));
 }
@@ -55,18 +60,11 @@ function countWinnings(bids: number[]) {
   }, 0);
 }
 
-export function typeHand(
-  hand: string[],
-  withJokers: boolean,
-): (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES] {
-  const cardOccurrences: Record<string, number> = {};
-  for (const card of hand) {
-    cardOccurrences[card] = (cardOccurrences[card] ?? 0) + 1;
-  }
-
-  const occurrences = Object.values(cardOccurrences);
+export function typeHand(hand: string[], withJokers: boolean): CardType {
+  const cardOccurrences = new Counter(hand);
+  const occurrences = cardOccurrences.values;
   if (occurrences.length === 1) return CARDS_TYPES.FIVE_OF_A_KIND;
-  const amountOfJokers = cardOccurrences.J ?? 0;
+  const amountOfJokers = cardOccurrences.get("J");
   if (withJokers && amountOfJokers > 0) {
     return typeHandWithJoker(occurrences, amountOfJokers);
   }
@@ -84,10 +82,7 @@ export function typeHand(
   return CARDS_TYPES.HIGH_CARD;
 }
 
-function typeHandWithJoker(
-  occurrences: number[],
-  jokers: number,
-): (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES] {
+function typeHandWithJoker(occurrences: number[], jokers: number): CardType {
   if (occurrences.length === 2) {
     if (occurrences.includes(4)) return CARDS_TYPES.FIVE_OF_A_KIND;
     if (jokers === 1) return CARDS_TYPES.FOUR_OF_A_KIND;
@@ -129,23 +124,16 @@ function sortHands(
     .toSorted((a, b) => {
       if (a.type > b.type) return -1;
       if (a.type < b.type) return 1;
-      for (let index = 0; index < a.score.length; index += 1) {
-        const aScore = a.score[index];
-        const bScore = b.score[index];
-        if (aScore !== bScore) {
-          if (aScore > bScore) return 1;
-          if (aScore < bScore) return -1;
-        }
-      }
+      const [aScore, bScore] = zip(a.score, b.score).find(([a, b]) => a !== b)!;
+      if (aScore > bScore) return 1;
+      if (aScore < bScore) return -1;
       return 0;
     });
 }
 
-export function parseInput(input: string) {
+function parseInput(input: string) {
   return input.split("\n").map((value) => {
-    const [rawHand, rawBid] = value.split(" ");
-    const bid = Number(rawBid);
-    const hand = rawHand.split("");
-    return { hand, bid };
+    const [hand, bid] = value.split(" ");
+    return { hand: hand.split(""), bid: Number(bid) };
   });
 }
