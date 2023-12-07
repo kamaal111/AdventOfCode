@@ -6,6 +6,16 @@ const CARDS_VALUES: Record<string, number> = CARDS.reduce(
   {},
 );
 
+export const CARDS_TYPES = {
+  FIVE_OF_A_KIND: 0,
+  FOUR_OF_A_KIND: 1,
+  FULL_HOUSE: 2,
+  THREE_OF_A_KIND: 3,
+  TWO_PAIR: 4,
+  ONE_PAIR: 5,
+  HIGH_CARD: 6,
+} as const;
+
 export function part1(input: string) {
   return countWinnings(sortHands(parseInput(input)));
 }
@@ -34,11 +44,11 @@ function countWinnings(
 // Two pair, where two cards share one label, two other cards share a second label, and the remaining card has a third label: 23432
 // One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
 // High card, where all cards' labels are distinct: 23456
-function typeHand(
+export function typeHand(
   handCards: { hand: string[]; bid: number },
   withJokers: boolean,
 ): {
-  type: number;
+  type: (typeof CARDS_TYPES)[keyof typeof CARDS_TYPES];
   hand: string[];
   bid: number;
   score: number[];
@@ -49,46 +59,29 @@ function typeHand(
   for (const card of hand) {
     cardOccurrences[card] = (cardOccurrences[card] ?? 0) + 1;
   }
+
   const occurrences = Object.values(cardOccurrences);
-  let amountOfJokers = 0;
-  if (withJokers && cardOccurrences.J != null) {
-    amountOfJokers = cardOccurrences.J;
+  if (occurrences.length === 1) {
+    return { ...handCards, type: CARDS_TYPES.FIVE_OF_A_KIND, score };
   }
-  // Five of a kind
-  if (occurrences.length === 1) return { ...handCards, type: 7, score };
   if (occurrences.length === 2) {
-    // Four of a kind
     if (occurrences.includes(4)) {
-      return { ...handCards, type: 6 + amountOfJokers, score };
+      return { ...handCards, type: CARDS_TYPES.FOUR_OF_A_KIND, score };
     }
-    return { ...handCards, type: 5, score };
+    return { ...handCards, type: CARDS_TYPES.FULL_HOUSE, score };
   }
   if (occurrences.length === 3) {
-    // Three of a kind
     if (occurrences.includes(3)) {
-      return { ...handCards, type: 4 + amountOfJokers, score };
+      return { ...handCards, type: CARDS_TYPES.THREE_OF_A_KIND, score };
     }
-    // Two pair
     if (occurrences.includes(2)) {
-      if (amountOfJokers > 0) {
-        // Three of a kind with a joker
-        if (amountOfJokers === 1) return { ...handCards, type: 4, score };
-        // Four of a kind with a joker
-        if (amountOfJokers === 2) return { ...handCards, type: 5, score };
-      }
-      return { ...handCards, type: 3, score };
+      return { ...handCards, type: CARDS_TYPES.TWO_PAIR, score };
     }
   }
-  // One pair
   if (occurrences.length === 4) {
-    if (amountOfJokers > 0) {
-      // Three of a kind with a joker
-      if (amountOfJokers === 1) return { ...handCards, type: 4, score };
-    }
-    return { ...handCards, type: 2, score };
+    return { ...handCards, type: CARDS_TYPES.ONE_PAIR, score };
   }
-  // High card
-  return { ...handCards, type: 0, score };
+  return { ...handCards, type: CARDS_TYPES.HIGH_CARD, score };
 }
 
 function sortHands(
@@ -108,11 +101,11 @@ function sortHands(
           if (aScore !== bScore) return aScore - bScore;
         }
       }
-      return a.type - b.type;
+      return b.type - a.type;
     });
 }
 
-function parseInput(input: string) {
+export function parseInput(input: string) {
   return input.split("\n").map((value) => {
     const [rawHand, rawBid] = value.split(" ");
     const bid = Number(rawBid);
