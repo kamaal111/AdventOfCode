@@ -14,4 +14,17 @@ public enum Maths {
         let longest = floor((-a - discriminant) / -2.0)
         return (shortest, longest)
     }
+
+    public static func greatestCommonDivisor(_ a: Int, _ b: Int) -> Int {
+        if b == 0 { a } else { greatestCommonDivisor(b, a % b) }
+    }
+
+    public static func leastCommonMultiple(_ a: Int, _ b: Int) -> Int {
+        (a * b) / greatestCommonDivisor(a, b)
+    }
+
+    public static func leastCommonMultiple(_ values: [Int]) -> Int {
+        guard values.count > 1 else { return values.first ?? 0 }
+        return values.reduce(values[0], leastCommonMultiple)
+    }
 }
