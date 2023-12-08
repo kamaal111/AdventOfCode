@@ -1,7 +1,7 @@
 import Matrix, { type MatrixElement } from "../models/matrix";
-import { compactMap } from "../utils/compactMap";
-import isNumber from "../utils/isNumber";
-import { sum } from "../utils/sum";
+import { compactMap } from "../utils/arrays";
+import { isNumber } from "../utils/strings";
+import { sum } from "../utils/maths";
 
 export function part1(input: string): number {
   const engineSchematic = Matrix.fromStringCharacters(input.split("\n"));

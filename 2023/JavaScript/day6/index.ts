@@ -1,4 +1,4 @@
-import isNumber from "../utils/isNumber";
+import { isNumber } from "../utils/strings";
 
 export function part1(input: string) {
   const { times, distances } = parseInput(input);
@@ -32,7 +32,6 @@ function getMaximumHoldDownTimeToWin(
 ) {
   for (let index = time; index > minimumTime; index -= 1) {
     const distanceTraveled = calculateDistanceTraveled(time, index);
-    console.log(`going from ${index} to ${minimumTime}`);
     if (distanceTraveled > distance) return index;
   }
 
@@ -42,7 +41,6 @@ function getMaximumHoldDownTimeToWin(
 function getMinimumHoldDownTimeToWin(time: number, distance: number) {
   for (let index = 1; index < time; index += 1) {
     const distanceTraveled = calculateDistanceTraveled(time, index);
-    console.log(`going from ${index} to ${time}`);
     if (distanceTraveled > distance) return index;
   }
 

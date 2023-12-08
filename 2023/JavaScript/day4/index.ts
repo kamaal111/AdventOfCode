@@ -1,5 +1,5 @@
-import isNumber from "../utils/isNumber";
-import { sum } from "../utils/sum";
+import { isNumber } from "../utils/strings";
+import { sum } from "../utils/maths";
 
 export function part1(input: string): number {
   const points = parseGames(input).map((game) => {

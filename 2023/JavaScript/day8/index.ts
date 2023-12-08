@@ -1,3 +1,6 @@
+import { uniques } from "../utils/arrays";
+import { leastCommonMultiple } from "../utils/maths";
+
 export function part1(input: string) {
   const { instructions, coordinates } = parseInput(input);
   let steps = 0;
@@ -32,31 +35,18 @@ export function part2(input: string) {
     steps += 1;
     Object.entries(currentCoordinates)
       .filter(([, value]) => !value.value.endsWith("Z"))
-      .forEach(([key, value]) => {
+      .forEach(([key, { value }]) => {
         currentCoordinates[key] = {
-          value: coordinates[value.value][instruction],
+          value: coordinates[value][instruction],
           steps,
         };
       });
   }
 
-  const coordinateSteps = [
-    ...new Set(Object.values(currentCoordinates).map((value) => value.steps)),
-  ];
-  return coordinateSteps
-    .slice(1)
-    .reduce(
-      (lcm, steps) => leastCommonMultiple(lcm, steps),
-      coordinateSteps[0],
-    );
-}
-
-function greatestCommonDivisor(a: number, b: number) {
-  return b === 0 ? a : greatestCommonDivisor(b, a % b);
-}
-
-function leastCommonMultiple(a: number, b: number) {
-  return (a * b) / greatestCommonDivisor(a, b);
+  const [firstSteps, ...coordinateSteps] = uniques(
+    Object.values(currentCoordinates).map((value) => value.steps),
+  );
+  return coordinateSteps.reduce(leastCommonMultiple, firstSteps);
 }
 
 function parseInput(input: string) {
