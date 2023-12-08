@@ -1,4 +1,4 @@
-import { min } from "../utils/min";
+import { min } from "../utils/maths";
 
 const MAP_KEYS = [
   "seed-to-soil",
@@ -34,24 +34,12 @@ export function part2(input: string) {
   const { seeds, maps } = parseInput(input);
   return makeSeedPairs(seeds).reduce(
     (lowestLocation, seedPair, index, seedPairs) => {
-      console.log(
-        `processing ${index + 1}/${seedPairs.length} with ${
-          seedPair.range
-        } seeds`,
-      );
       let newLowestLocation = lowestLocation;
       for (let index = 0; index < seedPair.range; index += 1) {
         const current = MAP_KEYS.reduce((current, mapKey) => {
           return mapping(current, maps, mapKey);
         }, seedPair.start + index);
 
-        if (index % 500_000 === 0) {
-          console.log(
-            `location found ${seedPair.start + index}/${
-              seedPair.start + seedPair.range
-            }`,
-          );
-        }
         if (current < newLowestLocation) {
           newLowestLocation = current;
         }

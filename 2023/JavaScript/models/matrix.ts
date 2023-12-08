@@ -19,8 +19,8 @@ class Matrix<T> {
     if (maxDistance < 1) return [];
 
     const neighbors: Array<MatrixElement<T>> = [];
-    for (let i = -1; i <= maxDistance; i += 1) {
-      for (let j = -1; j <= maxDistance; j += 1) {
+    for (let i = -maxDistance; i <= maxDistance; i += 1) {
+      for (let j = -maxDistance; j <= maxDistance; j += 1) {
         if (i === 0 && j === 0) continue;
 
         const cell = this.get(row + i, column + j);

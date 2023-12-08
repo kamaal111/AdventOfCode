@@ -1,5 +1,5 @@
 import { Counter } from "../utils/counter";
-import { zip } from "../utils/zip";
+import { zip } from "../utils/arrays";
 
 const CARDS_VALUES = [
   "2",

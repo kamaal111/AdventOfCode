@@ -1,6 +1,6 @@
-import { compactMap } from "../utils/compactMap";
-import isNumber from "../utils/isNumber";
-import { sum } from "../utils/sum";
+import { compactMap } from "../utils/arrays";
+import { isNumber } from "../utils/strings";
+import { sum } from "../utils/maths";
 
 const spelledOutDigitsMap = {
   one: 1,
