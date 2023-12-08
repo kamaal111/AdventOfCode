@@ -36,12 +36,12 @@ private func calculateWaysToWin(time: Double, distance: Double) -> Double {
 private func parseInput(_ input: String) -> (times: [Int], distances: [Int]) {
     let items = input
         .splitLines
-        .compactMap({
+        .map({
             $0
                 .split(separator: ":")
-                .last?
+                .last!
                 .split(separator: " ")
-                .compactMap({ $0.int })
+                .map({ $0.int! })
         })
     assert(items.count == 2)
     return (items[0], items[1])

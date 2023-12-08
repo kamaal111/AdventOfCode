@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "AOC2023",
-    platforms: [.iOS(.v15), .macOS(.v12)],
+    platforms: [.iOS(.v16), .macOS(.v13)],
     products: [
         .library(
             name: "AOC2023",
