@@ -97,23 +97,24 @@ fn make_set(input: String) -> Vec<Game> {
     return games;
 }
 
+#[path = "./utils/get_input.rs"]
+mod get_input;
+
 #[cfg(test)]
 mod tests {
-    use std::fs;
+    use super::get_input::get_input;
 
-    const FILE_PATH: &'static str = "../Swift/Sources/AOC2023/Inputs/day2.txt";
+    const NAME: &'static str = "day2";
 
     #[test]
     fn part1_works() {
-        let input = fs::read_to_string(FILE_PATH).unwrap();
-        let result = super::part1(input);
+        let result = super::part1(get_input(NAME.to_string()));
         assert_eq!(result, 2331);
     }
 
     #[test]
     fn part2_works() {
-        let input = fs::read_to_string(FILE_PATH).unwrap();
-        let result = super::part2(input);
+        let result = super::part2(get_input(NAME.to_string()));
         assert_eq!(result, 71585);
     }
 }
