@@ -1,4 +1,4 @@
-import { test, expect, describe } from "bun:test";
+import { test, expect, describe, beforeAll } from "bun:test";
 
 import {
   part1,
@@ -14,8 +14,17 @@ const EXAMPLE_INPUT = `0 3 6 9 12 15
 10 13 16 21 30 45`;
 
 describe("day9", () => {
+  let input: string;
+
+  beforeAll(async () => {
+    input = await getInput("day9");
+  });
+
+  test("part1 with example input", () => {
+    expect(part1(EXAMPLE_INPUT)).toEqual(114);
+  });
+
   test("part1", async () => {
-    const input = await getInput("day9");
     const result = part1(input);
     expect(result).toBeGreaterThan(831_158_931);
     expect(result).toBeLessThan(1_806_616_102);
@@ -28,9 +37,7 @@ describe("day9", () => {
   });
 
   test("makeTreeForHistoryLine", () => {
-    const historyLine = parseInput("10 13 16 21 30 45");
-
-    const tree = makeTreeForHistoryLine(historyLine[0]);
+    const tree = parseInput("10 13 16 21 30 45")[0];
 
     expect(tree.length).toEqual(2);
     expect(tree[0].value).toEqual(0);
@@ -40,12 +47,7 @@ describe("day9", () => {
     expect(tree[0].left?.left?.left?.left?.value).toEqual(10);
   });
 
-  test("part1 with example input", () => {
-    expect(part1(EXAMPLE_INPUT)).toEqual(114);
-  });
-
   test("part2", async () => {
-    const input = await getInput("day9");
     const result = part2(input);
     expect(result).toEqual(1211);
   });
