@@ -7,7 +7,7 @@ export async function getInput(day: string): Promise<string> {
   if (cachedInputs != null) return cachedInputs;
 
   const input = await fs.readFile(
-    `../Swift/Sources/AOC2023/Inputs/${day}.txt`,
+    `2023/Swift/Sources/AOC2023/Inputs/${day}.txt`,
     "utf-8",
   );
   const inputString = input.toString();
