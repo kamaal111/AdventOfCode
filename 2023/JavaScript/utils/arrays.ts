@@ -23,3 +23,7 @@ export function zip<T1, T2>(array1: T1[], array2: T2[]): Array<[T1, T2]> {
 export function uniques<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
+
+export function enumerate<T>(array: T[]): Array<{ index: number; element: T }> {
+  return array.map((element, index) => ({ index, element }));
+}
