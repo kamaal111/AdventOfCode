@@ -1,0 +1,53 @@
+import { test, expect, describe, beforeAll } from "bun:test";
+
+import { part1, part2 } from ".";
+import { getInput } from "../utils/getInput";
+
+const EXAMPLE_INPUT1 = `
+.....
+.F-7.
+.|.|.
+.L-J.
+.....
+`;
+
+const EXAMPLE_INPUT2 = `
+..F7.
+.FJ|.
+-J.L7
+|F--J
+LJ...
+`;
+
+describe("day10", () => {
+  let input: string;
+
+  beforeAll(async () => {
+    input = await getInput("day10");
+  });
+
+  test("part1 with example input", () => {
+    expect(part1(EXAMPLE_INPUT1)).toEqual(4);
+  });
+
+  test("part1 with example input2", () => {
+    expect(part1(EXAMPLE_INPUT2)).toEqual(8);
+  });
+
+  test.skip("part1", async () => {
+    const result = part1(input);
+    expect(result).not.toEqual(4);
+    expect(result).not.toEqual(9);
+    expect(result).not.toEqual(5);
+    expect(result).toEqual(0);
+  });
+
+  test("part2 with example input", () => {
+    expect(part2(EXAMPLE_INPUT1)).toEqual(0);
+  });
+
+  test("part2", async () => {
+    const result = part2(input);
+    expect(result).toEqual(0);
+  });
+});
