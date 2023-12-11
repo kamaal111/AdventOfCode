@@ -5,7 +5,7 @@ import { getInput } from "../utils/getInput";
 
 const EXAMPLE_INPUT1 = `
 .....
-.F-7.
+.S-7.
 .|.|.
 .L-J.
 .....
@@ -14,7 +14,7 @@ const EXAMPLE_INPUT1 = `
 const EXAMPLE_INPUT2 = `
 ..F7.
 .FJ|.
--J.L7
+SJ.L7
 |F--J
 LJ...
 `;
@@ -34,12 +34,12 @@ describe("day10", () => {
     expect(part1(EXAMPLE_INPUT2)).toEqual(8);
   });
 
-  test.skip("part1", async () => {
+  test("part1", async () => {
     const result = part1(input);
     expect(result).not.toEqual(4);
     expect(result).not.toEqual(9);
     expect(result).not.toEqual(5);
-    expect(result).toEqual(0);
+    expect(result).toEqual(6613);
   });
 
   test("part2 with example input", () => {
