@@ -8,11 +8,28 @@ type Directions = (typeof DIRECTIONS)[number];
 export function part1(input: string) {
   const maze = parseInput(input);
   const start = maze.elements.flat().find((tile) => tile.value === "S")!;
-  const journey = travelThroughMaze(start, maze)!;
-  return journey.iterations / 2;
+  const { iterations } = travelThroughMaze(start, maze)!;
+  return iterations / 2;
 }
 
 export function part2(input: string) {
+  const maze = parseInput(input);
+  const tiles = maze.elements.flat();
+  const start = tiles.find((tile) => tile.value === "S")!;
+  const path = travelThroughMaze(start, maze)!.path.map((item) => {
+    const [row, column] = item.split("-");
+    return { row: Number(row), column: Number(column) };
+  });
+  // Loop items
+  tiles.filter((tile) => {
+    if (tile.value === ".") return false;
+    for (const { row, column } of path) {
+      if (tile.row === row && tile.column === column) {
+        return true;
+      }
+    }
+    return false;
+  });
   return 0;
 }
 
@@ -27,23 +44,21 @@ function travelThroughMaze(
     let iterations = 0;
     while (true) {
       const next = getNextTile(currentTile, maze, direction);
-      console.log("iterations", iterations);
       // No connection
       if (next?.nextTile == null) break;
 
       const nextKey = makeElementHashKey(next.nextTile);
 
       iterations += 1;
-      if (traveling.includes(nextKey)) {
-        return { iterations, path: traveling };
-      }
+      if (traveling.includes(nextKey)) return { iterations, path: traveling };
+
       traveling.push(nextKey);
       currentTile = next.nextTile;
       direction = next.direction;
     }
   }
 
-  return null;
+  throw new Error("No loop found");
 }
 
 function getNextTile(

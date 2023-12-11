@@ -19,6 +19,18 @@ SJ.L7
 LJ...
 `;
 
+const EXAMPLE_INPUT3 = `
+...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+...........
+`;
+
 describe("day10", () => {
   let input: string;
 
@@ -43,10 +55,10 @@ describe("day10", () => {
   });
 
   test("part2 with example input", () => {
-    expect(part2(EXAMPLE_INPUT1)).toEqual(0);
+    expect(part2(EXAMPLE_INPUT3)).toEqual(4);
   });
 
-  test("part2", async () => {
+  test.skip("part2", async () => {
     const result = part2(input);
     expect(result).toEqual(0);
   });
