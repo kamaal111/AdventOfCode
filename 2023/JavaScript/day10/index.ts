@@ -1,18 +1,15 @@
 import Matrix, { type MatrixElement } from "../models/matrix";
 
-type TileTypes = "|" | "-" | "L" | "J" | "7" | "F" | ".";
-type Directions = "up" | "down" | "left" | "right";
+const DIRECTIONS = ["up", "down", "left", "right"] as const;
+
+type TileTypes = "|" | "-" | "L" | "J" | "7" | "F" | "." | "S";
+type Directions = (typeof DIRECTIONS)[number];
 
 export function part1(input: string) {
   const maze = parseInput(input);
-  const iterations: number[] = [];
-  for (const element of maze.elements.flat()) {
-    const journey = travelThroughMaze(element, maze);
-    if (journey == null) continue;
-
-    iterations.push(journey.iterations);
-  }
-  return Math.max(...iterations) / 2;
+  const start = maze.elements.flat().find((tile) => tile.value === "S")!;
+  const journey = travelThroughMaze(start, maze)!;
+  return journey.iterations / 2;
 }
 
 export function part2(input: string) {
@@ -23,28 +20,27 @@ function travelThroughMaze(
   tile: MatrixElement<TileTypes>,
   maze: Matrix<TileTypes>,
 ) {
-  if (tile.value === ".") return null;
+  for (let direction of DIRECTIONS) {
+    const elementKey = makeElementHashKey(tile);
+    const traveling = [elementKey];
+    let currentTile = tile;
+    let iterations = 0;
+    while (true) {
+      const next = getNextTile(currentTile, maze, direction);
+      console.log("iterations", iterations);
+      // No connection
+      if (next?.nextTile == null) break;
 
-  const elementKey = makeElementHashKey(tile);
-  const traveling = [elementKey];
-  console.log("traveling[0]", traveling[0]);
-  let currentTile = tile;
-  let direction: Directions | undefined;
-  let iterations = 0;
-  while (true) {
-    const next = getNextTile(currentTile, maze, direction);
-    // No connection
-    if (next?.nextTile == null) break;
+      const nextKey = makeElementHashKey(next.nextTile);
 
-    const nextKey = makeElementHashKey(next.nextTile);
-
-    iterations += 1;
-    if (traveling.includes(nextKey)) {
-      return { iterations, path: traveling };
+      iterations += 1;
+      if (traveling.includes(nextKey)) {
+        return { iterations, path: traveling };
+      }
+      traveling.push(nextKey);
+      currentTile = next.nextTile;
+      direction = next.direction;
     }
-    traveling.push(nextKey);
-    currentTile = next.nextTile;
-    direction = next.direction;
   }
 
   return null;
@@ -53,12 +49,25 @@ function travelThroughMaze(
 function getNextTile(
   tile: MatrixElement<TileTypes>,
   maze: Matrix<TileTypes>,
-  direction: Directions | undefined,
+  direction: Directions,
 ):
   | { direction: Directions; nextTile: MatrixElement<TileTypes> | undefined }
   | undefined {
+  if (tile.value === "S") {
+    if (direction === "down") {
+      return { nextTile: maze.get(tile.row + 1, tile.column), direction };
+    }
+    if (direction === "up") {
+      return { nextTile: maze.get(tile.row - 1, tile.column), direction };
+    }
+    if (direction === "left") {
+      return { nextTile: maze.get(tile.row, tile.column - 1), direction };
+    }
+    return { nextTile: maze.get(tile.row, tile.column + 1), direction };
+  }
+
   if (tile.value === "F") {
-    if (direction == null || direction === "up") {
+    if (direction === "up") {
       // Coming from below and going right
       return {
         nextTile: maze.get(tile.row, tile.column + 1),
@@ -74,7 +83,7 @@ function getNextTile(
   }
 
   if (tile.value === "-") {
-    if (direction == null || direction === "right") {
+    if (direction === "right") {
       // Coming from left and going right
       return {
         nextTile: maze.get(tile.row, tile.column + 1),
@@ -87,7 +96,7 @@ function getNextTile(
   }
 
   if (tile.value === "7") {
-    if (direction == null || direction === "right") {
+    if (direction === "right") {
       // Coming from left and going down
       return {
         nextTile: maze.get(tile.row + 1, tile.column),
@@ -103,7 +112,7 @@ function getNextTile(
   }
 
   if (tile.value === "|") {
-    if (direction == null || direction === "down") {
+    if (direction === "down") {
       // Coming from up and going down
       return {
         nextTile: maze.get(tile.row + 1, tile.column),
@@ -116,7 +125,7 @@ function getNextTile(
   }
 
   if (tile.value === "J") {
-    if (direction == null || direction === "down") {
+    if (direction === "down") {
       // Coming from up and going left
       return {
         nextTile: maze.get(tile.row, tile.column - 1),
@@ -129,7 +138,7 @@ function getNextTile(
   }
 
   if (tile.value === "L") {
-    if (direction == null || direction === "down") {
+    if (direction === "down") {
       // Coming from up and going right
       return {
         nextTile: maze.get(tile.row, tile.column + 1),

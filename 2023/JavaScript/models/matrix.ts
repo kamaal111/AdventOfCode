@@ -36,16 +36,16 @@ class Matrix<T> {
     return this.elements[row]?.[column];
   };
 
-  static fromStringCharacters(lines: string[]): Matrix<string> {
-    const cells: Array<Array<MatrixElement<string>>> = [];
+  static fromStringCharacters<T extends string>(lines: T[]): Matrix<T> {
+    const cells: Array<Array<MatrixElement<T>>> = [];
     for (let rowIndex = 0; rowIndex < lines.length; rowIndex += 1) {
-      const row: Array<MatrixElement<string>> = [];
+      const row: Array<MatrixElement<T>> = [];
       for (
         let columnIndex = 0;
         columnIndex < lines[rowIndex].length;
         columnIndex += 1
       ) {
-        const value = lines[rowIndex][columnIndex];
+        const value = lines[rowIndex][columnIndex] as T;
         row.push({ value, row: rowIndex, column: columnIndex });
       }
       cells.push(row);
