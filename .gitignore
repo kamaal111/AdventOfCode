@@ -63,3 +63,6 @@ fastlane/Deliverfile
 
 fastlane/Preview.html
 fastlane/screenshots
+
+.venv
+.ruff_cache

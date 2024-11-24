@@ -1,0 +1,5 @@
+[lint.isort]
+case-sensitive = true
+
+[lint]
+extend-select = ["I"]
