@@ -66,3 +66,5 @@ fastlane/screenshots
 
 .venv
 .ruff_cache
+
+target
