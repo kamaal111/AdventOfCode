@@ -1,0 +1,19 @@
+# List available commands
+default:
+    just --list --unsorted
+
+# Set up dev container. This step runs after building the dev container
+post-create: setup-zsh-environment install-atuin
+
+[private]
+setup-zsh-environment:
+    #!/bin/zsh
+
+    echo "Updating zsh configuration"
+    cp -f .zshrc ~/.zshrc
+
+[private]
+install-atuin:
+    #!/bin/zsh
+
+    echo Y | bash <(curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh)
