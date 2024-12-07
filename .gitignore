@@ -68,3 +68,4 @@ fastlane/screenshots
 .ruff_cache
 
 target
+.ipynb_checkpoints
