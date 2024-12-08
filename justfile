@@ -3,7 +3,7 @@ default:
     just --list --unsorted
 
 # Start notebook
-start-notebook: setup-deno-jupyter-kernel
+start-notebook:
     #!/bin/zsh
 
     . .venv/bin/activate
@@ -38,38 +38,16 @@ install-modules:
 
     rye sync
 
-# Setup deno jupyter kernel
-setup-deno-jupyter-kernel: deno-install-jupyter
-    #!/bin/zsh
-
-    . ~/.zshrc || true
-
-    deno jupyter
-
 # Prepare project to work with
-prepare: install-modules setup-deno-jupyter-kernel
+prepare: install-modules
 
 # Bootstrap project
-bootstrap: install-rye install-deno prepare setup-pre-commit
+bootstrap: install-rye prepare setup-pre-commit
 
 # Set up dev container. This step runs after building the dev container
 post-dev-container-create:
     just .devcontainer/post-create
     just bootstrap
-
-[private]
-deno-install-jupyter:
-    #!/bin/zsh
-
-    . ~/.zshrc || true
-
-    deno jupyter --install
-
-[private]
-install-deno:
-    #!/bin/zsh
-
-    curl -fsSL https://deno.land/install.sh | sh -s -- -y
 
 [private]
 install-rye:

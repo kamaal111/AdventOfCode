@@ -69,3 +69,4 @@ fastlane/screenshots
 
 target
 .ipynb_checkpoints
+.mypy_cache
